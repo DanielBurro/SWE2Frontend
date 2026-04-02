@@ -1,0 +1,24 @@
+<header class="oystr-header">
+  <a class="oystr-logo" routerLink="/">
+    <div class="logo-dot"></div>
+    Oystr
+  </a>
+
+  <nav class="header-nav">
+    <div class="search-bar">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>Events suchen</span>
+    </div>
+
+    @if (!isLoggedIn) {
+      <a routerLink="/auth/login" class="btn btn-ghost">Anmelden</a>
+      <a routerLink="/auth/register" class="btn btn-primary">Registrieren</a>
+    } @else {
+      <a routerLink="/events/create" class="btn btn-ghost">+ Event erstellen</a>
+      <a routerLink="/profile" class="avatar">{{ getInitials() }}</a>
+    }
+  </nav>
+</header>

@@ -1,0 +1,55 @@
+<app-header />
+
+<div class="create-page">
+  <div class="create-container">
+    <div class="page-header">
+      <a routerLink="/" class="back-link">← Zurück</a>
+      <p class="page-eyebrow">Neues Event</p>
+      <h1 class="page-title">Was planst du?</h1>
+    </div>
+
+    <form class="create-form" (ngSubmit)="submit()">
+      @if (error) {
+        <div class="form-error">{{ error }}</div>
+      }
+
+      <div class="form-group">
+        <label>Titel *</label>
+        <input type="text" placeholder="z.B. Sommerfest 2026" [(ngModel)]="form.title" name="title" required />
+      </div>
+
+      <div class="form-group">
+        <label>Beschreibung</label>
+        <textarea placeholder="Erzähl deinen Gästen, was sie erwartet…" [(ngModel)]="form.description" name="description" rows="4"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Datum *</label>
+          <input type="date" [(ngModel)]="form.date" name="date" required />
+        </div>
+        <div class="form-group">
+          <label>Uhrzeit</label>
+          <input type="time" [(ngModel)]="form.time" name="time" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Location *</label>
+        <select [(ngModel)]="form.locationId" name="locationId" required>
+          <option [value]="0" disabled>Location auswählen…</option>
+          @for (loc of locations; track loc.id) {
+            <option [value]="loc.id">{{ loc.name }} — {{ loc.city }} ({{ loc.capacity }} Personen)</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/" class="btn-ghost">Abbrechen</a>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Wird erstellt…' : 'Event erstellen →' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

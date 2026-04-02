@@ -1,0 +1,69 @@
+<app-header />
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">Event-Planning, neu gedacht</p>
+  <h1 class="hero-title">Plane Events, die<br><em>unvergesslich</em> werden</h1>
+  <p class="hero-sub">
+    Oystr ist dein persönlicher Event-Assistent — von der Einladung bis zur Gästeliste.
+  </p>
+  <div class="hero-actions">
+    <a routerLink="/events/create" class="btn-primary">Event erstellen</a>
+    <button class="btn-ghost">Events entdecken</button>
+  </div>
+</section>
+
+<div class="cta-banner">
+  <div class="cta-text">
+    <h3>Dein nächstes Event wartet</h3>
+    <p>Individuelle Event-Seite mit Einladungen, Gästeliste und RSVP — in wenigen Minuten.</p>
+  </div>
+  <a routerLink="/events/create" class="btn-primary">Neues Event erstellen →</a>
+</div>
+
+<section class="events-section">
+  <p class="section-label">Entdecken</p>
+  <h2 class="section-title">Events in deiner Nähe</h2>
+
+  <div class="tabs">
+    @for (tab of tabs; track tab.key) {
+      <button class="tab-btn" [class.active]="activeTab === tab.key" (click)="setTab(tab.key)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  @if (isLoading) {
+    <div class="events-grid">
+      @for (i of [1,2,3]; track i) {
+        <div class="event-card skeleton"></div>
+      }
+    </div>
+  } @else {
+    <div class="events-grid">
+      @for (event of filteredEvents; track event.id; let i = $index) {
+        <a class="event-card" [routerLink]="['/events', event.id]">
+          <div class="card-img" [style.background]="getGradient(i)">
+            <div class="img-overlay"></div>
+            <span class="date-badge">{{ formatDate(event.date) }}</span>
+          </div>
+          <div class="card-body">
+            <div class="event-status">
+              <div class="status-dot" [class.planned]="event.status === 'geplant'"></div>
+              {{ event.status | titlecase }}
+            </div>
+            <h3 class="event-title">{{ event.title }}</h3>
+            <div class="event-meta">📍 {{ event.locationName }}</div>
+            <div class="event-host">
+              <div class="host-avatar" [style]="getAvatarStyle(i)">{{ getInitials(event.hostName) }}</div>
+              <span class="host-name">von {{ event.hostName }}</span>
+            </div>
+          </div>
+        </a>
+      }
+      @if (filteredEvents.length === 0) {
+        <p class="empty-state">Keine Events gefunden.</p>
+      }
+    </div>
+  }
+</section>

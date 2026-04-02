@@ -1,0 +1,133 @@
+:host {
+  display: block;
+  background: #0a0a0f;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
+  background: radial-gradient(ellipse 50% 40% at 50% 20%, rgba(201,169,110,0.06) 0%, transparent 70%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(232,228,220,0.04);
+  border: 0.5px solid rgba(232,228,220,0.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+}
+
+.auth-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #e8e4dc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2rem;
+  text-decoration: none;
+
+  .logo-dot {
+    width: 7px;
+    height: 7px;
+    background: #c9a96e;
+    border-radius: 50%;
+  }
+}
+
+.auth-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #e8e4dc;
+  margin-bottom: 6px;
+}
+
+.auth-sub {
+  font-size: 14px;
+  color: rgba(232,228,220,0.45);
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.form-error {
+  background: rgba(201,90,90,0.1);
+  border: 0.5px solid rgba(201,90,90,0.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #c95a5a;
+  margin-bottom: 1.25rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 11px;
+    color: rgba(232,228,220,0.4);
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    background: rgba(232,228,220,0.05);
+    border: 0.5px solid rgba(232,228,220,0.15);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: #e8e4dc;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+
+    &::placeholder { color: rgba(232,228,220,0.2); }
+    &:focus { border-color: rgba(201,169,110,0.5); }
+  }
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: #c9a96e;
+  color: #0a0a0f;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+
+  &:hover:not(:disabled) { background: #d4b87a; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.auth-footer {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(232,228,220,0.35);
+  margin-top: 1.5rem;
+
+  a {
+    color: #c9a96e;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}

@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <a class="auth-logo" routerLink="/">
+      <div class="logo-dot"></div>
+      Oystr
+    </a>
+
+    <h1 class="auth-title">Konto erstellen</h1>
+    <p class="auth-sub">Plane unvergessliche Events. Kostenlos starten.</p>
+
+    @if (error) {
+      <div class="form-error">{{ error }}</div>
+    }
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vorname</label>
+          <input type="text" [(ngModel)]="form.firstName" name="firstName" placeholder="Max" />
+        </div>
+        <div class="form-group">
+          <label>Nachname</label>
+          <input type="text" [(ngModel)]="form.lastName" name="lastName" placeholder="Muster" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Username *</label>
+        <input type="text" [(ngModel)]="form.username" name="username" placeholder="maxmuster" required />
+      </div>
+
+      <div class="form-group">
+        <label>E-Mail *</label>
+        <input type="email" [(ngModel)]="form.email" name="email" placeholder="max@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label>Passwort *</label>
+        <input type="password" [(ngModel)]="form.password" name="password" placeholder="Mindestens 8 Zeichen" required />
+      </div>
+
+      <div class="form-group">
+        <label>Passwort bestätigen *</label>
+        <input type="password" [(ngModel)]="form.passwordConfirm" name="passwordConfirm" placeholder="Passwort wiederholen" required />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Wird registriert…' : 'Konto erstellen' }}
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Bereits registriert?
+      <a routerLink="/auth/login">Anmelden</a>
+    </p>
+  </div>
+</div>

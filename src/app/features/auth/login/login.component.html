@@ -1,0 +1,44 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <a class="auth-logo" routerLink="/">
+      <div class="logo-dot"></div>
+      Oystr
+    </a>
+
+    <h1 class="auth-title">Willkommen zurück</h1>
+    <p class="auth-sub">Melde dich an und manage deine Events.</p>
+
+    @if (error) {
+      <div class="form-error">{{ error }}</div>
+    }
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label>E-Mail oder Username</label>
+        <input
+          type="text"
+          [(ngModel)]="form.identifier"
+          name="identifier"
+          placeholder="max@example.com"
+          required />
+      </div>
+      <div class="form-group">
+        <label>Passwort</label>
+        <input
+          type="password"
+          [(ngModel)]="form.password"
+          name="password"
+          placeholder="••••••••"
+          required />
+      </div>
+      <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Anmeldung läuft…' : 'Anmelden' }}
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Noch kein Konto?
+      <a routerLink="/auth/register">Registrieren</a>
+    </p>
+  </div>
+</div>
