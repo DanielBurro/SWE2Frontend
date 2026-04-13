@@ -1,6 +1,6 @@
 .oystr-header {
   background: #141414;
-  border-bottom: 1px solid rgba(74, 158, 255, 0.15);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
   padding: 0;
   height: 60px;
   position: sticky;
@@ -20,20 +20,21 @@
 }
 
 .header-logo {
-  font-size: 18px;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
   font-weight: 600;
-  color: #4a9eff;
+  color: #e8e4dc;
   display: flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
   white-space: nowrap;
-  letter-spacing: -0.3px;
+  flex-shrink: 0;
 
   .logo-dot {
     width: 7px;
     height: 7px;
-    background: #4a9eff;
+    background: #c9a96e;
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -41,44 +42,34 @@
 
 .header-search {
   flex: 1;
-  max-width: 320px;
-
-  .search-input {
-    background: #1f1f1f;
-    border-color: rgba(74, 158, 255, 0.2);
-    color: #e0e0e0;
-    font-size: 13px;
-
-    &::placeholder { color: rgba(224, 224, 224, 0.35); }
-    &:focus { border-color: #4a9eff; }
-  }
+  max-width: 300px;
 
   .search-icon {
-    color: rgba(74, 158, 255, 0.5);
+    color: rgba(201, 169, 110, 0.5);
     font-size: 13px;
-  }
-
-  ::ng-deep .ant-input-group-addon,
-  ::ng-deep .ant-input-prefix {
-    background: #1f1f1f;
-    border-color: rgba(74, 158, 255, 0.2);
+    cursor: pointer;
+    transition: color 0.15s;
+    &:hover { color: #c9a96e; }
   }
 
   ::ng-deep .ant-input-affix-wrapper {
     background: #1f1f1f;
-    border-color: rgba(74, 158, 255, 0.2);
-    border-radius: 6px;
+    border-color: rgba(201, 169, 110, 0.2);
+    border-radius: 20px;
 
-    &:hover, &:focus, &.ant-input-affix-wrapper-focused {
-      border-color: #4a9eff;
-      box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1);
+    &:hover { border-color: rgba(201, 169, 110, 0.4); }
+
+    &:focus, &.ant-input-affix-wrapper-focused {
+      border-color: #c9a96e;
+      box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1);
     }
   }
 
   ::ng-deep .ant-input {
     background: #1f1f1f;
-    color: #e0e0e0;
-    &::placeholder { color: rgba(224, 224, 224, 0.35); }
+    color: #e8e4dc;
+    font-size: 13px;
+    &::placeholder { color: rgba(232, 228, 220, 0.3); }
   }
 }
 
@@ -90,85 +81,77 @@
 }
 
 .nav-link {
-  font-size: 13px;
-  color: rgba(74, 158, 255, 0.7);
+  font-size: 12px;
+  color: rgba(232, 228, 220, 0.6);
   text-decoration: none;
   padding: 4px 10px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: color 0.15s, background 0.15s;
+  border-radius: 20px;
+  border: 0.5px solid rgba(232, 228, 220, 0.15);
+  transition: all 0.15s;
   white-space: nowrap;
+  line-height: 1;
 
   &:hover {
-    color: #4a9eff;
-    background: rgba(74, 158, 255, 0.08);
+    color: #e8e4dc;
+    border-color: rgba(232, 228, 220, 0.35);
   }
-
-  span[nz-icon] { font-size: 14px; }
 }
 
-.register-btn {
-  font-size: 13px;
-  height: 32px;
-  padding: 0 16px;
-  border-radius: 6px;
+.btn-register {
+  height: 28px;
+  line-height: 26px;
+  padding: 0 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
 
   ::ng-deep & {
-    background: #4a9eff;
-    border-color: #4a9eff;
+    background: #c9a96e;
+    border-color: #c9a96e;
     color: #0a0a0f;
-    font-weight: 500;
-
-    &:hover {
-      background: #6ab0ff;
-      border-color: #6ab0ff;
-    }
+    &:hover { background: #d4b87a; border-color: #d4b87a; color: #0a0a0f; }
   }
 }
 
-.create-btn {
-  font-size: 13px;
-  height: 32px;
-  padding: 0 14px;
-  border-radius: 6px;
+.btn-create {
+  height: 28px;
+  line-height: 26px;
+  padding: 0 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 
   ::ng-deep & {
     background: transparent;
-    border-color: rgba(74, 158, 255, 0.35);
-    color: #4a9eff;
-
-    &:hover {
-      border-color: #4a9eff;
-      color: #4a9eff;
-      background: rgba(74, 158, 255, 0.08);
-    }
+    border-color: rgba(201, 169, 110, 0.35);
+    color: #c9a96e;
+    &:hover { border-color: #c9a96e; background: rgba(201, 169, 110, 0.08); color: #c9a96e; }
   }
 }
 
 .profile-avatar {
   cursor: pointer;
-  background: rgba(74, 158, 255, 0.2);
-  color: #4a9eff;
+  background: rgba(201, 169, 110, 0.15);
+  color: #c9a96e;
   font-size: 13px;
-  font-weight: 500;
-  border: 1px solid rgba(74, 158, 255, 0.3);
+  border: 1.5px solid rgba(201, 169, 110, 0.3);
   transition: border-color 0.15s;
-
-  &:hover { border-color: #4a9eff; }
+  &:hover { border-color: #c9a96e; }
 }
 
-// DROPDOWN
 ::ng-deep .profile-dropdown {
   background: #1a1a1a;
-  border: 1px solid rgba(74, 158, 255, 0.15);
-  border-radius: 8px;
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 10px;
   padding: 4px;
   min-width: 160px;
 
   .ant-dropdown-menu-item {
-    color: rgba(224, 224, 224, 0.8);
+    color: rgba(232, 228, 220, 0.7);
     font-size: 13px;
     border-radius: 6px;
     display: flex;
@@ -176,17 +159,17 @@
     gap: 8px;
 
     &:hover {
-      background: rgba(74, 158, 255, 0.08);
-      color: #4a9eff;
+      background: rgba(201, 169, 110, 0.08);
+      color: #c9a96e;
     }
   }
 
   .ant-dropdown-menu-item-divider {
-    background: rgba(74, 158, 255, 0.1);
+    background: rgba(201, 169, 110, 0.1);
   }
 
   .logout-item {
-    color: rgba(255, 100, 100, 0.7);
-    &:hover { background: rgba(255, 100, 100, 0.08); color: #ff6464; }
+    color: rgba(232, 100, 100, 0.7);
+    &:hover { background: rgba(232, 100, 100, 0.08); color: #e86464; }
   }
 }

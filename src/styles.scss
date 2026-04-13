@@ -1,25 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 html, body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
+  background: #0a0a0f;
+  color: #e8e4dc;
 }
 
-// DARKMODE
-body {
-  background: #1a1a1a;
-  color: #4a9eff;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-// NZ overrides global
+// NZ-ZORRO global overrides
 .ant-layout {
-  background: #1a1a1a;
+  background: #0a0a0f;
 }
 
-.ant-menu-dark {
-  background: #141414;
+.ant-btn {
+  font-family: 'DM Sans', sans-serif;
 }
 
-a { text-decoration: none; color: inherit; }
+// verhindert dass NZ globale Link-Farbe überschreibt
+a:not([nz-button]):not(.ant-btn) {
+  color: inherit;
+}

@@ -1,61 +1,42 @@
 <nz-header class="oystr-header">
   <div class="header-inner">
 
-    <!-- LOGO -->
     <a routerLink="/" class="header-logo">
       <span class="logo-dot"></span>
       Oystr
     </a>
 
-    <!-- SEARCH -->
     <div class="header-search">
       <nz-input-group [nzPrefix]="searchIcon" nzSize="default">
         <input
           nz-input
           [(ngModel)]="searchQuery"
+          (keydown.enter)="onSearch()"
           placeholder="Events suchen…"
           class="search-input" />
       </nz-input-group>
       <ng-template #searchIcon>
-        <span nz-icon nzType="search" class="search-icon"></span>
+        <span nz-icon nzType="search" class="search-icon" (click)="onSearch()"></span>
       </ng-template>
     </div>
 
-    <!-- NAV RECHTS -->
     <div class="header-actions">
-
-      <!-- Docs Link -->
-      <a routerLink="/docs" class="nav-link">
-        <span nz-icon nzType="book" nzTheme="outline"></span>
-        Dokumentation
-      </a>
-
       @if (!isLoggedIn) {
         <a routerLink="/auth/login" class="nav-link">Anmelden</a>
-        <button
-          nz-button
-          nzType="primary"
-          routerLink="/auth/register"
-          class="register-btn">
+        <button nz-button routerLink="/auth/register" class="btn-register">
           Registrieren
         </button>
       } @else {
-        <!-- Neues Event -->
-        <button
-          nz-button
-          nzType="default"
-          routerLink="/events/create"
-          class="create-btn">
+        <button nz-button routerLink="/events/create" class="btn-create">
           <span nz-icon nzType="plus"></span>
           Event erstellen
         </button>
 
-        <!-- Profil Dropdown -->
         <div nz-dropdown [nzDropdownMenu]="profileMenu" nzTrigger="click">
           <nz-avatar
-            nzText="MK"
-            class="profile-avatar"
-            [nzSize]="34">
+            [nzText]="getInitials()"
+            [nzSize]="34"
+            class="profile-avatar">
           </nz-avatar>
         </div>
 
