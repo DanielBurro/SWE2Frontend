@@ -1,44 +1,75 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <a class="auth-logo" routerLink="/">
-      <div class="logo-dot"></div>
-      Oystr
-    </a>
+<app-header />
 
-    <h1 class="auth-title">Willkommen zurück</h1>
-    <p class="auth-sub">Melde dich an und manage deine Events.</p>
+<div class="login-page">
+  <div class="login-card">
 
-    @if (error) {
-      <div class="form-error">{{ error }}</div>
-    }
+    <div class="card-header">
+      <p class="card-eyebrow">Willkommen zurück</p>
+      <h1 class="card-title">Anmelden</h1>
+      <p class="card-sub">Melde dich an und manage deine Events.</p>
+    </div>
 
-    <form class="auth-form" (ngSubmit)="submit()">
-      <div class="form-group">
-        <label>E-Mail oder Username</label>
-        <input
-          type="text"
-          [(ngModel)]="form.identifier"
-          name="identifier"
-          placeholder="max@example.com"
-          required />
-      </div>
-      <div class="form-group">
-        <label>Passwort</label>
-        <input
-          type="password"
-          [(ngModel)]="form.password"
-          name="password"
-          placeholder="••••••••"
-          required />
-      </div>
-      <button type="submit" class="btn-primary" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'Anmeldung läuft…' : 'Anmelden' }}
+    <nz-divider />
+
+    <form nz-form [formGroup]="form" (ngSubmit)="submit()" nzLayout="vertical" class="login-form">
+
+      <nz-form-item>
+        <nz-form-label nzRequired>E-Mail</nz-form-label>
+        <nz-form-control [nzErrorTip]="mailErr">
+          <nz-input-group [nzPrefix]="mailIcon">
+            <input
+              nz-input
+              formControlName="email"
+              type="email"
+              placeholder="max@example.com" />
+          </nz-input-group>
+          <ng-template #mailIcon>
+            <span nz-icon nzType="mail"></span>
+          </ng-template>
+          <ng-template #mailErr>
+            @if (getControl('email')?.hasError('required')) { Pflichtfeld }
+            @else { Ungültige E-Mail Adresse }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzRequired>Passwort</nz-form-label>
+        <nz-form-control nzErrorTip="Pflichtfeld">
+          <nz-input-group [nzSuffix]="pwToggle">
+            <input
+              nz-input
+              formControlName="password"
+              [type]="passwordVisible ? 'text' : 'password'"
+              placeholder="Dein Passwort" />
+          </nz-input-group>
+          <ng-template #pwToggle>
+            <span
+              nz-icon
+              [nzType]="passwordVisible ? 'eye' : 'eye-invisible'"
+              class="pw-toggle"
+              (click)="passwordVisible = !passwordVisible">
+            </span>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <button
+        nz-button
+        nzType="primary"
+        nzBlock
+        [nzLoading]="isSubmitting"
+        type="submit"
+        class="submit-btn">
+        Anmelden
       </button>
+
     </form>
 
-    <p class="auth-footer">
+    <p class="register-hint">
       Noch kein Konto?
       <a routerLink="/auth/register">Registrieren</a>
     </p>
+
   </div>
 </div>

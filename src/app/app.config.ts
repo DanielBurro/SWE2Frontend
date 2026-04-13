@@ -6,8 +6,34 @@ import { de_DE, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import de from '@angular/common/locales/de';
 import { routes } from './app.routes';
+import { provideNzIcons } from 'ng-zorro-antd/icon';
+import {
+  MailOutline,
+  LockOutline,
+  EyeOutline,
+  EyeInvisibleOutline,
+  UserOutline,
+  SearchOutline,
+  PlusOutline,
+  CalendarOutline,
+  LogoutOutline,
+  CameraOutline,
+} from '@ant-design/icons-angular/icons';
 
 registerLocaleData(de);
+
+const icons = [
+  MailOutline,
+  LockOutline,
+  EyeOutline,
+  EyeInvisibleOutline,
+  UserOutline,
+  SearchOutline,
+  PlusOutline,
+  CalendarOutline,
+  LogoutOutline,
+  CameraOutline,
+];
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +41,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
     provideNzI18n(de_DE),
+    provideNzIcons(icons),
   ],
 };
