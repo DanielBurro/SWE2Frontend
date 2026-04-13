@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
 :host {
   display: block;
-  background: #1a1a1a;
+  background: #0a0a0f;
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .register-page {
@@ -14,25 +16,35 @@
 .register-card {
   width: 100%;
   max-width: 520px;
-  background: #141414;
-  border: 1px solid rgba(74, 158, 255, 0.12);
-  border-radius: 12px;
+  background: #111118;
+  border: 0.5px solid rgba(201, 169, 110, 0.15);
+  border-radius: 16px;
   padding: 2rem 2.5rem;
 }
 
 .card-header {
   margin-bottom: 0.5rem;
 
+  .card-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c9a96e;
+    margin-bottom: 8px;
+  }
+
   .card-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: #4a9eff;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: #e8e4dc;
     margin-bottom: 4px;
   }
 
   .card-sub {
     font-size: 13px;
-    color: rgba(224, 224, 224, 0.45);
+    color: rgba(232, 228, 220, 0.4);
+    font-weight: 300;
   }
 }
 
@@ -41,16 +53,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1.5rem 0;
+  margin: 1.25rem 0 1.5rem;
 
   .avatar-hint {
-    font-size: 12px;
-    color: rgba(74, 158, 255, 0.5);
+    font-size: 11px;
+    color: rgba(201, 169, 110, 0.5);
     margin-top: 8px;
+    letter-spacing: 0.3px;
   }
 }
 
-.avatar-upload-trigger {
+.avatar-trigger {
   position: relative;
   cursor: pointer;
   border-radius: 50%;
@@ -61,160 +74,142 @@
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(74, 158, 255, 0.3);
+    border: 1.5px solid rgba(201, 169, 110, 0.35);
     display: block;
   }
 
   .avatar-placeholder {
-    background: rgba(74, 158, 255, 0.1);
-    color: #4a9eff;
-    border: 2px solid rgba(74, 158, 255, 0.2);
+    background: rgba(201, 169, 110, 0.08) !important;
+    color: #c9a96e !important;
+    border: 1.5px solid rgba(201, 169, 110, 0.2) !important;
   }
 
   .avatar-overlay {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.2s;
-    color: #fff;
-    font-size: 18px;
+    color: #c9a96e;
+    font-size: 20px;
   }
 
-  &:hover .avatar-overlay {
-    opacity: 1;
-  }
+  &:hover .avatar-overlay { opacity: 1; }
 }
 
 // FORM
-.register-form {
-  margin-top: 1rem;
-}
+.register-form { margin-top: 0.5rem; }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+
+  .half { margin-bottom: 0; }
 }
 
-.form-item-half {
-  margin-bottom: 0;
-}
-
-.optional-label {
+.optional {
   font-size: 11px;
-  color: rgba(224, 224, 224, 0.3);
-  font-weight: 400;
-  margin-left: 4px;
+  color: rgba(232, 228, 220, 0.25);
+  font-weight: 300;
+  margin-left: 3px;
 }
 
 .pw-toggle {
   cursor: pointer;
-  color: rgba(74, 158, 255, 0.5);
+  color: rgba(201, 169, 110, 0.45);
   transition: color 0.15s;
-  &:hover { color: #4a9eff; }
-}
-
-.submit-item {
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+  &:hover { color: #c9a96e; }
 }
 
 .submit-btn {
-  height: 40px;
+  height: 42px;
   font-size: 14px;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 21px;
+  margin-top: 0.5rem;
 }
 
 .login-hint {
   text-align: center;
   font-size: 13px;
-  color: rgba(224, 224, 224, 0.35);
+  color: rgba(232, 228, 220, 0.3);
   margin-top: 1.25rem;
 
   a {
-    color: #4a9eff;
+    color: #c9a96e;
     text-decoration: none;
     &:hover { text-decoration: underline; }
   }
 }
 
-// NZ OVERRIDES
+// NZ OVERRIDES — golden theme
 ::ng-deep {
   .ant-form-item-label > label {
-    color: rgba(224, 224, 224, 0.65);
-    font-size: 13px;
+    color: rgba(232, 228, 220, 0.55);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
   }
 
   .ant-input,
   .ant-input-affix-wrapper {
-    background: #1f1f1f;
-    border-color: rgba(74, 158, 255, 0.2);
-    color: #e0e0e0;
-    border-radius: 6px;
+    background: #1a1a22;
+    border-color: rgba(201, 169, 110, 0.18);
+    color: #e8e4dc;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
 
-    &::placeholder { color: rgba(224, 224, 224, 0.25); }
-
-    &:hover {
-      border-color: rgba(74, 158, 255, 0.5);
+    &::placeholder { color: rgba(232, 228, 220, 0.2); }
+    &:hover { border-color: rgba(201, 169, 110, 0.4); }
+    &:focus, &.ant-input-affix-wrapper-focused {
+      border-color: #c9a96e;
+      box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1);
     }
-
-    &:focus,
-    &.ant-input-affix-wrapper-focused {
-      border-color: #4a9eff;
-      box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1);
-    }
-  }
-
-  .ant-input-prefix {
-    color: rgba(74, 158, 255, 0.45);
-    margin-right: 8px;
   }
 
   .ant-input-affix-wrapper {
-    background: #1f1f1f;
-
-    .ant-input {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
+    background: #1a1a22;
+    .ant-input { background: transparent; border: none; box-shadow: none; }
   }
 
-  .ant-form-item-explain-error {
-    font-size: 12px;
-    color: #ff6b6b;
-  }
-
-  .ant-btn-primary {
-    background: #4a9eff;
-    border-color: #4a9eff;
-    color: #0a0a0f;
-    font-weight: 500;
-
-    &:hover {
-      background: #6ab0ff;
-      border-color: #6ab0ff;
-    }
-  }
-
-  .ant-divider {
-    border-color: rgba(74, 158, 255, 0.1);
+  .ant-input-prefix {
+    color: rgba(201, 169, 110, 0.4);
+    margin-right: 8px;
   }
 
   textarea.ant-input {
-    background: #1f1f1f;
-    border-color: rgba(74, 158, 255, 0.2);
-    color: #e0e0e0;
-    border-radius: 6px;
+    background: #1a1a22;
+    border-color: rgba(201, 169, 110, 0.18);
+    color: #e8e4dc;
+    border-radius: 8px;
     resize: none;
+    &::placeholder { color: rgba(232, 228, 220, 0.2); }
+    &:focus { border-color: #c9a96e; box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1); }
+  }
 
-    &::placeholder { color: rgba(224, 224, 224, 0.25); }
-    &:focus { border-color: #4a9eff; box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1); }
+  .ant-form-item-explain-error {
+    font-size: 11px;
+    color: rgba(220, 100, 100, 0.85);
+  }
+
+  .ant-btn-primary {
+    background: #c9a96e;
+    border-color: #c9a96e;
+    color: #0a0a0f;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+
+    &:hover { background: #d4b87a; border-color: #d4b87a; }
+    &:disabled { opacity: 0.5; }
+  }
+
+  .ant-divider {
+    border-color: rgba(201, 169, 110, 0.1);
+    margin: 1rem 0;
   }
 }
