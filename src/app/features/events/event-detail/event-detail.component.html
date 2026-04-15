@@ -1,0 +1,190 @@
+<app-header />
+
+<div class="detail-page">
+
+  @if (isLoading) {
+    <div class="detail-container">
+      <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 6 }" />
+    </div>
+  }
+
+  @if (!isLoading && event) {
+    <!-- HERO BANNER -->
+    <div class="event-banner" [style.background]="'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'">
+      <div class="banner-overlay"></div>
+      <div class="banner-content">
+        <a routerLink="/" class="back-link">
+          <span nz-icon nzType="arrow-left"></span>
+          Alle Events
+        </a>
+        <div class="event-status-badge">
+          <span class="status-dot" [style.background]="event.status === 'offen' ? '#4caf82' : '#c9a96e'"></span>
+          {{ event.status | titlecase }}
+        </div>
+        <h1 class="event-banner-title">{{ event.title }}</h1>
+        <div class="banner-meta">
+          <span>
+            <span nz-icon nzType="calendar" nzTheme="outline"></span>
+            {{ formatDate(event.date) }}
+          </span>
+          <span>
+            <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+            {{ formatTime(event.date) }} Uhr
+          </span>
+          <span>
+            <span nz-icon nzType="environment" nzTheme="outline"></span>
+            {{ event.locationName }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-container">
+      <div class="detail-layout">
+
+        <!-- LINKE SPALTE -->
+        <div class="detail-main">
+
+          <!-- BESCHREIBUNG -->
+          <div class="detail-card">
+            <h2 class="card-title">Über dieses Event</h2>
+            <nz-divider />
+            <p class="event-description">
+              {{ event.description || 'Keine Beschreibung vorhanden.' }}
+            </p>
+          </div>
+
+          <!-- GÄSTELISTE -->
+          <div class="detail-card">
+            <div class="guests-header">
+              <h2 class="card-title">Gästeliste</h2>
+              <div class="guest-stats">
+                <span class="stat accepted">
+                  <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+                  {{ acceptedCount }} Zugesagt
+                </span>
+                <span class="stat pending">
+                  <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                  {{ pendingCount }} Ausstehend
+                </span>
+              </div>
+            </div>
+            <nz-divider />
+
+            @if (invitations.length === 0) {
+              <nz-empty nzNotFoundContent="Noch keine Gäste eingeladen" class="custom-empty" />
+            }
+
+            <div class="guests-list">
+              @for (inv of invitations; track inv.id) {
+                <div class="guest-row">
+                  <div class="guest-left">
+                    <nz-avatar
+                      [nzText]="getInitials(inv.guestName)"
+                      [nzSize]="36"
+                      class="guest-avatar">
+                    </nz-avatar>
+                    <div class="guest-info">
+                      <span class="guest-name">{{ inv.guestName }}</span>
+                      @if (inv.plusOnes > 0) {
+                        <span class="plus-ones">+{{ inv.plusOnes }} Begleitung</span>
+                      }
+                    </div>
+                  </div>
+                  <span class="guest-status" [style.color]="getStatusColor(inv.status)">
+                    {{ getStatusLabel(inv.status) }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RECHTE SPALTE -->
+        <div class="detail-sidebar">
+
+          <!-- HOST INFO -->
+          <div class="sidebar-card">
+            <p class="sidebar-label">Veranstalter</p>
+            <div class="host-row">
+              <nz-avatar
+                [nzText]="getInitials(event.hostName)"
+                [nzSize]="44"
+                class="host-avatar">
+              </nz-avatar>
+              <div>
+                <p class="host-name">{{ event.hostName }}</p>
+                <p class="host-sub">Event-Host</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- RSVP (Gast-Sicht) -->
+          @if (!isHost) {
+            <div class="sidebar-card rsvp-card">
+              <p class="sidebar-label">Deine Antwort</p>
+              @if (myInvitation) {
+                <p class="rsvp-current" [style.color]="getStatusColor(myInvitation.status)">
+                  {{ getStatusLabel(myInvitation.status) }}
+                </p>
+                @if (myInvitation.status === 'PENDING') {
+                  <div class="rsvp-actions">
+                    <button nz-button class="btn-accept" (click)="rsvp('ACCEPTED')">
+                      <span nz-icon nzType="check"></span>
+                      Zusagen
+                    </button>
+                    <button nz-button class="btn-decline" (click)="rsvp('DECLINED')">
+                      <span nz-icon nzType="close"></span>
+                      Ablehnen
+                    </button>
+                  </div>
+                }
+              } @else {
+                <p class="rsvp-none">Du wurdest noch nicht eingeladen.</p>
+              }
+            </div>
+          }
+
+          <!-- HOST ACTIONS -->
+          @if (isHost) {
+            <div class="sidebar-card">
+              <p class="sidebar-label">Event verwalten</p>
+              <div class="host-actions">
+                <button nz-button nzBlock class="btn-gold">
+                  <span nz-icon nzType="user-add"></span>
+                  Gast einladen
+                </button>
+                <button nz-button nzBlock class="btn-outline-gold">
+                  <span nz-icon nzType="edit"></span>
+                  Event bearbeiten
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- EVENT INFO -->
+          <div class="sidebar-card">
+            <p class="sidebar-label">Details</p>
+            <div class="info-rows">
+              <div class="info-row">
+                <span nz-icon nzType="calendar" nzTheme="outline" class="info-icon"></span>
+                <span>{{ formatDate(event.date) }}</span>
+              </div>
+              <div class="info-row">
+                <span nz-icon nzType="clock-circle" nzTheme="outline" class="info-icon"></span>
+                <span>{{ formatTime(event.date) }} Uhr</span>
+              </div>
+              <div class="info-row">
+                <span nz-icon nzType="environment" nzTheme="outline" class="info-icon"></span>
+                <span>{{ event.locationName }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

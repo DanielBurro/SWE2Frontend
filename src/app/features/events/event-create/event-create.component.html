@@ -2,54 +2,102 @@
 
 <div class="create-page">
   <div class="create-container">
+
     <div class="page-header">
-      <a routerLink="/" class="back-link">← Zurück</a>
+      <a routerLink="/" class="back-link">
+        <span nz-icon nzType="arrow-left"></span>
+        Zurück
+      </a>
       <p class="page-eyebrow">Neues Event</p>
       <h1 class="page-title">Was planst du?</h1>
     </div>
 
-    <form class="create-form" (ngSubmit)="submit()">
-      @if (error) {
-        <div class="form-error">{{ error }}</div>
-      }
+    <nz-divider />
 
-      <div class="form-group">
-        <label>Titel *</label>
-        <input type="text" placeholder="z.B. Sommerfest 2026" [(ngModel)]="form.title" name="title" required />
-      </div>
+    <form nz-form [formGroup]="form" (ngSubmit)="submit()" nzLayout="vertical" class="create-form">
 
-      <div class="form-group">
-        <label>Beschreibung</label>
-        <textarea placeholder="Erzähl deinen Gästen, was sie erwartet…" [(ngModel)]="form.description" name="description" rows="4"></textarea>
-      </div>
+      <nz-form-item>
+        <nz-form-label nzRequired>Titel</nz-form-label>
+        <nz-form-control nzErrorTip="Titel ist erforderlich">
+          <input
+            nz-input
+            formControlName="title"
+            placeholder="z.B. Sommerfest 2026"
+            nzSize="large" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Beschreibung</nz-form-label>
+        <nz-form-control>
+          <textarea
+            nz-input
+            formControlName="description"
+            placeholder="Erzähl deinen Gästen, was sie erwartet…"
+            [nzAutosize]="{ minRows: 4, maxRows: 8 }">
+          </textarea>
+        </nz-form-control>
+      </nz-form-item>
 
       <div class="form-row">
-        <div class="form-group">
-          <label>Datum *</label>
-          <input type="date" [(ngModel)]="form.date" name="date" required />
-        </div>
-        <div class="form-group">
-          <label>Uhrzeit</label>
-          <input type="time" [(ngModel)]="form.time" name="time" />
-        </div>
+        <nz-form-item>
+          <nz-form-label nzRequired>Datum</nz-form-label>
+          <nz-form-control nzErrorTip="Datum ist erforderlich">
+            <nz-date-picker
+              formControlName="date"
+              nzSize="large"
+              nzFormat="dd.MM.yyyy"
+              [nzDisabledDate]="disablePastDates"
+              nzPlaceHolder="Datum wählen"
+              style="width: 100%">
+            </nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Uhrzeit</nz-form-label>
+          <nz-form-control>
+            <nz-time-picker
+              formControlName="time"
+              nzSize="large"
+              nzFormat="HH:mm"
+              nzPlaceHolder="Uhrzeit wählen"
+              style="width: 100%">
+            </nz-time-picker>
+          </nz-form-control>
+        </nz-form-item>
       </div>
 
-      <div class="form-group">
-        <label>Location *</label>
-        <select [(ngModel)]="form.locationId" name="locationId" required>
-          <option [value]="0" disabled>Location auswählen…</option>
-          @for (loc of locations; track loc.id) {
-            <option [value]="loc.id">{{ loc.name }} — {{ loc.city }} ({{ loc.capacity }} Personen)</option>
-          }
-        </select>
-      </div>
+      <nz-form-item>
+        <nz-form-label nzRequired>Location</nz-form-label>
+        <nz-form-control nzErrorTip="Bitte wähle eine Location">
+          <nz-select
+            formControlName="locationId"
+            nzSize="large"
+            nzPlaceHolder="Location auswählen…"
+            style="width: 100%">
+            @for (loc of locations; track loc.id) {
+              <nz-option
+                [nzValue]="loc.id"
+                [nzLabel]="loc.name + ' — ' + loc.city + ' (' + loc.capacity + ' Personen)'">
+              </nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
 
       <div class="form-actions">
         <a routerLink="/" class="btn-ghost">Abbrechen</a>
-        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Wird erstellt…' : 'Event erstellen →' }}
+        <button
+          nz-button
+          nzType="primary"
+          [nzLoading]="isSubmitting"
+          type="submit"
+          class="btn-gold">
+          Event erstellen →
         </button>
       </div>
+
     </form>
   </div>
 </div>

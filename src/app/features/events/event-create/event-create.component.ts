@@ -1,36 +1,58 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { LocationService } from '../../../core/services/location.service';
 import { Location } from '../../../core/models/location.model';
 import { HeaderComponent } from '../../../shared/header/header.component';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @Component({
   selector: 'app-event-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    HeaderComponent,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzIconModule,
+    NzSelectModule,
+    NzDatePickerModule,
+    NzTimePickerModule,
+    NzDividerModule,
+  ],
   templateUrl: './event-create.component.html',
   styleUrl: './event-create.component.scss',
 })
 export class EventCreateComponent implements OnInit {
+  private fb = inject(FormBuilder);
   private eventService = inject(EventService);
   private locationService = inject(LocationService);
   private router = inject(Router);
+  private message = inject(NzMessageService);
 
   locations: Location[] = [];
   isSubmitting = false;
-  error = '';
 
-  form = {
-    title: '',
-    description: '',
-    date: '',
-    time: '',
-    hostId: 1,
-    locationId: 0,
-  };
+  form: FormGroup = this.fb.group({
+    title:       ['', [Validators.required]],
+    description: [''],
+    date:        [null, [Validators.required]],
+    time:        [null],
+    locationId:  [null, [Validators.required]],
+  });
 
   ngOnInit(): void {
     this.locationService.getAll().subscribe({
@@ -44,26 +66,42 @@ export class EventCreateComponent implements OnInit {
     });
   }
 
+  disablePastDates = (current: Date): boolean => {
+    return current < new Date(new Date().setHours(0, 0, 0, 0));
+  };
+
+  getControl(name: string) { return this.form.get(name); }
+
   submit(): void {
-    if (!this.form.title || !this.form.date || !this.form.locationId) {
-      this.error = 'Bitte fuelle alle Pflichtfelder aus.';
+    if (this.form.invalid) {
+      Object.values(this.form.controls).forEach((c) => {
+        c.markAsDirty();
+        c.updateValueAndValidity();
+      });
       return;
     }
-    this.isSubmitting = true;
-    this.error = '';
 
-    const dateTime = `${this.form.date}T${this.form.time || '18:00'}:00.000Z`;
+    this.isSubmitting = true;
+    const { title, description, date, time, locationId } = this.form.value;
+
+    const d = new Date(date);
+    if (time) {
+      d.setHours(new Date(time).getHours(), new Date(time).getMinutes());
+    }
 
     this.eventService.create({
-      title: this.form.title,
-      description: this.form.description,
-      date: dateTime,
-      hostId: this.form.hostId,
-      locationId: this.form.locationId,
+      title,
+      description,
+      date: d.toISOString(),
+      hostId: 1, // TODO: AuthService
+      locationId,
     }).subscribe({
-      next: (event) => this.router.navigate(['/events', event.id]),
+      next: (event) => {
+        this.message.success('Event erfolgreich erstellt!');
+        this.router.navigate(['/events', event.id]);
+      },
       error: () => {
-        this.error = 'Fehler beim Erstellen. Bitte versuche es erneut.';
+        this.message.error('Fehler beim Erstellen. Bitte versuche es erneut.');
         this.isSubmitting = false;
       },
     });

@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+:host {
+  display: block;
+  background: #0a0a0f;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  color: #e8e4dc;
+}
+
+.detail-page { padding-bottom: 5rem; }
+
+// BANNER
+.event-banner {
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  align-items: flex-end;
+  padding: 2.5rem 2rem;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(10,10,15,0.7) 60%, rgba(10,10,15,0.95) 100%);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(232,228,220,0.5);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.15s;
+  &:hover { color: rgba(232,228,220,0.9); }
+}
+
+.event-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(232,228,220,0.5);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.5px;
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+}
+
+.event-banner-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  color: #e8e4dc;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.banner-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 13px;
+  color: rgba(232,228,220,0.5);
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    [nz-icon] { color: rgba(201,169,110,0.6); font-size: 13px; }
+  }
+}
+
+// CONTAINER
+.detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 0;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// CARDS
+.detail-card {
+  background: rgba(232,228,220,0.03);
+  border: 0.5px solid rgba(232,228,220,0.1);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #e8e4dc;
+    margin-bottom: 0;
+  }
+}
+
+.event-description {
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(232,228,220,0.6);
+  font-weight: 300;
+}
+
+// GUESTS
+.guests-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.guest-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 12px;
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &.accepted { color: #4caf82; }
+    &.pending  { color: #c9a96e; }
+  }
+}
+
+.guests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.guest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 0.5px solid rgba(232,228,220,0.05);
+
+  &:last-child { border-bottom: none; }
+
+  .guest-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .guest-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .guest-name { font-size: 13px; color: #e8e4dc; }
+    .plus-ones  { font-size: 11px; color: rgba(232,228,220,0.35); }
+  }
+
+  .guest-status {
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
+
+.guest-avatar {
+  background: rgba(201,169,110,0.12) !important;
+  color: #c9a96e !important;
+  font-size: 11px !important;
+  border: 1px solid rgba(201,169,110,0.2);
+  flex-shrink: 0;
+}
+
+// SIDEBAR
+.sidebar-card {
+  background: rgba(232,228,220,0.03);
+  border: 0.5px solid rgba(232,228,220,0.1);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+
+  .sidebar-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(232,228,220,0.3);
+    margin-bottom: 1rem;
+  }
+}
+
+.host-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .host-name { font-size: 14px; color: #e8e4dc; font-weight: 500; }
+  .host-sub  { font-size: 11px; color: rgba(232,228,220,0.35); margin-top: 2px; }
+}
+
+.host-avatar {
+  background: rgba(201,169,110,0.15) !important;
+  color: #c9a96e !important;
+  border: 1.5px solid rgba(201,169,110,0.25) !important;
+  flex-shrink: 0;
+}
+
+// RSVP
+.rsvp-card { }
+
+.rsvp-current {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.rsvp-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rsvp-none {
+  font-size: 13px;
+  color: rgba(232,228,220,0.35);
+}
+
+.btn-accept {
+  flex: 1;
+  ::ng-deep & {
+    background: rgba(76,175,130,0.12);
+    border-color: rgba(76,175,130,0.3);
+    color: #4caf82;
+    border-radius: 8px;
+    &:hover { background: rgba(76,175,130,0.2); border-color: #4caf82; color: #4caf82; }
+  }
+}
+
+.btn-decline {
+  flex: 1;
+  ::ng-deep & {
+    background: transparent;
+    border-color: rgba(232,228,220,0.15);
+    color: rgba(232,228,220,0.45);
+    border-radius: 8px;
+    &:hover { border-color: rgba(232,100,100,0.4); color: #e86464; }
+  }
+}
+
+// HOST ACTIONS
+.host-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-gold {
+  border-radius: 8px;
+  ::ng-deep & {
+    background: #c9a96e;
+    border-color: #c9a96e;
+    color: #0a0a0f;
+    font-weight: 500;
+    &:hover { background: #d4b87a; border-color: #d4b87a; color: #0a0a0f; }
+  }
+}
+
+.btn-outline-gold {
+  border-radius: 8px;
+  ::ng-deep & {
+    background: transparent;
+    border-color: rgba(201,169,110,0.3);
+    color: #c9a96e;
+    &:hover { border-color: #c9a96e; background: rgba(201,169,110,0.08); }
+  }
+}
+
+// INFO ROWS
+.info-rows { display: flex; flex-direction: column; gap: 10px; }
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(232,228,220,0.6);
+
+  .info-icon { color: rgba(201,169,110,0.5); font-size: 14px; flex-shrink: 0; }
+}
+
+// NZ OVERRIDES
+::ng-deep {
+  .ant-divider { border-color: rgba(201,169,110,0.08); margin: 1rem 0; }
+
+  .ant-skeleton-content .ant-skeleton-title,
+  .ant-skeleton-content .ant-skeleton-paragraph > li {
+    background: rgba(232,228,220,0.06);
+  }
+
+  .ant-empty-description {
+    color: rgba(232,228,220,0.3);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+  }
+}
