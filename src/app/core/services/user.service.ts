@@ -1,6 +1,3 @@
-// user.service.ts
-// /api/users
-
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,7 +7,9 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/api/users`;
+  
+  // HIER GEÄNDERT: Das "/api" ist rausgeflogen!
+  private base = `${environment.apiUrl}/users`;
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.base);
