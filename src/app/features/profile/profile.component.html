@@ -1,5 +1,48 @@
 <app-header />
 
 <div class="profile-page">
+  <div class="profile-hero">
+    <div class="avatar-ring">
+      <div class="avatar">{{ getInitials() }}</div>
+    </div>
+    <div class="profile-name">{{ user?.firstName }} {{ user?.lastName }}</div>
+    <div class="profile-username">&#64;{{ user?.username }}</div>
+    <div class="profile-bio">{{ editForm.bio }}</div>
+    <div class="profile-since">Mitglied seit {{ user?.createdAt | date: 'longDate' }}</div>
+  </div>
 
+  <div class="profile-tabs">
+    <button nz-button nzType="default" class="tab-btn">Einladungen</button>
+    <button nz-button nzType="default" class="tab-btn">Meine Events</button>
+  </div>
+
+  <div class="profile-section">
+    <h3>Einladungen</h3>
+    @if (invitations.length > 0) {
+      <ul>
+        @for (invitation of invitations; track invitation.id) {
+          <li>
+            <strong>{{ invitation.eventTitle }}</strong> - {{ getStatusLabel(invitation.status) }}
+          </li>
+        }
+      </ul>
+    } @else {
+      <p>Aktuell keine Einladungen</p>
+    }
+  </div>
+
+  <div class="profile-section">
+    <h3>Meine Events</h3>
+    @if (myEvents.length > 0) {
+      <ul>
+        @for (event of myEvents; track event.id) {
+          <li>
+            <strong>{{ event.title }}</strong> - {{ formatDate(event.date) }}
+          </li>
+        }
+      </ul>
+    } @else {
+      <app-cta-banner />
+    }
+  </div>
 </div>
