@@ -5,7 +5,7 @@ export interface Event {
   title: string;
   description: string;
   date: string;
-  status: string;
+  status: 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'COMPLETED';
   hostName: string;
   locationName: string;
 }
@@ -17,3 +17,5 @@ export interface CreateEventDto {
   hostId: number;
   locationId: number;
 }
+
+export type EventStatus = Event['status'];

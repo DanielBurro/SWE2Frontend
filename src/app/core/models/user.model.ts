@@ -16,3 +16,15 @@ export interface RegisterDto {
   email: string;
   password: string;
 }
+
+export interface UpdateUserDto {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
+
+export interface ChangePasswordDto {
+  oldPassword: string;
+  newPassword: string;
+}
