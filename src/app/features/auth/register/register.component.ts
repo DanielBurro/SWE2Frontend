@@ -104,7 +104,8 @@ export class RegisterComponent {
       error: () => {
         this.message.error('Registrierung fehlgeschlagen. Bitte versuche es erneut.');
         this.isSubmitting = false;
-      },
-    });
-  }
-}
+        this.cdr.detectChanges();
+      });
+    },
+  });
+}}

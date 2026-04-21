@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class EventService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/api/events`;
+  private base = `${environment.apiUrl}/events`;
 
   getAll(): Observable<Event[]> {
     return this.http.get<Event[]>(this.base);
