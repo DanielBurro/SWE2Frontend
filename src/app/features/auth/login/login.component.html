@@ -9,27 +9,55 @@
       <p class="card-sub">Melde dich an und manage deine Events.</p>
     </div>
 
+    <form nz-form nzLayout="vertical" class="auth-form" (ngSubmit)="submit()">
 
-    <form class="auth-form" (ngSubmit)="submit()">
-      <div class="form-group">
-        <label>E-Mail oder Username</label>
-        <input
-          type="text"
-          [(ngModel)]="form.email"
-          name="identifier"
-          placeholder="max@example.com"
-          required />
-      </div>
-      <div class="form-group">
-        <label>Passwort</label>
-        <input
-          type="password"
-          [(ngModel)]="form.password"
-          name="password"
-          placeholder="••••••••"
-          required />
-      </div>
-      <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+      <nz-form-item>
+        <nz-form-label>E-Mail oder Username</nz-form-label>
+        <nz-form-control>
+          <nz-input-group nzPrefixIcon="user">
+            <input
+              nz-input
+              type="text"
+              [(ngModel)]="form.email"
+              name="identifier"
+              placeholder="max@example.com"
+              required />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Passwort</nz-form-label>
+        <nz-form-control>
+          <nz-input-group
+            nzPrefixIcon="lock"
+            [nzSuffix]="suffixTemplate">
+            <input
+              nz-input
+              [type]="passwordVisible ? 'text' : 'password'"
+              [(ngModel)]="form.password"
+              name="password"
+              placeholder="••••••••"
+              required />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <span
+              nz-icon
+              class="pw-toggle"
+              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible">
+            </span>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <button
+        nz-button
+        nzType="primary"
+        nzBlock
+        type="submit"
+        class="submit-btn"
+        [nzLoading]="isSubmitting">
         {{ isSubmitting ? 'Anmeldung läuft…' : 'Anmelden' }}
       </button>
 
