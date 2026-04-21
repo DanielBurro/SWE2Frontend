@@ -1,57 +1,134 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <a class="auth-logo" routerLink="/">
-      <div class="logo-dot"></div>
-      Oystr
-    </a>
+<app-header />
 
-    <h1 class="auth-title">Konto erstellen</h1>
-    <p class="auth-sub">Plane unvergessliche Events. Kostenlos starten.</p>
+<div class="register-page">
+  <div class="register-card">
 
-    @if (error) {
-      <div class="form-error">{{ error }}</div>
-    }
+    <div class="card-header">
+      <p class="card-eyebrow">Konto erstellen</p>
+      <h1 class="card-title">Willkommen bei Oystr</h1>
+      <p class="card-sub">Plane unvergessliche Events. Kostenlos starten.</p>
+    </div>
 
-    <form class="auth-form" (ngSubmit)="submit()">
+    <nz-divider />
+
+    <div class="avatar-section">
+      <nz-upload [nzBeforeUpload]="beforeUpload" nzShowUploadList="false" nzAccept="image/*">
+        <div class="avatar-trigger">
+          @if (avatarUrl) {
+            <img [src]="avatarUrl" class="avatar-preview" alt="Profilbild" />
+          } @else {
+            <nz-avatar [nzSize]="80" nzIcon="user" class="avatar-placeholder" />
+          }
+          <div class="avatar-overlay">
+            <span nz-icon nzType="camera" nzTheme="outline"></span>
+          </div>
+        </div>
+      </nz-upload>
+      <p class="avatar-hint">Profilbild hochladen</p>
+    </div>
+
+    <form nz-form [formGroup]="form" (ngSubmit)="submit()" nzLayout="vertical" class="register-form">
+
       <div class="form-row">
-        <div class="form-group">
-          <label>Vorname</label>
-          <input type="text" [(ngModel)]="form.firstName" name="firstName" placeholder="Max" />
-        </div>
-        <div class="form-group">
-          <label>Nachname</label>
-          <input type="text" [(ngModel)]="form.lastName" name="lastName" placeholder="Muster" />
-        </div>
+        <nz-form-item class="half">
+          <nz-form-label>Vorname</nz-form-label>
+          <nz-form-control nzErrorTip="Pflichtfeld">
+            <input nz-input formControlName="firstName" placeholder="Max" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="half">
+          <nz-form-label>Nachname</nz-form-label>
+          <nz-form-control nzErrorTip="Pflichtfeld">
+            <input nz-input formControlName="lastName" placeholder="Muster" />
+          </nz-form-control>
+        </nz-form-item>
       </div>
 
-      <div class="form-group">
-        <label>Username *</label>
-        <input type="text" [(ngModel)]="form.username" name="username" placeholder="maxmuster" required />
-      </div>
+      <nz-form-item>
+        <nz-form-label nzRequired>Username</nz-form-label>
+        <nz-form-control [nzErrorTip]="userErr">
+          <nz-input-group [nzPrefix]="userIcon">
+            <input nz-input formControlName="username" placeholder="maxmuster" />
+          </nz-input-group>
+          <ng-template #userIcon><span nz-icon nzType="user"></span></ng-template>
+          <ng-template #userErr>
+            @if (getControl('username')?.hasError('required')) { Pflichtfeld }
+            @else { Mindestens 3 Zeichen }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
 
-      <div class="form-group">
-        <label>E-Mail *</label>
-        <input type="email" [(ngModel)]="form.email" name="email" placeholder="max@example.com" required />
-      </div>
+      <nz-form-item>
+        <nz-form-label nzRequired>E-Mail</nz-form-label>
+        <nz-form-control [nzErrorTip]="mailErr">
+          <nz-input-group [nzPrefix]="mailIcon">
+            <input nz-input formControlName="email" type="email" placeholder="max@example.com" />
+          </nz-input-group>
+          <ng-template #mailIcon><span nz-icon nzType="mail"></span></ng-template>
+          <ng-template #mailErr>
+            @if (getControl('email')?.hasError('required')) { Pflichtfeld }
+            @else { Ungültige E-Mail }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
 
-      <div class="form-group">
-        <label>Passwort *</label>
-        <input type="password" [(ngModel)]="form.password" name="password" placeholder="Mindestens 8 Zeichen" required />
-      </div>
+      <nz-form-item>
+        <nz-form-label nzRequired>Passwort</nz-form-label>
+        <nz-form-control [nzErrorTip]="pwErr">
+          <nz-input-group [nzSuffix]="pwToggle">
+            <input nz-input formControlName="password"
+              [type]="passwordVisible ? 'text' : 'password'"
+              placeholder="Mindestens 8 Zeichen" />
+          </nz-input-group>
+          <ng-template #pwToggle>
+            <span nz-icon [nzType]="passwordVisible ? 'eye' : 'eye-invisible'"
+              class="pw-toggle" (click)="passwordVisible = !passwordVisible"></span>
+          </ng-template>
+          <ng-template #pwErr>
+            @if (getControl('password')?.hasError('required')) { Pflichtfeld }
+            @else { Mindestens 8 Zeichen }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
 
-      <div class="form-group">
-        <label>Passwort bestätigen *</label>
-        <input type="password" [(ngModel)]="form.passwordConfirm" name="passwordConfirm" placeholder="Passwort wiederholen" required />
-      </div>
+      <nz-form-item>
+        <nz-form-label nzRequired>Passwort bestätigen</nz-form-label>
+        <nz-form-control [nzErrorTip]="confirmErr">
+          <nz-input-group [nzSuffix]="confirmToggle">
+            <input nz-input formControlName="confirmPassword"
+              [type]="confirmVisible ? 'text' : 'password'"
+              placeholder="Passwort wiederholen" />
+          </nz-input-group>
+          <ng-template #confirmToggle>
+            <span nz-icon [nzType]="confirmVisible ? 'eye' : 'eye-invisible'"
+              class="pw-toggle" (click)="confirmVisible = !confirmVisible"></span>
+          </ng-template>
+          <ng-template #confirmErr>
+            @if (getControl('confirmPassword')?.hasError('required')) { Pflichtfeld }
+            @else { Passwörter stimmen nicht überein }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
 
-      <button type="submit" class="btn-primary" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'Wird registriert…' : 'Konto erstellen' }}
+      <nz-form-item>
+        <nz-form-label>Bio <span class="optional">(optional)</span></nz-form-label>
+        <nz-form-control>
+          <textarea nz-input formControlName="bio"
+            placeholder="Erzähl etwas über dich…"
+            [nzAutosize]="{ minRows: 3, maxRows: 5 }">
+          </textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <button nz-button nzType="primary" nzBlock [nzLoading]="isSubmitting" type="submit" class="submit-btn">
+        Konto erstellen
       </button>
+
     </form>
 
-    <p class="auth-footer">
-      Bereits registriert?
-      <a routerLink="/auth/login">Anmelden</a>
+    <p class="login-hint">
+      Bereits registriert? <a routerLink="/auth/login">Anmelden</a>
     </p>
+
   </div>
 </div>
