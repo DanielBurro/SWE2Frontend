@@ -4,11 +4,31 @@ import { RouterLink } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
 import { HeaderComponent } from '../../shared/header/header.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    HeaderComponent,
+    NzButtonModule,
+    NzCardModule,
+    NzTagModule,
+    NzAvatarModule,
+    NzSkeletonModule,
+    NzIconModule,
+    NzDividerModule,
+    NzEmptyModule,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -51,8 +71,7 @@ export class HomeComponent implements OnInit {
 
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString('de-DE', {
-      day: 'numeric',
-      month: 'short',
+      day: 'numeric', month: 'short',
     });
   }
 
@@ -66,19 +85,17 @@ export class HomeComponent implements OnInit {
     return gradients[index % gradients.length];
   }
 
-  getAvatarStyle(index: number): string {
-    const colors = [
-      { bg: 'rgba(201,169,110,0.15)', text: '#c9a96e' },
-      { bg: 'rgba(76,175,130,0.15)', text: '#4caf82' },
-      { bg: 'rgba(201,90,110,0.15)', text: '#c95a6e' },
-      { bg: 'rgba(90,130,201,0.15)', text: '#5a82c9' },
-    ];
-    const c = colors[index % colors.length];
-    return `background:${c.bg};color:${c.text}`;
-  }
-
   getInitials(name: string): string {
     return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  getAvatarColor(index: number): string {
+    const colors = ['#c9a96e', '#4caf82', '#c95a6e', '#5a82c9'];
+    return colors[index % colors.length];
+  }
+
+  getStatusColor(status: string): string {
+    return status === 'offen' ? '#4caf82' : '#c9a96e';
   }
 
   private getDemoEvents(): Event[] {
