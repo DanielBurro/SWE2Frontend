@@ -21,7 +21,7 @@
     </div>
 
     <div class="header-actions">
-      @if (!isLoggedIn) {
+      @if (!isLoggedIn()) {
         <a routerLink="/auth/login" class="nav-link">Anmelden</a>
         <button nz-button routerLink="/auth/register" class="btn-register">
           Registrieren
@@ -51,7 +51,7 @@
               Neues Event
             </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item class="logout-item">
+            <li nz-menu-item class="logout-item" (click)="onLogout()">
               <span nz-icon nzType="logout"></span>
               Abmelden
             </li>
