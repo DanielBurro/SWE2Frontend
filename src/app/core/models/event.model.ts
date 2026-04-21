@@ -5,7 +5,8 @@ export interface Event {
   title: string;
   description: string;
   date: string;
-  status: 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'COMPLETED';
+  //status: 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'COMPLETED';
+  status: string;
   hostName: string;
   locationName: string;
 }
