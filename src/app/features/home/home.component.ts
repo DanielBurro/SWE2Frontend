@@ -71,13 +71,13 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (!this.isLoggedIn()) return;  // ← kein API-Call wenn nicht eingeloggt
+    if (!this.isLoggedIn()) return; 
 
     this.eventService.getAll().subscribe({
       next: (events) => {
         this.allEvents.set(events);
         this.isLoading = false;
-        this.cdr.markForCheck(); // ← DAS FIXT ES
+        this.cdr.markForCheck();
       },
       error: () => {
         this.allEvents.set(this.getDemoEvents());

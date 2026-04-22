@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
@@ -40,10 +40,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './event-detail.component.scss',
 })
 export class EventDetailComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private eventService = inject(EventService);
+  private route             = inject(ActivatedRoute);
+  private eventService      = inject(EventService);
   private invitationService = inject(InvitationService);
-  private message = inject(NzMessageService);
+  private message           = inject(NzMessageService);
+  private cdr               = inject(ChangeDetectorRef);
 
   event: Event | null = null;
   invitations: Invitation[] = [];
@@ -67,6 +68,7 @@ export class EventDetailComponent implements OnInit {
         this.event = events.find((e) => e.id === id) ?? null;
         this.isHost = this.event?.hostName === 'Laura Huber'; // TODO: echte Auth
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.event = {
@@ -77,6 +79,7 @@ export class EventDetailComponent implements OnInit {
         };
         this.isHost = true;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
     });
   }
