@@ -88,19 +88,20 @@
   }
 }
 
-.btn-ghost {
-  font-size: 13px;
-  color: rgba(232,228,220,0.45);
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 0.5px solid rgba(232,228,220,0.15);
-  transition: all 0.15s;
-  &:hover { color: #e8e4dc; border-color: rgba(232,228,220,0.3); }
-}
-
 // NZ OVERRIDES
 ::ng-deep {
+  
+  .btn-ghost {
+    font-size: 13px;
+    color: rgba(232,228,220,0.45);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 0.5px solid rgba(232,228,220,0.15);
+    transition: all 0.15s;
+    &:hover { color: #e8e4dc; border-color: rgba(232,228,220,0.3); }
+  }
+
   .ant-form-item-label > label {
     color: rgba(232,228,220,0.55);
     font-size: 12px;

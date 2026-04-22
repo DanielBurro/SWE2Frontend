@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+@import 'ng-zorro-antd/ng-zorro-antd.css';
+
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -13,21 +15,128 @@ html, body {
   color: #e8e4dc;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+.ant-layout { background: #0a0a0f; }
+.ant-btn    { font-family: 'DM Sans', sans-serif; }
+
+// ── OYSTR FARBEN ──────────────────────────────────────────────────────────────
+// Background-Töne anpassen (NgZorro Dark nutzt #141414, wir wollen #0a0a0f)
+.ant-modal-content,
+.ant-modal-header,
+.ant-modal-footer,
+.ant-modal-body       { background: #111118 !important; }
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker,
+.ant-input-number     { background: #1a1a22 !important; }
+
+// Goldene Akzentfarbe für Focus/Hover
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused,
+.ant-select-focused .ant-select-selector,
+.ant-picker-focused   {
+  border-color: #c9a96e !important;
+  box-shadow: 0 0 0 2px rgba(201,169,110,0.1) !important;
 }
 
-// NZ-ZORRO global overrides
-.ant-layout {
-  background: #0a0a0f;
+.ant-input:hover,
+.ant-select:hover .ant-select-selector,
+.ant-picker:hover     { border-color: rgba(201,169,110,0.4) !important; }
+
+// Primary Button
+.ant-btn-primary {
+  background: #c9a96e !important;
+  border-color: #c9a96e !important;
+  color: #0a0a0f !important;
+  &:hover { background: #d4b87a !important; border-color: #d4b87a !important; }
 }
 
-.ant-btn {
+// Form Labels
+.ant-form-item-label > label {
+  color: rgba(232,228,220,0.55);
+  font-size: 12px;
   font-family: 'DM Sans', sans-serif;
 }
 
-// verhindert dass NZ globale Link-Farbe überschreibt
-a:not([nz-button]):not(.ant-btn) {
-  color: inherit;
+.ant-form-item-explain-error {
+  font-size: 11px;
+  color: rgba(220,100,100,0.85) !important;
+}
+
+// Modal Titel & Rahmen
+.ant-modal-content {
+  border: 0.5px solid rgba(201,169,110,0.15);
+  border-radius: 16px;
+}
+
+.ant-modal-header {
+  border-bottom: 0.5px solid rgba(201,169,110,0.1);
+  border-radius: 16px 16px 0 0;
+  .ant-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    color: #e8e4dc;
+  }
+}
+
+.ant-modal-footer {
+  border-top: 0.5px solid rgba(201,169,110,0.1);
+  border-radius: 0 0 16px 16px;
+
+  .ant-btn {
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+  }
+}
+
+// Divider
+.ant-divider { border-color: rgba(201,169,110,0.1) !important; }
+
+// ── PICKER PANEL ──────────────────────────────────────────────────────────────
+.ant-picker-dropdown {
+  .ant-picker-panel-container {
+    background: #1a1a22;
+    border: 0.5px solid rgba(201,169,110,0.15);
+    border-radius: 10px;
+  }
+
+  .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+    background: #c9a96e;
+    color: #0a0a0f;
+  }
+
+  .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+    border-color: #c9a96e;
+  }
+
+  .ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+    background: rgba(201,169,110,0.15) !important;
+    color: #c9a96e !important;
+  }
+
+  .ant-picker-footer {
+    .ant-picker-ok .ant-btn {
+      background: #c9a96e;
+      border-color: #c9a96e;
+      color: #0a0a0f;
+      border-radius: 12px;
+    }
+    .ant-picker-now-btn { color: #c9a96e; }
+  }
+}
+
+// ── SELECT DROPDOWN ───────────────────────────────────────────────────────────
+.ant-select-dropdown {
+  background: #1a1a22 !important;
+  border: 0.5px solid rgba(201,169,110,0.15);
+  border-radius: 8px;
+
+  .ant-select-item-option-selected {
+    background: rgba(201,169,110,0.12) !important;
+    color: #c9a96e !important;
+  }
 }

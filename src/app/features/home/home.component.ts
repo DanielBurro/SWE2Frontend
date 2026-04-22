@@ -1,9 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
 import { HeaderComponent } from '../../shared/header/header.component';
+import { AuthService } from '../../auth/auth';
+import { SearchService } from '../../core/services/search.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTagModule } from 'ng-zorro-antd/tag';
@@ -33,40 +35,57 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  private eventService = inject(EventService);
+  private eventService  = inject(EventService);
+  private searchService = inject(SearchService);
+  private authService   = inject(AuthService);
 
-  events: Event[] = [];
-  filteredEvents: Event[] = [];
-  activeTab = 'alle';
+  isLoggedIn = this.authService.isAuthenticated;  // ← Signal
+
+  private allEvents = signal<Event[]>([]);
+  activeTab = signal<string>('alle');
   isLoading = true;
+  skeletonParagraph = { rows: 3 }; 
 
   tabs = [
-    { key: 'alle', label: 'Alle' },
-    { key: 'offen', label: 'Offen' },
+    { key: 'alle',    label: 'Alle' },
+    { key: 'offen',   label: 'Offen' },
     { key: 'geplant', label: 'Geplant' },
   ];
 
+  filteredEvents = computed(() => {
+    const q   = this.searchService.query().toLowerCase();
+    const tab = this.activeTab();
+    let events = this.allEvents();
+
+    if (tab !== 'alle') {
+      events = events.filter(e => e.status.toLowerCase() === tab);
+    }
+    if (q) {
+      events = events.filter(e =>
+        e.title.toLowerCase().includes(q) ||
+        e.description.toLowerCase().includes(q)
+      );
+    }
+    return events;
+  });
+
   ngOnInit(): void {
+    if (!this.isLoggedIn()) return;  // ← kein API-Call wenn nicht eingeloggt
+
     this.eventService.getAll().subscribe({
       next: (events) => {
-        this.events = events;
-        this.filteredEvents = events;
+        this.allEvents.set(events);
         this.isLoading = false;
       },
       error: () => {
-        this.events = this.getDemoEvents();
-        this.filteredEvents = this.events;
+        this.allEvents.set(this.getDemoEvents());
         this.isLoading = false;
       },
     });
   }
 
   setTab(tab: string): void {
-    this.activeTab = tab;
-    this.filteredEvents =
-      tab === 'alle'
-        ? this.events
-        : this.events.filter((e) => e.status.toLowerCase() === tab);
+    this.activeTab.set(tab);
   }
 
   formatDate(dateStr: string): string {
@@ -86,7 +105,7 @@ export class HomeComponent implements OnInit {
   }
 
   getInitials(name: string): string {
-    return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   }
 
   getAvatarColor(index: number): string {
@@ -100,9 +119,9 @@ export class HomeComponent implements OnInit {
 
   private getDemoEvents(): Event[] {
     return [
-      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'offen', hostName: 'Laura Huber', locationName: 'Heidelberg' },
-      { id: 2, title: 'Gartenparty im Weinberg', description: '', date: '2026-04-19T15:00:00Z', status: 'geplant', hostName: 'Thomas Maier', locationName: 'Heilbronn' },
-      { id: 3, title: 'Firmen-Sommerfest 2026', description: '', date: '2026-05-03T12:00:00Z', status: 'offen', hostName: 'Sarah Weber', locationName: 'Neckarsulm' },
+      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'offen',   hostName: 'Laura Huber',   locationName: 'Heidelberg' },
+      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'geplant', hostName: 'Thomas Maier', locationName: 'Heilbronn'  },
+      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'offen',   hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
     ];
   }
 }
