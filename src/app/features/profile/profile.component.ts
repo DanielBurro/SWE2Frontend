@@ -1,168 +1,92 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
 import { InvitationService } from '../../core/services/invitation.service';
 import { EventService } from '../../core/services/event.service';
-import { User } from '../../core/models/user.model';
 import { Invitation } from '../../core/models/invitation.model';
 import { Event } from '../../core/models/event.model';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CtaBanner } from '../../components/cta-banner/cta-banner';
+import { AuthService, User } from '../../auth/auth';
+import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent, NzButtonModule, CtaBanner],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    NzButtonModule,
+    CtaBanner,
+    NzTabComponent,
+    NzTabsComponent,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
-  private userService = inject(UserService);
   private invitationService = inject(InvitationService);
   private eventService = inject(EventService);
+  protected authService = inject(AuthService); // Zugriff auf currentUser()
 
-  currentUserId = 14; // aktuell hart coded
-  user: User | null = null;
-  invitations: Invitation[] = [];
-  myEvents: Event[] = [];
-  editMode = false;
+  // Quelle der Wahrheit: Das Signal aus dem AuthService
+  readonly user = this.authService.currentUser;
+
+  // Verwandte Daten bleiben lokale Signals
+  invitations = signal<Invitation[]>([]);
+  myEvents = signal<Event[]>([]);
+
+  // Computed für die Initialen
+  initials = computed(() => {
+    const u = this.user();
+    if (!u) return '??';
+    return `${u.firstName[0]}${u.lastName[0]}`.toUpperCase();
+  });
+
   editForm = { username: '', firstName: '', lastName: '', email: '', bio: '' };
 
+  constructor() {
+    // Optional: Ein Effect, der das Formular automatisch füllt, sobald der User geladen ist
+    effect(() => {
+      const u = this.user();
+      if (u) {
+        this.syncEditForm(u);
+      }
+    });
+  }
+
   ngOnInit(): void {
-    this.loadUser();
-    //this.loadInvitations();
-    //this.loadMyEvents();
+    const u = this.user();
+    if (u) {
+      this.loadRelatedData(u.id);
+    } else {
+      // Falls wir im Profil landen, aber kein User da ist -> Redirect
+      this.authService.logout();
+    }
   }
 
-  loadUser(): void {
-    this.userService.getById(this.currentUserId).subscribe({
-      next: (user) => {
-        this.user = user;
-        this.editForm = {
-          username: user.username,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          bio: '',
-        };
-      },
-      error: () => {
-        console.log('Login nicht erfolgreich, weiter mit Mockdaten');
-        this.user = {
-          id: 1,
-          username: 'maxkuster',
-          firstName: 'Max',
-          lastName: 'Kuster',
-          email: 'max.kuster@example.com',
-          createdAt: '2026-01-15',
-        };
-        this.editForm = {
-          username: 'maxkuster',
-          firstName: 'Max',
-          lastName: 'Kuster',
-          email: 'max.kuster@example.com',
-          bio: 'Event-Enthusiast aus Neckarsulm 🎉',
-        };
-      },
-    });
+  private loadRelatedData(userId: number): void {
+    // Hier laden wir nur noch das, was NICHT im AuthService steckt
+    this.invitationService.getByUser(userId).subscribe((inv) => this.invitations.set(inv));
+    this.eventService.getByHost(userId).subscribe((ev) => this.myEvents.set(ev));
   }
 
-  loadInvitations(): void {
-    this.invitationService.getByUser(this.currentUserId).subscribe({
-      next: (inv) => (this.invitations = inv),
-      error: () => {
-        this.invitations = [
-          {
-            id: 1,
-            eventId: 2,
-            eventTitle: 'Gartenparty im Weinberg',
-            guestId: 1,
-            guestName: 'Max Kuster',
-            status: 'PENDING',
-            plusOnes: 0,
-            sentAt: '2026-03-20T10:00:00Z',
-          },
-          {
-            id: 2,
-            eventId: 3,
-            eventTitle: 'Firmen-Sommerfest 2026',
-            guestId: 1,
-            guestName: 'Max Kuster',
-            status: 'ACCEPTED',
-            plusOnes: 1,
-            sentAt: '2026-03-18T09:00:00Z',
-          },
-        ];
-      },
-    });
-  }
-
-  loadMyEvents(): void {
-    this.eventService.getByHost(this.currentUserId).subscribe({
-      next: (events) => (this.myEvents = events),
-      error: () => {
-        this.myEvents = [
-          {
-            id: 1,
-            title: 'Rooftop Vernissage — Frühjahr 2026',
-            description: '',
-            date: '2026-04-12T18:00:00Z',
-            status: 'offen',
-            hostName: 'Max Kuster',
-            locationName: 'Heidelberg',
-          },
-        ];
-      },
-    });
-  }
-
-  getInitials(): string {
-    if (!this.user) return '??';
-    return `${this.user.firstName[0]}${this.user.lastName[0]}`.toUpperCase();
-  }
-
-  getStatusLabel(status: string): string {
-    const map: Record<string, string> = {
-      PENDING: 'Ausstehend',
-      ACCEPTED: 'Zugesagt',
-      DECLINED: 'Abgelehnt',
+  private syncEditForm(user: User): void {
+    this.editForm = {
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      bio: user.bio || '',
     };
-    return map[status] ?? status;
   }
 
-  getStatusClass(status: string): string {
-    const map: Record<string, string> = {
-      PENDING: 'status-pending',
-      ACCEPTED: 'status-accepted',
-      DECLINED: 'status-declined',
-    };
-    return map[status] ?? '';
+  protected saveProfile() {
+    // Hier würdest du den UserService nutzen, um die Daten ans Backend zu senden
+    // Danach nicht vergessen: authService.refreshUser() aufrufen,
+    // damit der Header und das Profil die neuen Daten zeigen!
+    console.log('Speichere:', this.editForm);
   }
-
-  respondToInvitation(invId: number, status: 'ACCEPTED' | 'DECLINED'): void {
-    this.invitationService.updateStatus(invId, { status, plusOnes: 0 }).subscribe({
-      next: (updated) => {
-        const idx = this.invitations.findIndex((i) => i.id === invId);
-        if (idx !== -1) this.invitations[idx] = updated;
-      },
-      error: () => {
-        // Demo: lokal updaten wenn Backend nicht erreichbar
-        const idx = this.invitations.findIndex((i) => i.id === invId);
-        if (idx !== -1) this.invitations[idx] = { ...this.invitations[idx], status };
-      },
-    });
-  }
-
-  formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('de-DE', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  }
-
-  navigateToCreateEvent(): void {}
 }

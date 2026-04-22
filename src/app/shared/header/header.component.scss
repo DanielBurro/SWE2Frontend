@@ -93,3 +93,14 @@
   text-decoration: none;
   border: 1.5px solid rgba(201,169,110,0.4);
 }
+
+.profile-menu {
+  background: rgba(232,228,220,0.06);
+}
+
+.menu-field {
+  background: rgba(232,228,220,0.06);
+  color: rgba(232,228,220,0.7);
+  font-weight: 500;
+  &:hover { color: #e8e4dc; border-color: rgba(232,228,220,0.4); cursor: pointer; }
+}
