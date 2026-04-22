@@ -15,7 +15,7 @@
       <nz-upload [nzBeforeUpload]="beforeUpload" nzShowUploadList="false" nzAccept="image/*">
         <div class="avatar-trigger">
           @if (avatarUrl) {
-            <img [src]="avatarUrl" class="avatar-preview" alt="Profilbild" />
+            <img ngSrc="avatarUrl" class="avatar-preview" alt="Profilbild" fill/>
           } @else {
             <nz-avatar [nzSize]="80" nzIcon="user" class="avatar-placeholder" />
           }

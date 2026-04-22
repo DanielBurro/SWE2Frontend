@@ -1,175 +1,106 @@
 .oystr-header {
-  background: #141414;
-  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
-  padding: 0;
-  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+  background: rgba(10,10,15,0.92);
+  border-bottom: 0.5px solid rgba(232,228,220,0.12);
   position: sticky;
   top: 0;
   z-index: 100;
-  line-height: 60px;
+  backdrop-filter: blur(8px);
 }
 
-.header-inner {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 0 2rem;
-  height: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.header-logo {
+.oystr-logo {
   font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
   color: #e8e4dc;
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  text-decoration: none;
-  white-space: nowrap;
-  flex-shrink: 0;
 
   .logo-dot {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     background: #c9a96e;
     border-radius: 50%;
-    flex-shrink: 0;
   }
 }
 
-.header-search {
-  flex: 1;
-  max-width: 300px;
-
-  .search-icon {
-    color: rgba(201, 169, 110, 0.5);
-    font-size: 13px;
-    cursor: pointer;
-    transition: color 0.15s;
-    &:hover { color: #c9a96e; }
-  }
-
-  ::ng-deep .ant-input-affix-wrapper {
-    background: #1f1f1f;
-    border-color: rgba(201, 169, 110, 0.2);
-    border-radius: 20px;
-
-    &:hover { border-color: rgba(201, 169, 110, 0.4); }
-
-    &:focus, &.ant-input-affix-wrapper-focused {
-      border-color: #c9a96e;
-      box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.1);
-    }
-  }
-
-  ::ng-deep .ant-input {
-    background: #1f1f1f;
-    color: #e8e4dc;
-    font-size: 13px;
-    &::placeholder { color: rgba(232, 228, 220, 0.3); }
-  }
-}
-
-.header-actions {
+.header-nav {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
 }
 
-.nav-link {
-  font-size: 12px;
-  color: rgba(232, 228, 220, 0.6);
-  text-decoration: none;
-  padding: 4px 10px;
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(232,228,220,0.06);
+  border: 0.5px solid rgba(232,228,220,0.15);
   border-radius: 20px;
-  border: 0.5px solid rgba(232, 228, 220, 0.15);
-  transition: all 0.15s;
-  white-space: nowrap;
-  line-height: 1;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: rgba(232,228,220,0.5);
+  cursor: text;
+  width: 200px;
+  transition: all 0.2s;
 
-  &:hover {
-    color: #e8e4dc;
-    border-color: rgba(232, 228, 220, 0.35);
+  &:hover { border-color: rgba(232,228,220,0.3); }
+}
+
+.btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 0.5px solid transparent;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+
+  &.btn-ghost {
+    background: transparent;
+    color: rgba(232,228,220,0.7);
+    border-color: rgba(232,228,220,0.15);
+    &:hover { color: #e8e4dc; border-color: rgba(232,228,220,0.4); }
+  }
+
+  &.btn-primary {
+    background: #c9a96e;
+    color: #0a0a0f;
+    font-weight: 500;
+    &:hover { background: #d4b87a; }
   }
 }
 
-.btn-register {
-  height: 28px;
-  line-height: 26px;
-  padding: 0 14px;
-  border-radius: 20px;
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a96e, #8b6842);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 12px;
   font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-
-  ::ng-deep & {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0a0a0f;
-    &:hover { background: #d4b87a; border-color: #d4b87a; color: #0a0a0f; }
-  }
+  color: #0a0a0f;
+  text-decoration: none;
+  border: 1.5px solid rgba(201,169,110,0.4);
 }
 
-.btn-create {
-  height: 28px;
-  line-height: 26px;
-  padding: 0 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  ::ng-deep & {
-    background: transparent;
-    border-color: rgba(201, 169, 110, 0.35);
-    color: #c9a96e;
-    &:hover { border-color: #c9a96e; background: rgba(201, 169, 110, 0.08); color: #c9a96e; }
-  }
+.profile-menu {
+  background: rgba(232,228,220,0.06);
 }
 
-.profile-avatar {
-  cursor: pointer;
-  background: rgba(201, 169, 110, 0.15);
-  color: #c9a96e;
-  font-size: 13px;
-  border: 1.5px solid rgba(201, 169, 110, 0.3);
-  transition: border-color 0.15s;
-  &:hover { border-color: #c9a96e; }
-}
-
-::ng-deep .profile-dropdown {
-  background: #1a1a1a;
-  border: 1px solid rgba(201, 169, 110, 0.15);
-  border-radius: 10px;
-  padding: 4px;
-  min-width: 160px;
-
-  .ant-dropdown-menu-item {
-    color: rgba(232, 228, 220, 0.7);
-    font-size: 13px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    &:hover {
-      background: rgba(201, 169, 110, 0.08);
-      color: #c9a96e;
-    }
-  }
-
-  .ant-dropdown-menu-item-divider {
-    background: rgba(201, 169, 110, 0.1);
-  }
-
-  .logout-item {
-    color: rgba(232, 100, 100, 0.7);
-    &:hover { background: rgba(232, 100, 100, 0.08); color: #e86464; }
-  }
+.menu-field {
+  background: rgba(232,228,220,0.06);
+  color: rgba(232,228,220,0.7);
+  font-weight: 500;
+  &:hover { color: #e8e4dc; border-color: rgba(232,228,220,0.4); cursor: pointer; }
 }

@@ -1,64 +1,37 @@
-<nz-header class="oystr-header">
-  <div class="header-inner">
+<header class="oystr-header">
+  <a class="oystr-logo" routerLink="/">
+    <div class="logo-dot"></div>
+    Oystr
+  </a>
 
-    <a routerLink="/" class="header-logo">
-      <span class="logo-dot"></span>
-      Oystr
-    </a>
-
-    <div class="header-search">
-      <nz-input-group [nzPrefix]="searchIcon" nzSize="default">
-        <input
-          nz-input
-          [(ngModel)]="searchQuery"
-          (keydown.enter)="onSearch()"
-          placeholder="Events suchen…"
-          class="search-input" />
-      </nz-input-group>
-      <ng-template #searchIcon>
-        <span nz-icon nzType="search" class="search-icon" (click)="onSearch()"></span>
-      </ng-template>
+  <nav class="header-nav">
+    <div class="search-bar">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>Events suchen</span>
     </div>
 
-    <div class="header-actions">
-      @if (!isLoggedIn()) {
-        <a routerLink="/auth/login" class="nav-link">Anmelden</a>
-        <button nz-button routerLink="/auth/register" class="btn-register">
-          Registrieren
-        </button>
-      } @else {
-        <button nz-button routerLink="/events/create" class="btn-create">
-          <span nz-icon nzType="plus"></span>
-          Event erstellen
-        </button>
+    @if (!isLoggedIn()) {
+      <a routerLink="/auth/login" class="btn btn-ghost">Anmelden</a>
+      <a routerLink="/auth/register" class="btn btn-primary">Registrieren</a>
+    } @else {
+      <a routerLink="/events/create" class="btn btn-ghost">+ Event erstellen</a>
+      <button class="avatar" nz-button nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomRight">
+        {{ initials() }}
+      </button>
+    }
+  </nav>
+</header>
 
-        <div nz-dropdown [nzDropdownMenu]="profileMenu" nzTrigger="click">
-          <nz-avatar
-            [nzText]="getInitials()"
-            [nzSize]="34"
-            class="profile-avatar">
-          </nz-avatar>
-        </div>
-
-        <nz-dropdown-menu #profileMenu="nzDropdownMenu">
-          <ul nz-menu class="profile-dropdown">
-            <li nz-menu-item routerLink="/profile">
-              <span nz-icon nzType="user"></span>
-              Mein Profil
-            </li>
-            <li nz-menu-item routerLink="/events/create">
-              <span nz-icon nzType="calendar"></span>
-              Neues Event
-            </li>
-            <li nz-menu-divider></li>
-            <li nz-menu-item class="logout-item" (click)="onLogout()">
-              <span nz-icon nzType="logout"></span>
-              Abmelden
-            </li>
-          </ul>
-        </nz-dropdown-menu>
-      }
-    </div>
-
-  </div>
-</nz-header>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu class="profile-menu">
+    <li nz-menu-item class="menu-field">
+      <a routerLink="/profile" class="menu-field">Profil</a>
+    </li>
+    <li nz-menu-item class="menu-field">
+      <button (click)="logout()" class="menu-field">Logout</button>
+    </li>
+  </ul>
+</nz-dropdown-menu>

@@ -1,74 +1,47 @@
-import { Component, inject, computed, ChangeDetectorRef } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+// header.component.ts
+
+import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { AuthService } from '../../auth/auth';
-import { UserService } from '../../core/services/user.service';
-import { User } from '../../core/models/user.model';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { NzDropdownDirective, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    CommonModule,
     RouterLink,
-    FormsModule,
-    NzLayoutModule,
-    NzButtonModule,
-    NzInputModule,
-    NzIconModule,
-    NzDropDownModule,
-    NzAvatarModule,
+    CommonModule,
+    NzButtonComponent,
+    NzDropdownDirective,
+    NzDropdownMenuComponent,
+    NzMenuDirective,
+    NzMenuItemComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  private router      = inject(Router);
   private authService = inject(AuthService);
-  private userService = inject(UserService);
-  private cdr =         inject(ChangeDetectorRef);
 
-  // direkt vom AuthService-Signal ableiten — kein localStorage-Zugriff nötig
+  // Wir greifen direkt auf die Signals des Services zu
   isLoggedIn = this.authService.isAuthenticated;
+  currentUser = this.authService.currentUser;
 
-  searchQuery = '';
-  currentUser: User | null = null;
+  // Berechnete Initialen (Reagiert automatisch auf Änderungen am User)
+  initials = computed(() => {
+    const user = this.currentUser();
+    if (!user) return '';
 
-  constructor() {
-    // Userdaten laden, sobald eingeloggt
-    if (this.isLoggedIn()) {
-      this.userService.getMe().subscribe({
-        next: (user) => (this.currentUser = user),
-        error: () => (this.currentUser = null),
-      });
-    }
-  }
+    const firstInitial = user.firstName?.charAt(0) || '';
+    const lastInitial = user.lastName?.charAt(0) || '';
 
-  getInitials(): string {
-    if (!this.currentUser) return '?';
-    const first = this.currentUser.firstName?.charAt(0) ?? '';
-    const last  = this.currentUser.lastName?.charAt(0) ?? '';
-    return (first + last).toUpperCase();
-  }
+    return (firstInitial + lastInitial).toUpperCase();
+  });
 
-  onSearch(): void {
-    if (!this.searchQuery.trim()) return;
-    this.router.navigate(['/events'], {
-      queryParams: { q: this.searchQuery.trim() },
-    });
-  }
-
-  onLogout(): void {
+  protected logout() {
     this.authService.logout();
-    this.currentUser = null; 
-    this.cdr.detectChanges();
   }
 }
