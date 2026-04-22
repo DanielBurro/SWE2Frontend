@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
@@ -29,6 +29,7 @@ import { HeaderComponent } from '../../../shared/header/header.component';
     NzUploadModule,
     NzAvatarModule,
     NzDividerModule,
+    NgOptimizedImage,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -46,15 +47,18 @@ export class RegisterComponent {
   avatarUrl: string | null = null;
   avatarFile: NzUploadFile | null = null;
 
-  form: FormGroup = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
-    username: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', [Validators.required]],
-    bio: [''],
-  }, { validators: this.passwordMatchValidator });
+  form: FormGroup = this.fb.group(
+    {
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]],
+      bio: [''],
+    },
+    { validators: this.passwordMatchValidator },
+  );
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const pw = control.get('password')?.value;
@@ -90,33 +94,34 @@ export class RegisterComponent {
   }
 
   submit(): void {
-  if (this.form.invalid) {
-    Object.values(this.form.controls).forEach((c) => {
-      c.markAsDirty();
-      c.updateValueAndValidity();
-    });
-    return;
-  }
-
-  // setTimeout verhindert den ExpressionChanged Fehler
-  setTimeout(() => {
-    this.isSubmitting = true;
-    this.cdr.detectChanges();
-  });
-
-  const { firstName, lastName, username, email, password } = this.form.value;
-
-  this.userService.register({ firstName, lastName, username, email, password }).subscribe({
-    next: () => {
-      this.message.success('Konto erfolgreich erstellt!');
-      this.router.navigate(['/']);
-    },
-    error: () => {
-      this.message.error('Registrierung fehlgeschlagen. Bitte versuche es erneut.');
-      setTimeout(() => {
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
+    if (this.form.invalid) {
+      Object.values(this.form.controls).forEach((c) => {
+        c.markAsDirty();
+        c.updateValueAndValidity();
       });
-    },
-  });
-}}
+      return;
+    }
+
+    // setTimeout verhindert den ExpressionChanged Fehler
+    setTimeout(() => {
+      this.isSubmitting = true;
+      this.cdr.detectChanges();
+    });
+
+    const { firstName, lastName, username, email, password } = this.form.value;
+
+    this.userService.register({ firstName, lastName, username, email, password }).subscribe({
+      next: () => {
+        this.message.success('Konto erfolgreich erstellt!');
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.message.error('Registrierung fehlgeschlagen. Bitte versuche es erneut.');
+        setTimeout(() => {
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+        });
+      },
+    });
+  }
+}

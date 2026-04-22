@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  background: #0a0a0f;
+  color: #e8e4dc;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+}
+
+// HERO
+
+.hero-title em {
+  font-style: italic;
+  color: #c9a96e;
+}
+
+// BUTTONS
+   .btn-primary {
+     padding: 12px 28px;
+     background: #c9a96e;
+     color: #0a0a0f;
+     border: none;
+     border-radius: 24px;
+     font-size: 14px;
+     font-weight: 500;
+     font-family: 'DM Sans', sans-serif;
+     cursor: pointer;
+     transition: all 0.2s;
+     text-decoration: none;
+     display: inline-flex;
+     align-items: center;
+     gap: 6px;
+   }
+
+.btn-primary:hover {
+  background: #d4b87a;
+  transform: translateY(-1px);
+}
+
+// CTA BANNER
+   .cta-banner {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 2rem;
+     flex-wrap: wrap;
+     background: rgba(201,169,110,0.06);
+     border: 0.5px solid rgba(201,169,110,0.2);
+     border-radius: 16px;
+     padding: 2rem 2.5rem;
+     margin: 0 2rem 1rem;
+   }
+
+.cta-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #e8e4dc;
+  margin-bottom: 4px;
+}
+
+.cta-text p {
+  font-size: 14px;
+  color: rgba(232,228,220,0.5);
+  font-weight: 300;
+}
+
+// EVENTS SECTION
+
+// TABS
+
+// GRID
+
+// EVENT CARD
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}

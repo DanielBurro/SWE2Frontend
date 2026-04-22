@@ -5,6 +5,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-cta-banner',
   imports: [RouterLink],
   templateUrl: './cta-banner.html',
-  styleUrl: './cta-banner.css',
+  styleUrl: './cta-banner.scss',
 })
 export class CtaBanner {}
