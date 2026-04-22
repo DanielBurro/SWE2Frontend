@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed, signal } from '@angular/core';
+import { Component, OnInit, inject, computed, signal, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
   private eventService  = inject(EventService);
   private searchService = inject(SearchService);
   private authService   = inject(AuthService);
+  private cdr           = inject(ChangeDetectorRef);
 
   isLoggedIn = this.authService.isAuthenticated;  // ← Signal
 
@@ -76,11 +77,13 @@ export class HomeComponent implements OnInit {
       next: (events) => {
         this.allEvents.set(events);
         this.isLoading = false;
+        this.cdr.markForCheck(); // ← DAS FIXT ES
       },
       error: () => {
         this.allEvents.set(this.getDemoEvents());
         this.isLoading = false;
-      },
+        this.cdr.markForCheck();
+      }
     });
   }
 

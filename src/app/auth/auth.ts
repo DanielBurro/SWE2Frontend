@@ -45,7 +45,9 @@ export class AuthService {
   isAuthenticated = computed(() => !!this.#token());
 
   // Die User-Daten direkt als Signal verfügbar machen
+  currentToken = computed(() => this.#token());
   currentUser = computed(() => this.#user());
+
 
   private getInitialUser(): User | null {
     const savedUser = localStorage.getItem(this.USER_KEY);

@@ -4,7 +4,7 @@ import { AuthService } from '../../auth/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const token = authService.currentUser(); // Wir holen das Token aus dem Signal
+  const token = authService.currentToken(); // Wir holen das Token aus dem Signal
 
   if (token) {
     const cloned = req.clone({
