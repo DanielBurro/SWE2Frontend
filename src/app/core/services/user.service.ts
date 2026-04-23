@@ -7,8 +7,6 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpClient);
-  
-  // HIER GEÄNDERT: Das "/api" ist rausgeflogen!
   private base = `${environment.apiUrl}/users`;
 
   getAll(): Observable<User[]> {

@@ -13,12 +13,25 @@
       <span>Events suchen</span>
     </div>
 
-    @if (!isLoggedIn) {
+    @if (!isLoggedIn()) {
       <a routerLink="/auth/login" class="btn btn-ghost">Anmelden</a>
       <a routerLink="/auth/register" class="btn btn-primary">Registrieren</a>
     } @else {
       <a routerLink="/events/create" class="btn btn-ghost">+ Event erstellen</a>
-      <a routerLink="/profile" class="avatar">{{ getInitials() }}</a>
+      <button class="avatar" nz-button nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomRight">
+        {{ initials() }}
+      </button>
     }
   </nav>
 </header>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu class="profile-menu">
+    <li nz-menu-item class="menu-field">
+      <a routerLink="/profile" class="menu-field">Profil</a>
+    </li>
+    <li nz-menu-item class="menu-field">
+      <button (click)="logout()" class="menu-field">Logout</button>
+    </li>
+  </ul>
+</nz-dropdown-menu>
