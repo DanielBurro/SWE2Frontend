@@ -2,15 +2,12 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface JwtPayload {
   sub: string;
   name: string;
   exp: number; // Unix-Timestamp in Sekunden
-}
-
-interface AuthResponse {
-  token: string;
 }
 
 export interface User {
@@ -27,6 +24,11 @@ export interface User {
 interface AuthResponse {
   token: string;
   user: User; // Das kommt jetzt vom Backend mit
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
 }
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -53,8 +55,8 @@ export class AuthService {
     return savedUser ? JSON.parse(savedUser) : null;
   }
 
-  login(credentials: any) {
-    return this.http.post<AuthResponse>('/api/auth/login', credentials).pipe(
+  login(credentials: LoginCredentials) {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials).pipe(
       tap((response) => {
         this.setSession(response.token, response.user);
       }),
@@ -75,7 +77,7 @@ export class AuthService {
 
     this.#token.set(null);
     this.#user.set(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   // Hilfsmethode, falls man die Daten manuell vom Server auffrischen will

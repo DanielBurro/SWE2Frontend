@@ -12,14 +12,14 @@
     <form nz-form nzLayout="vertical" class="auth-form" (ngSubmit)="submit()">
 
       <nz-form-item>
-        <nz-form-label>E-Mail oder Username</nz-form-label>
+        <nz-form-label>E-Mail</nz-form-label>
         <nz-form-control>
           <nz-input-group nzPrefixIcon="user">
             <input
               nz-input
-              type="text"
+              type="email"
               [(ngModel)]="form.email"
-              name="identifier"
+              name="email"
               placeholder="max@example.com"
               required />
           </nz-input-group>
@@ -57,7 +57,7 @@
         nzBlock
         type="submit"
         class="submit-btn"
-        [nzLoading]="isSubmitting">
+        [disabled]="isSubmitting">
         {{ isSubmitting ? 'Anmeldung läuft…' : 'Anmelden' }}
       </button>
 
