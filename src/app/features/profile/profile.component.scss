@@ -1,4 +1,3 @@
-// --- Variablen für das konsistente Design ---
 $gold-primary: #c9a96e;
 $gold-light: #d4b87a;
 $bg-dark: #0a0a0f;
@@ -18,13 +17,14 @@ $font-sans: 'DM Sans', sans-serif;
 }
 
 .profile-page {
-  max-width: 700px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 0 1.5rem 5rem;
 }
 
-// --- Header / Hero Bereich ---
 .profile-hero {
+  max-width: 700px;
+  margin: 0 auto;
   text-align: center;
   padding: 3rem 0 2rem;
 
@@ -82,8 +82,11 @@ $font-sans: 'DM Sans', sans-serif;
   }
 }
 
-// --- Buttons ---
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 10px 24px;
   background: $gold-primary;
   color: $bg-dark;
@@ -92,14 +95,16 @@ $font-sans: 'DM Sans', sans-serif;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
     background: $gold-light;
+    transform: translateY(-1px);
   }
 }
 
-// --- Sektionen & Listen ---
 .profile-section {
   padding: 1.5rem 0;
 
@@ -113,6 +118,7 @@ $font-sans: 'DM Sans', sans-serif;
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 
     li {
       font-size: 14px;
@@ -128,7 +134,233 @@ $font-sans: 'DM Sans', sans-serif;
   }
 }
 
-// --- Ng-Zorro Tabs Overrides ---
+.list-skeleton,
+.feedback-card {
+  background: rgba(232, 228, 220, 0.03);
+  border: 0.5px solid rgba(232, 228, 220, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+}
+
+.empty-copy {
+  font-size: 14px;
+  color: rgba($text-main, 0.45);
+  margin: 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    margin-bottom: 0;
+  }
+}
+
+.section-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba($text-main, 0.3);
+}
+
+.section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  border: 0.5px solid rgba($gold-primary, 0.25);
+  color: $gold-primary;
+  text-decoration: none;
+  font-size: 13px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    border-color: rgba($gold-light, 0.45);
+    background: rgba($gold-primary, 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.skeleton-card {
+  background: rgba(232, 228, 220, 0.04);
+  border: 0.5px solid rgba(232, 228, 220, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+  min-height: 240px;
+}
+
+.event-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(232, 228, 220, 0.03);
+  border: 0.5px solid rgba(232, 228, 220, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+
+  &:hover {
+    border-color: rgba($gold-primary, 0.4);
+    background: rgba(232, 228, 220, 0.06);
+    transform: translateY(-2px);
+  }
+}
+
+.card-img {
+  height: 130px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.875rem;
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(10, 10, 15, 0.85));
+}
+
+.date-badge {
+  position: relative;
+  z-index: 1;
+  background: rgba(10, 10, 15, 0.75);
+  border: 0.5px solid rgba($gold-primary, 0.4);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 500;
+  color: $gold-primary;
+}
+
+.card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem 1.25rem 1.125rem;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-text {
+  font-size: 11px;
+  color: rgba($text-main, 0.4);
+}
+
+.event-title {
+  font-family: $font-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: $text-main;
+  margin: 0 0 0.5rem;
+  line-height: 1.35;
+}
+
+.event-meta {
+  font-size: 12px;
+  color: rgba($text-main, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+
+  .meta-icon {
+    font-size: 11px;
+    color: rgba($gold-primary, 0.5);
+  }
+}
+
+.card-divider {
+  margin: 10px 0;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.event-host {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .host-name {
+    font-size: 12px;
+    color: rgba($text-main, 0.45);
+  }
+}
+
+.card-link-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 12px;
+  color: $gold-primary;
+}
+
+.feedback-title {
+  margin: 0 0 0.5rem;
+  font-family: $font-serif;
+  font-size: 18px;
+  color: $text-main;
+}
+
+.feedback-copy {
+  margin: 0 0 1rem;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba($text-main, 0.55);
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 0 1rem 4rem;
+  }
+
+  .section-header,
+  .card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-link {
+    width: fit-content;
+  }
+}
+
 :host ::ng-deep {
   .ant-tabs {
     color: $text-main;
@@ -168,5 +400,14 @@ $font-sans: 'DM Sans', sans-serif;
         height: 2px !important;
       }
     }
+  }
+
+  .ant-divider {
+    border-color: rgba($gold-primary, 0.08);
+  }
+
+  .ant-skeleton-content .ant-skeleton-title,
+  .ant-skeleton-content .ant-skeleton-paragraph > li {
+    background: rgba(232, 228, 220, 0.06);
   }
 }

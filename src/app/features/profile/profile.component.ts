@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { InvitationService } from '../../core/services/invitation.service';
 import { EventService } from '../../core/services/event.service';
 import { Invitation } from '../../core/models/invitation.model';
@@ -10,6 +11,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CtaBanner } from '../../components/cta-banner/cta-banner';
 import { AuthService, User } from '../../auth/auth';
 import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -17,11 +23,16 @@ import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     HeaderComponent,
     NzButtonModule,
     CtaBanner,
     NzTabComponent,
     NzTabsComponent,
+    NzAvatarModule,
+    NzDividerModule,
+    NzIconModule,
+    NzSkeletonModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -37,6 +48,9 @@ export class ProfileComponent implements OnInit {
   // Verwandte Daten bleiben lokale Signals
   invitations = signal<Invitation[]>([]);
   myEvents = signal<Event[]>([]);
+  invitationsLoading = signal(true);
+  myEventsLoading = signal(true);
+  myEventsError = signal(false);
 
   // Computed für die Initialen
   initials = computed(() => {
@@ -68,9 +82,34 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadRelatedData(userId: number): void {
-    // Hier laden wir nur noch das, was NICHT im AuthService steckt
-    this.invitationService.getByUser(userId).subscribe((inv) => this.invitations.set(inv));
-    this.eventService.getByHost(userId).subscribe((ev) => this.myEvents.set(ev));
+    this.loadInvitations(userId);
+    this.loadMyEvents(userId);
+  }
+
+  private loadInvitations(userId: number): void {
+    this.invitationsLoading.set(true);
+    this.invitationService
+      .getByUser(userId)
+      .pipe(finalize(() => this.invitationsLoading.set(false)))
+      .subscribe({
+        next: (inv) => this.invitations.set(inv),
+        error: () => this.invitations.set([]),
+      });
+  }
+
+  private loadMyEvents(userId: number): void {
+    this.myEventsLoading.set(true);
+    this.myEventsError.set(false);
+    this.eventService
+      .getByHost(userId)
+      .pipe(finalize(() => this.myEventsLoading.set(false)))
+      .subscribe({
+        next: (ev) => this.myEvents.set(ev),
+        error: () => {
+          this.myEvents.set([]);
+          this.myEventsError.set(true);
+        },
+      });
   }
 
   private syncEditForm(user: User): void {
@@ -81,6 +120,57 @@ export class ProfileComponent implements OnInit {
       email: user.email,
       bio: user.bio || '',
     };
+  }
+
+  protected reloadMyEvents(): void {
+    const u = this.user();
+    if (u) {
+      this.loadMyEvents(u.id);
+    }
+  }
+
+  protected formatEventDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('de-DE', {
+      day: 'numeric',
+      month: 'short',
+    });
+  }
+
+  protected getGradient(index: number): string {
+    const gradients = [
+      'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+      'linear-gradient(135deg, #0d1f12 0%, #1a3a24 50%, #2d5a3d 100%)',
+      'linear-gradient(135deg, #1f0d0d 0%, #3a1a1a 50%, #5a2d2d 100%)',
+      'linear-gradient(135deg, #1a1a0d 0%, #2e2e0d 50%, #4a4a1a 100%)',
+    ];
+    return gradients[index % gradients.length];
+  }
+
+  protected getStatusColor(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'offen':
+      case 'active':
+      case 'accepted':
+        return '#4caf82';
+      case 'abgesagt':
+      case 'cancelled':
+      case 'declined':
+        return '#e86464';
+      default:
+        return '#c9a96e';
+    }
+  }
+
+  protected getHostInitials(name: string | null | undefined): string {
+    if (!name?.trim()) {
+      return this.initials();
+    }
+    return name
+      .split(' ')
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
 
   protected saveProfile() {
