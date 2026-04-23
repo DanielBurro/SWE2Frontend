@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../auth/auth';
 
 @Component({
   selector: 'app-login',
@@ -12,18 +13,19 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   private router = inject(Router);
+  private authService = inject(AuthService);
 
-  form = { identifier: '', password: '' };
+  form = { email: '', password: '' };
   isSubmitting = false;
   error = '';
 
   submit(): void {
-    if (!this.form.identifier || !this.form.password) {
+    if (!this.form.email || !this.form.password) {
       this.error = 'Bitte fülle alle Felder aus.';
       return;
     }
     this.isSubmitting = true;
-    // TODO: AuthService.login() wenn Backend /api/auth/login bereitstellt
+    this.authService.login(this.form).subscribe();
     setTimeout(() => this.router.navigate(['/']), 800);
   }
 }

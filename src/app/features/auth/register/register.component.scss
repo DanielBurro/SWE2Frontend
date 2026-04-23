@@ -1,133 +1,220 @@
 :host {
   display: block;
-  background: #0a0a0f;
+  background: #1a1a1a;
   min-height: 100vh;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
-.auth-page {
+.register-page {
   display: flex;
-  align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 2rem 1.5rem;
-  background: radial-gradient(ellipse 50% 40% at 50% 20%, rgba(201,169,110,0.06) 0%, transparent 70%);
+  padding: 2.5rem 1.5rem 5rem;
 }
 
-.auth-card {
+.register-card {
   width: 100%;
-  max-width: 440px;
-  background: rgba(232,228,220,0.04);
-  border: 0.5px solid rgba(232,228,220,0.1);
-  border-radius: 20px;
-  padding: 2.5rem;
+  max-width: 520px;
+  background: #141414;
+  border: 1px solid rgba(74, 158, 255, 0.12);
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
 }
 
-.auth-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: #e8e4dc;
+.card-header {
+  margin-bottom: 0.5rem;
+
+  .card-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4a9eff;
+    margin-bottom: 4px;
+  }
+
+  .card-sub {
+    font-size: 13px;
+    color: rgba(224, 224, 224, 0.45);
+  }
+}
+
+// AVATAR
+.avatar-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 2rem;
-  text-decoration: none;
+  margin: 1.5rem 0;
 
-  .logo-dot {
-    width: 7px;
-    height: 7px;
-    background: #c9a96e;
+  .avatar-hint {
+    font-size: 12px;
+    color: rgba(74, 158, 255, 0.5);
+    margin-top: 8px;
+  }
+}
+
+.avatar-upload-trigger {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  display: inline-block;
+
+  .avatar-preview {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(74, 158, 255, 0.3);
+    display: block;
+  }
+
+  .avatar-placeholder {
+    background: rgba(74, 158, 255, 0.1);
+    color: #4a9eff;
+    border: 2px solid rgba(74, 158, 255, 0.2);
+  }
+
+  .avatar-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #fff;
+    font-size: 18px;
+  }
+
+  &:hover .avatar-overlay {
+    opacity: 1;
   }
 }
 
-.auth-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
+// FORM
+.register-form {
+  margin-top: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-item-half {
+  margin-bottom: 0;
+}
+
+.optional-label {
+  font-size: 11px;
+  color: rgba(224, 224, 224, 0.3);
   font-weight: 400;
-  color: #e8e4dc;
-  margin-bottom: 6px;
+  margin-left: 4px;
 }
 
-.auth-sub {
-  font-size: 14px;
-  color: rgba(232,228,220,0.45);
-  font-weight: 300;
-  margin-bottom: 2rem;
+.pw-toggle {
+  cursor: pointer;
+  color: rgba(74, 158, 255, 0.5);
+  transition: color 0.15s;
+  &:hover { color: #4a9eff; }
 }
 
-.form-error {
-  background: rgba(201,90,90,0.1);
-  border: 0.5px solid rgba(201,90,90,0.3);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 13px;
-  color: #c95a5a;
-  margin-bottom: 1.25rem;
+.submit-item {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
 }
 
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 11px;
-    color: rgba(232,228,220,0.4);
-    letter-spacing: 0.5px;
-  }
-
-  input {
-    background: rgba(232,228,220,0.05);
-    border: 0.5px solid rgba(232,228,220,0.15);
-    border-radius: 10px;
-    padding: 11px 14px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    color: #e8e4dc;
-    outline: none;
-    width: 100%;
-    transition: border-color 0.2s;
-
-    &::placeholder { color: rgba(232,228,220,0.2); }
-    &:focus { border-color: rgba(201,169,110,0.5); }
-  }
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 13px;
-  background: #c9a96e;
-  color: #0a0a0f;
-  border: none;
-  border-radius: 24px;
+.submit-btn {
+  height: 40px;
   font-size: 14px;
   font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 0.5rem;
-
-  &:hover:not(:disabled) { background: #d4b87a; }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  border-radius: 8px;
 }
 
-.auth-footer {
+.login-hint {
   text-align: center;
   font-size: 13px;
-  color: rgba(232,228,220,0.35);
-  margin-top: 1.5rem;
+  color: rgba(224, 224, 224, 0.35);
+  margin-top: 1.25rem;
 
   a {
-    color: #c9a96e;
+    color: #4a9eff;
     text-decoration: none;
     &:hover { text-decoration: underline; }
+  }
+}
+
+// NZ OVERRIDES
+::ng-deep {
+  .ant-form-item-label > label {
+    color: rgba(224, 224, 224, 0.65);
+    font-size: 13px;
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper {
+    background: #1f1f1f;
+    border-color: rgba(74, 158, 255, 0.2);
+    color: #e0e0e0;
+    border-radius: 6px;
+
+    &::placeholder { color: rgba(224, 224, 224, 0.25); }
+
+    &:hover {
+      border-color: rgba(74, 158, 255, 0.5);
+    }
+
+    &:focus,
+    &.ant-input-affix-wrapper-focused {
+      border-color: #4a9eff;
+      box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1);
+    }
+  }
+
+  .ant-input-prefix {
+    color: rgba(74, 158, 255, 0.45);
+    margin-right: 8px;
+  }
+
+  .ant-input-affix-wrapper {
+    background: #1f1f1f;
+
+    .ant-input {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+  }
+
+  .ant-form-item-explain-error {
+    font-size: 12px;
+    color: #ff6b6b;
+  }
+
+  .ant-btn-primary {
+    background: #4a9eff;
+    border-color: #4a9eff;
+    color: #0a0a0f;
+    font-weight: 500;
+
+    &:hover {
+      background: #6ab0ff;
+      border-color: #6ab0ff;
+    }
+  }
+
+  .ant-divider {
+    border-color: rgba(74, 158, 255, 0.1);
+  }
+
+  textarea.ant-input {
+    background: #1f1f1f;
+    border-color: rgba(74, 158, 255, 0.2);
+    color: #e0e0e0;
+    border-radius: 6px;
+    resize: none;
+
+    &::placeholder { color: rgba(224, 224, 224, 0.25); }
+    &:focus { border-color: #4a9eff; box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.1); }
   }
 }
