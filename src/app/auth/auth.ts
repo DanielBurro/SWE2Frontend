@@ -48,7 +48,6 @@ export class AuthService {
   currentToken = computed(() => this.#token());
   currentUser = computed(() => this.#user());
 
-
   private getInitialUser(): User | null {
     const savedUser = localStorage.getItem(this.USER_KEY);
     return savedUser ? JSON.parse(savedUser) : null;
