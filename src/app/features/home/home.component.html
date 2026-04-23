@@ -1,5 +1,6 @@
 <app-header />
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
   <p class="hero-eyebrow">Event-Planning, neu gedacht</p>
@@ -8,62 +9,112 @@
     Oystr ist dein persönlicher Event-Assistent — von der Einladung bis zur Gästeliste.
   </p>
   <div class="hero-actions">
-    <a routerLink="/events/create" class="btn-primary">Event erstellen</a>
-    <button class="btn-ghost">Events entdecken</button>
+    <button nz-button routerLink="/events/create" class="btn-gold">
+      Event erstellen
+    </button>
+    <button nz-button class="btn-outline">
+      Events entdecken
+    </button>
   </div>
 </section>
 
+<!-- CTA BANNER -->
 <div class="cta-banner">
   <div class="cta-text">
     <h3>Dein nächstes Event wartet</h3>
     <p>Individuelle Event-Seite mit Einladungen, Gästeliste und RSVP — in wenigen Minuten.</p>
   </div>
-  <a routerLink="/events/create" class="btn-primary">Neues Event erstellen →</a>
+  <button nz-button routerLink="/events/create" class="btn-gold">
+    Neues Event erstellen →
+  </button>
 </div>
 
+<!-- EVENTS SECTION -->
 <section class="events-section">
   <p class="section-label">Entdecken</p>
   <h2 class="section-title">Events in deiner Nähe</h2>
 
-  <div class="tabs">
-    @for (tab of tabs; track tab.key) {
-      <button class="tab-btn" [class.active]="activeTab === tab.key" (click)="setTab(tab.key)">
-        {{ tab.label }}
+  <!-- NICHT EINGELOGGT -->
+  @if (!isLoggedIn()) {
+    <div class="login-hint">
+      <nz-empty nzNotFoundContent="Bitte melde dich an, um Events zu sehen."></nz-empty>
+      <button nz-button routerLink="/auth/login" class="btn-gold" style="margin-top: 1rem">
+        Jetzt anmelden
       </button>
-    }
-  </div>
-
-  @if (isLoading) {
-    <div class="events-grid">
-      @for (i of [1,2,3]; track i) {
-        <div class="event-card skeleton"></div>
-      }
     </div>
   } @else {
-    <div class="events-grid">
-      @for (event of filteredEvents; track event.id; let i = $index) {
-        <a class="event-card" [routerLink]="['/events', event.id]">
-          <div class="card-img" [style.background]="getGradient(i)">
-            <div class="img-overlay"></div>
-            <span class="date-badge">{{ formatDate(event.date) }}</span>
-          </div>
-          <div class="card-body">
-            <div class="event-status">
-              <div class="status-dot" [class.planned]="event.status === 'geplant'"></div>
-              {{ event.status | titlecase }}
-            </div>
-            <h3 class="event-title">{{ event.title }}</h3>
-            <div class="event-meta">📍 {{ event.locationName }}</div>
-            <div class="event-host">
-              <div class="host-avatar" [style]="getAvatarStyle(i)">{{ getInitials(event.hostName) }}</div>
-              <span class="host-name">von {{ event.hostName }}</span>
-            </div>
-          </div>
-        </a>
-      }
-      @if (filteredEvents.length === 0) {
-        <p class="empty-state">Keine Events gefunden.</p>
+
+    <!-- TABS -->
+    <div class="tabs">
+      @for (tab of tabs; track tab.key) {
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === tab.key"
+          (click)="setTab(tab.key)">
+          {{ tab.label }}
+        </button>
       }
     </div>
+
+    <!-- SKELETON -->
+    @if (isLoading) {
+      <div class="events-grid">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="skeleton-card">
+            <nz-skeleton [nzActive]="true" [nzAvatar]="false" [nzParagraph]="skeletonParagraph"></nz-skeleton>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- EVENTS -->
+    @if (!isLoading && filteredEvents().length > 0) {
+      <div class="events-grid">
+        @for (event of filteredEvents(); track event.id; let i = $index) {
+          <a class="event-card" [routerLink]="['/events', event.id]">
+
+            <div class="card-img" [style.background]="getGradient(i)">
+              <div class="img-overlay"></div>
+              <span class="date-badge">{{ formatDate(event.date) }}</span>
+            </div>
+
+            <div class="card-body">
+              <div class="status-row">
+                <span class="status-dot" [style.background]="getStatusColor(event.status)"></span>
+                <span class="status-text">{{ event.status | titlecase }}</span>
+              </div>
+
+              <h3 class="event-title">{{ event.title }}</h3>
+
+              <p class="event-meta">
+                <span nz-icon nzType="environment" nzTheme="outline" class="meta-icon"></span>
+                {{ event.locationName }}
+              </p>
+
+              <nz-divider class="card-divider" />
+
+              <div class="event-host">
+                <!-- nzSize als string "small" statt Zahl → fix für NG0100 -->
+                <nz-avatar
+                  [nzText]="getInitials(event.hostName)"
+                  nzSize="small"
+                  [ngStyle]="{ 'background': 'rgba(201,169,110,0.15)', 'color': getAvatarColor(i), 'font-size': '9px' }">
+                </nz-avatar>
+                <span class="host-name">von {{ event.hostName }}</span>
+              </div>
+            </div>
+
+          </a>
+        }
+      </div>
+    }
+
+    <!-- EMPTY -->
+    @if (!isLoading && filteredEvents().length === 0) {
+      <div class="empty-wrap">
+        <nz-empty nzNotFoundContent="Keine Events gefunden" class="custom-empty"></nz-empty>
+      </div>
+    }
+
   }
 </section>

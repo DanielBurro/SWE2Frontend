@@ -1,47 +1,79 @@
-// header.component.ts
-
-import { Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject, effect, ChangeDetectorRef } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { AuthService } from '../../auth/auth';
-import { NzDropdownDirective, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
-import { NzButtonComponent } from 'ng-zorro-antd/button';
-import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/models/user.model';
+import { SearchService } from '../../core/services/search.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    RouterLink,
     CommonModule,
-    NzButtonComponent,
-    NzDropdownDirective,
-    NzDropdownMenuComponent,
-    NzMenuDirective,
-    NzMenuItemComponent,
+    RouterLink,
+    FormsModule,
+    NzLayoutModule,
+    NzButtonModule,
+    NzInputModule,
+    NzIconModule,
+    NzDropDownModule,
+    NzAvatarModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  private authService = inject(AuthService);
+  private router        = inject(Router);
+  private authService   = inject(AuthService);
+  private userService   = inject(UserService);
+  private cdr           = inject(ChangeDetectorRef);
+  private searchService = inject(SearchService);
 
-  // Wir greifen direkt auf die Signals des Services zu
-  isLoggedIn = this.authService.isAuthenticated;
-  currentUser = this.authService.currentUser;
+  isLoggedIn  = this.authService.isAuthenticated;
+  searchQuery = '';
+  currentUser: User | null = null;
 
-  // Berechnete Initialen (Reagiert automatisch auf Änderungen am User)
-  initials = computed(() => {
-    const user = this.currentUser();
-    if (!user) return '';
+  constructor() {
+    // Reagiert automatisch wenn isAuthenticated sich ändert
+    effect(() => {
+      if (this.isLoggedIn()) {
+        this.userService.getMe().subscribe({
+          next: (user) => {
+            this.currentUser = user;
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.currentUser = null;
+            this.cdr.detectChanges();
+          },
+        });
+      } else {
+        this.currentUser = null;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
-    const firstInitial = user.firstName?.charAt(0) || '';
-    const lastInitial = user.lastName?.charAt(0) || '';
+  getInitials(): string {
+    if (!this.currentUser) return '?';
+    const first = this.currentUser.firstName?.charAt(0) ?? '';
+    const last  = this.currentUser.lastName?.charAt(0) ?? '';
+    return (first + last).toUpperCase();
+  }
 
-    return (firstInitial + lastInitial).toUpperCase();
-  });
+  onSearch(): void {
+    this.searchService.query.set(this.searchQuery.trim());
+  }
 
-  protected logout() {
+  onLogout(): void {
     this.authService.logout();
   }
 }

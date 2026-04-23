@@ -1,3 +1,5 @@
+// location.service.ts
+
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -13,7 +15,19 @@ export class LocationService {
     return this.http.get<Location[]>(this.base);
   }
 
+  getById(id: number): Observable<Location> {
+    return this.http.get<Location>(`${this.base}/${id}`);
+  }
+
   create(location: Omit<Location, 'id'>): Observable<Location> {
     return this.http.post<Location>(this.base, location);
+  }
+
+  update(id: number, location: Omit<Location, 'id'>): Observable<Location> {
+    return this.http.put<Location>(`${this.base}/${id}`, location);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${id}`);
   }
 }

@@ -29,6 +29,7 @@
   text-transform: uppercase;
   color: #c9a96e;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .hero-title {
@@ -41,11 +42,12 @@
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-}
+  position: relative;
 
-.hero-title em {
-  font-style: italic;
-  color: #c9a96e;
+  em {
+    font-style: italic;
+    color: #c9a96e;
+  }
 }
 
 .hero-sub {
@@ -55,6 +57,7 @@
   margin: 0 auto 2.5rem;
   line-height: 1.7;
   font-weight: 300;
+  position: relative;
 }
 
 .hero-actions {
@@ -62,46 +65,53 @@
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
+  position: relative;
 }
 
 // BUTTONS
-.btn-primary {
-  padding: 12px 28px;
-  background: #c9a96e;
-  color: #0a0a0f;
-  border: none;
-  border-radius: 24px;
+.btn-gold {
+  height: 44px;
+  padding: 0 28px;
+  border-radius: 22px;
   font-size: 14px;
   font-weight: 500;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  border: none;
+
+  ::ng-deep & {
+    background: #c9a96e;
+    color: #0a0a0f;
+    border-color: #c9a96e;
+
+    &:hover {
+      background: #d4b87a;
+      border-color: #d4b87a;
+      color: #0a0a0f;
+      transform: translateY(-1px);
+    }
+  }
 }
 
-.btn-primary:hover {
-  background: #d4b87a;
-  transform: translateY(-1px);
-}
-
-.btn-ghost {
-  padding: 12px 28px;
-  background: transparent;
-  color: rgba(232,228,220,0.7);
-  border: 0.5px solid rgba(232,228,220,0.2);
-  border-radius: 24px;
+.btn-outline {
+  height: 44px;
+  padding: 0 28px;
+  border-radius: 22px;
   font-size: 14px;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
-  transition: all 0.2s;
-}
 
-.btn-ghost:hover {
-  border-color: rgba(232,228,220,0.5);
-  color: #e8e4dc;
+  ::ng-deep & {
+    background: transparent;
+    border: 0.5px solid rgba(232,228,220,0.25);
+    color: rgba(232,228,220,0.7);
+
+    &:hover {
+      border-color: rgba(232,228,220,0.5);
+      color: #e8e4dc;
+      background: transparent;
+    }
+  }
 }
 
 // CTA BANNER
@@ -112,30 +122,32 @@
   gap: 2rem;
   flex-wrap: wrap;
   background: rgba(201,169,110,0.06);
-  border: 0.5px solid rgba(201,169,110,0.2);
-  border-radius: 16px;
-  padding: 2rem 2.5rem;
-  margin: 0 2rem 1rem;
-}
+  border-top: 0.5px solid rgba(201,169,110,0.15);
+  border-bottom: 0.5px solid rgba(201,169,110,0.15);
+  padding: 1.75rem 2rem;
+  margin-bottom: 0;
 
-.cta-text h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 400;
-  color: #e8e4dc;
-  margin-bottom: 4px;
-}
+  .cta-text {
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: #e8e4dc;
+      margin-bottom: 4px;
+    }
 
-.cta-text p {
-  font-size: 14px;
-  color: rgba(232,228,220,0.5);
-  font-weight: 300;
+    p {
+      font-size: 13px;
+      color: rgba(232,228,220,0.45);
+      font-weight: 300;
+    }
+  }
 }
 
 // EVENTS SECTION
 .events-section {
-  padding: 2.5rem 2rem 4rem;
-  max-width: 1100px;
+  padding: 2.5rem 2rem 5rem;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -143,8 +155,8 @@
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(232,228,220,0.35);
-  margin-bottom: 0.4rem;
+  color: rgba(232,228,220,0.3);
+  margin-bottom: 6px;
 }
 
 .section-title {
@@ -158,30 +170,28 @@
 // TABS
 .tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 1.5rem;
+  gap: 6px;
+  margin-bottom: 1.75rem;
 }
 
 .tab-btn {
-  padding: 6px 16px;
+  padding: 5px 16px;
   border-radius: 20px;
   font-size: 13px;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
   border: 0.5px solid transparent;
   background: transparent;
-  color: rgba(232,228,220,0.45);
+  color: rgba(232,228,220,0.4);
   transition: all 0.15s;
-}
 
-.tab-btn:hover {
-  color: rgba(232,228,220,0.7);
-}
+  &:hover { color: rgba(232,228,220,0.7); }
 
-.tab-btn.active {
-  background: rgba(201,169,110,0.12);
-  border-color: rgba(201,169,110,0.3);
-  color: #c9a96e;
+  &.active {
+    background: rgba(201,169,110,0.12);
+    border-color: rgba(201,169,110,0.3);
+    color: #c9a96e;
+  }
 }
 
 // GRID
@@ -191,9 +201,26 @@
   gap: 1.25rem;
 }
 
+// SKELETON CARD
+.skeleton-card {
+  background: rgba(232,228,220,0.04);
+  border: 0.5px solid rgba(232,228,220,0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+  min-height: 240px;
+
+  ::ng-deep .ant-skeleton-content .ant-skeleton-title {
+    background: rgba(232,228,220,0.08);
+  }
+
+  ::ng-deep .ant-skeleton-content .ant-skeleton-paragraph > li {
+    background: rgba(232,228,220,0.06);
+  }
+}
+
 // EVENT CARD
 .event-card {
-  background: rgba(232,228,220,0.04);
+  background: rgba(232,228,220,0.03);
   border: 0.5px solid rgba(232,228,220,0.1);
   border-radius: 16px;
   overflow: hidden;
@@ -202,55 +229,49 @@
   text-decoration: none;
   display: block;
   color: inherit;
-}
 
-.event-card:hover {
-  border-color: rgba(201,169,110,0.35);
-  background: rgba(232,228,220,0.07);
-  transform: translateY(-2px);
-}
-
-.event-card.skeleton {
-  height: 260px;
-  animation: pulse 1.5s ease-in-out infinite;
+  &:hover {
+    border-color: rgba(201,169,110,0.4);
+    background: rgba(232,228,220,0.06);
+    transform: translateY(-2px);
+  }
 }
 
 .card-img {
-  height: 140px;
+  height: 130px;
   position: relative;
   display: flex;
   align-items: flex-end;
-  padding: 1rem;
+  padding: 0.875rem;
 }
 
 .img-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(10,10,15,0.8));
+  background: linear-gradient(to bottom, transparent 30%, rgba(10,10,15,0.85));
 }
 
 .date-badge {
   position: relative;
   z-index: 1;
-  background: rgba(10,10,15,0.8);
+  background: rgba(10,10,15,0.75);
   border: 0.5px solid rgba(201,169,110,0.4);
-  border-radius: 8px;
-  padding: 4px 10px;
+  border-radius: 6px;
+  padding: 3px 9px;
   font-size: 11px;
   font-weight: 500;
   color: #c9a96e;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .card-body {
-  padding: 1rem 1.25rem 1.25rem;
+  padding: 1rem 1.25rem 1.125rem;
 }
 
-.event-status {
-  display: inline-flex;
+.status-row {
+  display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
-  color: rgba(232,228,220,0.4);
   margin-bottom: 6px;
 }
 
@@ -258,63 +279,71 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #4caf82;
+  flex-shrink: 0;
 }
 
-.status-dot.planned {
-  background: #c9a96e;
+.status-text {
+  font-size: 11px;
+  color: rgba(232,228,220,0.4);
 }
 
 .event-title {
   font-family: 'Playfair Display', serif;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
   color: #e8e4dc;
-  margin-bottom: 6px;
-  line-height: 1.3;
+  margin-bottom: 8px;
+  line-height: 1.35;
 }
 
 .event-meta {
   font-size: 12px;
   color: rgba(232,228,220,0.4);
+  display: flex;
+  align-items: center;
+  gap: 5px;
   margin-bottom: 0;
+
+  .meta-icon {
+    font-size: 11px;
+    color: rgba(201,169,110,0.5);
+  }
+}
+
+.card-divider {
+  ::ng-deep &.ant-divider {
+    margin: 10px 0;
+    border-color: rgba(232,228,220,0.07);
+  }
 }
 
 .event-host {
-  margin-top: 0.75rem;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-top: 0.75rem;
-  border-top: 0.5px solid rgba(232,228,220,0.07);
+
+  .host-name {
+    font-size: 12px;
+    color: rgba(232,228,220,0.45);
+  }
 }
 
-.host-avatar {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 500;
-  flex-shrink: 0;
-}
-
-.host-name {
-  font-size: 12px;
-  color: rgba(232,228,220,0.5);
-}
-
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
+// EMPTY
+.empty-wrap {
   padding: 3rem;
-  color: rgba(232,228,220,0.3);
-  font-size: 14px;
-}
+  text-align: center;
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.7; }
+  ::ng-deep .ant-empty-description {
+    color: rgba(232,228,220,0.3);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  ::ng-deep .ant-empty-img-simple-ellipse {
+    fill: rgba(232,228,220,0.05);
+  }
+
+  ::ng-deep .ant-empty-img-simple-path {
+    fill: rgba(232,228,220,0.08);
+  }
 }

@@ -8,6 +8,11 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import de from '@angular/common/locales/de';
 import { routes } from './app.routes';
 
+import { provideNzIconsPatch } from 'ng-zorro-antd/icon';
+import * as AllIcons from '@ant-design/icons-angular/icons';
+
+const antDesignIcons = Object.values(AllIcons) as any[];
+
 registerLocaleData(de);
 
 export const appConfig: ApplicationConfig = {
@@ -16,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
     provideNzI18n(de_DE),
+    provideNzIconsPatch(antDesignIcons),
   ],
 };

@@ -1,44 +1,72 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <a class="auth-logo" routerLink="/">
-      <div class="logo-dot"></div>
-      Oystr
-    </a>
+<app-header />
 
-    <h1 class="auth-title">Willkommen zurück</h1>
-    <p class="auth-sub">Melde dich an und manage deine Events.</p>
+<div class="login-page">
+  <div class="login-card">
 
-    @if (error) {
-      <div class="form-error">{{ error }}</div>
-    }
+    <div class="card-header">
+      <p class="card-eyebrow">Willkommen zurück</p>
+      <h1 class="card-title">Anmelden</h1>
+      <p class="card-sub">Melde dich an und manage deine Events.</p>
+    </div>
 
-    <form class="auth-form" (ngSubmit)="submit()">
-      <div class="form-group">
-        <label>E-Mail oder Username</label>
-        <input
-          type="text"
-          [(ngModel)]="form.email"
-          name="identifier"
-          placeholder="max@example.com"
-          required />
-      </div>
-      <div class="form-group">
-        <label>Passwort</label>
-        <input
-          type="password"
-          [(ngModel)]="form.password"
-          name="password"
-          placeholder="••••••••"
-          required />
-      </div>
-      <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+    <form nz-form nzLayout="vertical" class="auth-form" (ngSubmit)="submit()">
+
+      <nz-form-item>
+        <nz-form-label>E-Mail oder Username</nz-form-label>
+        <nz-form-control>
+          <nz-input-group nzPrefixIcon="user">
+            <input
+              nz-input
+              type="text"
+              [(ngModel)]="form.email"
+              name="identifier"
+              placeholder="max@example.com"
+              required />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Passwort</nz-form-label>
+        <nz-form-control>
+          <nz-input-group
+            nzPrefixIcon="lock"
+            [nzSuffix]="suffixTemplate">
+            <input
+              nz-input
+              [type]="passwordVisible ? 'text' : 'password'"
+              [(ngModel)]="form.password"
+              name="password"
+              placeholder="••••••••"
+              required />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <span
+              nz-icon
+              class="pw-toggle"
+              [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible">
+            </span>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <button
+        nz-button
+        nzType="primary"
+        nzBlock
+        type="submit"
+        class="submit-btn"
+        [nzLoading]="isSubmitting">
         {{ isSubmitting ? 'Anmeldung läuft…' : 'Anmelden' }}
       </button>
+
     </form>
 
-    <p class="auth-footer">
+    <p class="register-hint">
       Noch kein Konto?
       <a routerLink="/auth/register">Registrieren</a>
     </p>
+
   </div>
 </div>

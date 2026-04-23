@@ -16,6 +16,14 @@ export class InvitationService {
     return this.http.post<Invitation>(this.base, dto);
   }
 
+  getById(id: number): Observable<Invitation> {
+    return this.http.get<Invitation>(`${this.base}/${id}`);
+  }
+
+  getMyInvitations(): Observable<Invitation[]> {
+    return this.http.get<Invitation[]>(`${this.base}/me`);
+  }
+
   getByUser(userId: number): Observable<Invitation[]> {
     return this.http.get<Invitation[]>(`${this.base}/user/${userId}`);
   }
@@ -26,5 +34,9 @@ export class InvitationService {
 
   updateStatus(id: number, dto: UpdateInvitationStatusDto): Observable<Invitation> {
     return this.http.put<Invitation>(`${this.base}/${id}/status`, dto);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${id}`);
   }
 }
