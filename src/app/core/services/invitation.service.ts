@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class InvitationService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/api/invitations`;
+  private base = `${environment.apiUrl}/invitations`;
 
   send(dto: SendInvitationDto): Observable<Invitation> {
     return this.http.post<Invitation>(this.base, dto);

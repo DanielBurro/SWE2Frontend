@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/api/users`;
+  private base = `${environment.apiUrl}/users`;
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(this.base);
