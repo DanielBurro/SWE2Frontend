@@ -1,238 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+// --- Variablen ---
+$gold-primary: #c9a96e;
+$gold-light:   #d4b87a;
+$bg-dark:      #0a0a0f;
+$bg-sider:     #12121a;
+$text-main:    #e8e4dc;
+$text-muted:   rgba(232, 228, 220, 0.6);
 
 :host {
   display: block;
-  background: #0a0a0f;
-  min-height: 100vh;
-  font-family: 'DM Sans', sans-serif;
-  color: #e8e4dc;
-}
-
-.create-page {
-  display: flex;
-  justify-content: center;
-  padding: 3rem 1.5rem 5rem;
-}
-
-.create-container {
   width: 100%;
-  max-width: 580px;
+  min-height: 100vh;
+  background: $bg-dark;
 }
 
-.page-header {
-  margin-bottom: 0.5rem;
+.main-layout {
+  min-height: 100vh;
+  background: $bg-dark;
+}
 
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: rgba(232,228,220,0.4);
-    text-decoration: none;
-    margin-bottom: 1.5rem;
-    transition: color 0.15s;
-    &:hover { color: rgba(232,228,220,0.8); }
-  }
+// --- Sidebar ---
+.gold-sider {
+  background: $bg-sider !important;
+  border-right: 1px solid rgba($gold-primary, 0.1);
 
-  .page-eyebrow {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #c9a96e;
-    margin-bottom: 6px;
-  }
-
-  .page-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 30px;
-    font-weight: 400;
-    color: #e8e4dc;
+  .sider-toggle-container {
+    padding: 16px;
+    display: flex;
+    justify-content: center;
   }
 }
 
-.create-form {
-  margin-top: 0.5rem;
+// --- Content Bereich ---
+.gold-content {
+  background: $bg-dark;
+  padding: 0; // Padding auf 0, damit der Sticky-Header der Unterkomponente bis zum Rand geht
+  position: relative;
+  min-height: 100vh;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.form-actions {
+// --- Vorschau Button (Fixiert) ---
+.btn-preview-fixed {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+  height: 48px;
+  padding: 0 28px;
+  background: $gold-primary;
+  border: none;
+  color: $bg-dark;
+  font-weight: 600;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba($gold-primary, 0.2);
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  gap: 12px;
-  padding-top: 0.5rem;
-}
+  gap: 8px;
+  transition: all 0.2s ease;
 
-.btn-gold {
-  height: 40px;
-  padding: 0 24px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-
-  ::ng-deep & {
-    background: #c9a96e;
-    border-color: #c9a96e;
-    color: #0a0a0f;
-    &:hover { background: #d4b87a; border-color: #d4b87a; color: #0a0a0f; }
+  &:hover {
+    background: $gold-light;
+    transform: translateY(-2px);
+    color: $bg-dark;
   }
 }
 
-// NZ OVERRIDES
-::ng-deep {
-  
-  .btn-ghost {
-    font-size: 13px;
-    color: rgba(232,228,220,0.45);
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 0.5px solid rgba(232,228,220,0.15);
-    transition: all 0.15s;
-    &:hover { color: #e8e4dc; border-color: rgba(232,228,220,0.3); }
+// --- NG-ZORRO Sidebar Menu Overrides ---
+:host ::ng-deep {
+  .ant-menu.gold-menu {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+
+    .ant-menu-item {
+      height: 50px;
+      line-height: 50px;
+      margin-block: 4px;
+
+      &:hover { color: $gold-light !important; }
+
+      &.ant-menu-item-selected {
+        background: rgba($gold-primary, 0.1) !important;
+        color: $gold-primary !important;
+        &::after { border-right: 3px solid $gold-primary; }
+      }
+    }
   }
 
-  .ant-form-item-label > label {
-    color: rgba(232,228,220,0.55);
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .ant-input,
-  .ant-input-affix-wrapper,
-  .ant-input-lg {
-    background: #1a1a22;
-    border-color: rgba(201,169,110,0.18);
-    color: #e8e4dc;
+  .btn-gold-icon {
+    background: rgba($gold-primary, 0.1);
+    border: 1px solid $gold-primary;
+    color: $gold-primary;
+    padding: 8px;
     border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-
-    &::placeholder { color: rgba(232,228,220,0.2); }
-    &:hover { border-color: rgba(201,169,110,0.4); }
-    &:focus, &.ant-input-affix-wrapper-focused {
-      border-color: #c9a96e;
-      box-shadow: 0 0 0 2px rgba(201,169,110,0.1);
-    }
-  }
-
-  textarea.ant-input {
-    background: #1a1a22;
-    border-color: rgba(201,169,110,0.18);
-    color: #e8e4dc;
-    border-radius: 8px;
-    resize: none;
-    &::placeholder { color: rgba(232,228,220,0.2); }
-    &:focus { border-color: #c9a96e; box-shadow: 0 0 0 2px rgba(201,169,110,0.1); }
-  }
-
-  .ant-select-selector {
-    background: #1a1a22 !important;
-    border-color: rgba(201,169,110,0.18) !important;
-    color: #e8e4dc !important;
-    border-radius: 8px !important;
-  }
-
-  .ant-select:hover .ant-select-selector {
-    border-color: rgba(201,169,110,0.4) !important;
-  }
-
-  .ant-select-focused .ant-select-selector {
-    border-color: #c9a96e !important;
-    box-shadow: 0 0 0 2px rgba(201,169,110,0.1) !important;
-  }
-
-  .ant-select-arrow { color: rgba(201,169,110,0.4); }
-
-  .ant-select-dropdown {
-    background: #1a1a22;
-    border: 0.5px solid rgba(201,169,110,0.15);
-    border-radius: 8px;
-  }
-
-  .ant-select-item {
-    color: rgba(232,228,220,0.7);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    &:hover { background: rgba(201,169,110,0.08); color: #e8e4dc; }
-  }
-
-  .ant-select-item-option-selected {
-    background: rgba(201,169,110,0.12) !important;
-    color: #c9a96e !important;
-  }
-
-  .ant-picker {
-    background: #1a1a22;
-    border-color: rgba(201,169,110,0.18);
-    border-radius: 8px;
-    color: #e8e4dc;
-    width: 100%;
-
-    &:hover { border-color: rgba(201,169,110,0.4); }
-    &.ant-picker-focused {
-      border-color: #c9a96e;
-      box-shadow: 0 0 0 2px rgba(201,169,110,0.1);
-    }
-
-    .ant-picker-input > input {
-      color: #e8e4dc;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      &::placeholder { color: rgba(232,228,220,0.2); }
-    }
-
-    .ant-picker-suffix { color: rgba(201,169,110,0.4); }
-    .ant-picker-clear { background: #1a1a22; color: rgba(232,228,220,0.4); }
-  }
-
-  .ant-picker-panel-container {
-    background: #1a1a22;
-    border: 0.5px solid rgba(201,169,110,0.15);
-    border-radius: 10px;
-
-    .ant-picker-header {
-      border-bottom-color: rgba(201,169,110,0.1);
-      button { color: rgba(232,228,220,0.6); &:hover { color: #c9a96e; } }
-    }
-
-    .ant-picker-content th { color: rgba(232,228,220,0.35); }
-
-    .ant-picker-cell-in-view { color: rgba(232,228,220,0.8); }
-    .ant-picker-cell { color: rgba(232,228,220,0.25); }
-
-    .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
-      background: #c9a96e;
-      color: #0a0a0f;
-    }
-
-    .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
-      border-color: #c9a96e;
-    }
-
-    .ant-picker-footer {
-      border-top-color: rgba(201,169,110,0.1);
-      .ant-picker-today-btn { color: #c9a96e; }
-    }
-  }
-
-  .ant-form-item-explain-error {
-    font-size: 11px;
-    color: rgba(220,100,100,0.85);
-  }
-
-  .ant-divider {
-    border-color: rgba(201,169,110,0.1);
-    margin: 1rem 0 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 }

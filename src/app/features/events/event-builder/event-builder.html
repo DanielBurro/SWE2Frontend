@@ -1,0 +1,45 @@
+<div class="header-sticky-wrapper">
+  <nz-header class="secondary-header" #headerContainer>
+
+    <div class="status-pill" #pillElement>
+      <span class="dot"></span>
+      <span class="pill-text">Hinzufügen:</span>
+    </div>
+
+    <div class="header-controls">
+      <div class="main-actions">
+        @for (item of visibleItems; track item.id) {
+          <button class="action-item ripple">
+            <span nz-icon [nzType]="item.icon"></span>
+            <span class="label">{{ item.label }}</span>
+          </button>
+        }
+      </div>
+
+      @if (overflowItems.length > 0) {
+        <button
+          class="action-item more-button"
+          [class.active]="isMenuOpen"
+          (click)="toggleMenu()"
+        >
+          <span nz-icon [nzType]="isMenuOpen ? 'close' : 'plus'"></span>
+        </button>
+      }
+    </div>
+  </nz-header>
+
+  @if (isMenuOpen && overflowItems.length > 0) {
+    <div class="grid-card-overlay" (click)="toggleMenu()"></div>
+
+    <div class="grid-card">
+      <div class="grid-container">
+        @for (item of overflowItems; track item.id) {
+          <div class="grid-item">
+            <span nz-icon [nzType]="item.icon"></span>
+            <span class="grid-label">{{ item.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
