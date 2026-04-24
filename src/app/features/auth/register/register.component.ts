@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../../../core/services/user.service';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -12,6 +11,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HeaderComponent } from '../../../shared/header/header.component';
+import { AuthService } from '../../../auth/auth';
 
 @Component({
   selector: 'app-register',
@@ -36,7 +36,7 @@ import { HeaderComponent } from '../../../shared/header/header.component';
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
-  private userService = inject(UserService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private message = inject(NzMessageService);
   private cdr = inject(ChangeDetectorRef);
@@ -110,7 +110,7 @@ export class RegisterComponent {
 
     const { firstName, lastName, username, email, password } = this.form.value;
 
-    this.userService.register({ firstName, lastName, username, email, password }).subscribe({
+    this.authService.register({ firstName, lastName, username, email, password }).subscribe({
       next: () => {
         this.message.success('Konto erfolgreich erstellt!');
         this.router.navigate(['/']);

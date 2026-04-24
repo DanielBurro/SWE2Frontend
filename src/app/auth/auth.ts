@@ -1,13 +1,9 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-
-interface JwtPayload {
-  sub: string;
-  name: string;
-  exp: number; // Unix-Timestamp in Sekunden
-}
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { RegisterDto } from '../core/models/user.model';
 
 interface AuthResponse {
   token: string;
@@ -32,6 +28,7 @@ interface AuthResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private base = `${environment.apiUrl}/auth`;
 
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
@@ -89,5 +86,9 @@ export class AuthService {
         }),
       )
       .subscribe();
+  }
+
+  register(dto: RegisterDto): Observable<User> {
+    return this.http.post<User>(`${this.base}/register`, dto);
   }
 }

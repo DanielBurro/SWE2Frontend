@@ -3,7 +3,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User, RegisterDto, UpdateUserDto, ChangePasswordDto } from '../models/user.model';
+import { User, UpdateUserDto, ChangePasswordDto } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -21,10 +21,6 @@ export class UserService {
 
   getMe(): Observable<User> {
     return this.http.get<User>(`${this.base}/me`);
-  }
-
-  register(dto: RegisterDto): Observable<User> {
-    return this.http.post<User>(`${this.base}/register`, dto);
   }
 
   update(id: number, dto: UpdateUserDto): Observable<User> {
