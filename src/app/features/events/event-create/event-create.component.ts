@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { LocationService } from '../../../core/services/location.service';
 import { UserService } from '../../../core/services/user.service';
@@ -32,7 +32,6 @@ import { provideNzIcons } from 'ng-zorro-antd/icon';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     HeaderComponent,
     NzFormModule,
     NzInputModule,
@@ -131,10 +130,6 @@ export class EventCreateComponent implements OnInit {
   disablePastDates = (current: Date): boolean =>
     current < new Date(new Date().setHours(0, 0, 0, 0));
 
-  protected getBackRoute(): Array<string | number> {
-    return this.isEditMode && this.eventId !== null ? ['/events', this.eventId] : ['/'];
-  }
-
   protected getEyebrow(): string {
     return this.isEditMode ? 'Event bearbeiten' : 'Neues Event';
   }
@@ -145,6 +140,19 @@ export class EventCreateComponent implements OnInit {
 
   protected getSubmitLabel(): string {
     return this.isEditMode ? 'Event speichern →' : 'Event erstellen →';
+  }
+
+  protected navigateBack(domEvent?: MouseEvent): void {
+    domEvent?.preventDefault();
+
+    if (this.isEditMode && this.eventId !== null) {
+      this.router.navigate(['/events', this.eventId], {
+        state: this.pendingEvent ? { event: this.pendingEvent } : undefined,
+      });
+      return;
+    }
+
+    this.router.navigate(['/']);
   }
 
   submit(): void {

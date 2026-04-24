@@ -3,7 +3,7 @@
 <div class="create-page">
   <div class="create-container">
     <div class="page-header">
-      <a [routerLink]="getBackRoute()" class="back-link">
+      <a class="back-link" (click)="navigateBack($event)">
         <span nz-icon nzType="arrow-left"></span>
         Zurück
       </a>
@@ -94,7 +94,7 @@
         </nz-form-item>
 
         <div class="form-actions">
-          <a [routerLink]="getBackRoute()" class="btn-ghost">Abbrechen</a>
+          <a class="btn-ghost" (click)="navigateBack($event)">Abbrechen</a>
           <button nz-button nzType="primary" [nzLoading]="isSubmitting" type="submit" class="btn-gold">
             {{ getSubmitLabel() }}
           </button>
