@@ -1,13 +1,12 @@
-// event.model.ts
-
 export interface Event {
   id: number;
   title: string;
   description: string;
   date: string;
-  //status: 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'COMPLETED';
   status: string;
+  hostId?: number;
   hostName: string;
+  locationId?: number;
   locationName: string;
 }
 

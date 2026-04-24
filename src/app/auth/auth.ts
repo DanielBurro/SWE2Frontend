@@ -1,17 +1,7 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-
-interface JwtPayload {
-  sub: string;
-  name: string;
-  exp: number; // Unix-Timestamp in Sekunden
-}
-
-interface AuthResponse {
-  token: string;
-}
 
 export interface User {
   id: number;
@@ -26,8 +16,9 @@ export interface User {
 
 interface AuthResponse {
   token: string;
-  user: User; // Das kommt jetzt vom Backend mit
+  user: User;
 }
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
@@ -36,25 +27,19 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
-  // 1. Private Writable Signals (Die Quelle der Wahrheit)
   #token = signal<string | null>(localStorage.getItem(this.TOKEN_KEY));
   #user = signal<User | null>(this.getInitialUser());
 
-  // 2. Public Read-Only Signals (Für die Komponenten)
-  // isAuthenticated ist true, wenn ein Token existiert UND nicht abgelaufen ist
   isAuthenticated = computed(() => !!this.#token());
-
-  // Die User-Daten direkt als Signal verfügbar machen
   currentToken = computed(() => this.#token());
   currentUser = computed(() => this.#user());
-
 
   private getInitialUser(): User | null {
     const savedUser = localStorage.getItem(this.USER_KEY);
     return savedUser ? JSON.parse(savedUser) : null;
   }
 
-  login(credentials: any) {
+  login(credentials: unknown) {
     return this.http.post<AuthResponse>('/api/auth/login', credentials).pipe(
       tap((response) => {
         this.setSession(response.token, response.user);
@@ -76,10 +61,9 @@ export class AuthService {
 
     this.#token.set(null);
     this.#user.set(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
-  // Hilfsmethode, falls man die Daten manuell vom Server auffrischen will
   refreshUser() {
     return this.http
       .get<User>('/api/users/me')

@@ -57,6 +57,9 @@ Falls das Backend sich spaeter fuer Option 1 entscheidet, muss nur die Datenquel
 ## Interaktion im UI
 
 - Klick auf eine Event-Karte oeffnet `/events/:id`
+- die Detailseite erkennt den eingeloggten Host ueber echte Auth-Daten statt ueber einen Demo-Namen
+- Host-Events werden bereits aus der Navigation vorbefuellt, damit die Detailseite nicht auf einer endlosen Ladeanzeige haengen bleibt
+- `Event bearbeiten` fuehrt zu `/events/:id/edit` und nutzt denselben Formular-Flow wie die Erstellung
 - `Neues Event` fuehrt zu `/events/create`
 - bei leeren Daten bleibt der bestehende CTA sichtbar
 - bei Ladefehlern gibt es eine Retry-Aktion

@@ -1,21 +1,21 @@
-import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { InvitationService } from '../../core/services/invitation.service';
-import { EventService } from '../../core/services/event.service';
-import { Invitation } from '../../core/models/invitation.model';
-import { Event } from '../../core/models/event.model';
-import { HeaderComponent } from '../../shared/header/header.component';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { CtaBanner } from '../../components/cta-banner/cta-banner';
-import { AuthService, User } from '../../auth/auth';
-import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
+import { finalize } from 'rxjs';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
-import { finalize } from 'rxjs';
+import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
+import { AuthService, User } from '../../auth/auth';
+import { CtaBanner } from '../../components/cta-banner/cta-banner';
+import { Event } from '../../core/models/event.model';
+import { Invitation } from '../../core/models/invitation.model';
+import { EventService } from '../../core/services/event.service';
+import { InvitationService } from '../../core/services/invitation.service';
+import { HeaderComponent } from '../../shared/header/header.component';
 
 @Component({
   selector: 'app-profile',
@@ -40,19 +40,17 @@ import { finalize } from 'rxjs';
 export class ProfileComponent implements OnInit {
   private invitationService = inject(InvitationService);
   private eventService = inject(EventService);
-  protected authService = inject(AuthService); // Zugriff auf currentUser()
+  protected authService = inject(AuthService);
+  private lastLoadedUserId: number | null = null;
 
-  // Quelle der Wahrheit: Das Signal aus dem AuthService
   readonly user = this.authService.currentUser;
 
-  // Verwandte Daten bleiben lokale Signals
   invitations = signal<Invitation[]>([]);
   myEvents = signal<Event[]>([]);
   invitationsLoading = signal(true);
   myEventsLoading = signal(true);
   myEventsError = signal(false);
 
-  // Computed für die Initialen
   initials = computed(() => {
     const u = this.user();
     if (!u) return '??';
@@ -62,21 +60,29 @@ export class ProfileComponent implements OnInit {
   editForm = { username: '', firstName: '', lastName: '', email: '', bio: '' };
 
   constructor() {
-    // Optional: Ein Effect, der das Formular automatisch füllt, sobald der User geladen ist
     effect(() => {
       const u = this.user();
       if (u) {
         this.syncEditForm(u);
+
+        if (this.lastLoadedUserId !== u.id) {
+          this.lastLoadedUserId = u.id;
+          this.loadRelatedData(u.id);
+        }
+        return;
       }
+
+      this.lastLoadedUserId = null;
+      this.invitations.set([]);
+      this.myEvents.set([]);
+      this.invitationsLoading.set(false);
+      this.myEventsLoading.set(false);
+      this.myEventsError.set(false);
     });
   }
 
   ngOnInit(): void {
-    const u = this.user();
-    if (u) {
-      this.loadRelatedData(u.id);
-    } else {
-      // Falls wir im Profil landen, aber kein User da ist -> Redirect
+    if (!this.user()) {
       this.authService.logout();
     }
   }
@@ -165,6 +171,7 @@ export class ProfileComponent implements OnInit {
     if (!name?.trim()) {
       return this.initials();
     }
+
     return name
       .split(' ')
       .map((part) => part[0])
@@ -174,9 +181,6 @@ export class ProfileComponent implements OnInit {
   }
 
   protected saveProfile() {
-    // Hier würdest du den UserService nutzen, um die Daten ans Backend zu senden
-    // Danach nicht vergessen: authService.refreshUser() aufrufen,
-    // damit der Header und das Profil die neuen Daten zeigen!
     console.log('Speichere:', this.editForm);
   }
 }

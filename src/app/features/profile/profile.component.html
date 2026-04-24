@@ -67,7 +67,7 @@
           } @else if (myEvents().length > 0) {
             <div class="events-grid">
               @for (event of myEvents(); track event.id; let i = $index) {
-                <a class="event-card" [routerLink]="['/events', event.id]">
+                <a class="event-card" [routerLink]="['/events', event.id]" [state]="{ event }">
                   <div class="card-img" [style.background]="getGradient(i)">
                     <div class="img-overlay"></div>
                     <span class="date-badge">{{ formatEventDate(event.date) }}</span>
