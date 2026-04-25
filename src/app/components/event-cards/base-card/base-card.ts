@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { BuilderElement } from '../../core/services/event.service';
+import { BuilderElement } from '../../../core/services/event.service';
 import { NzIconDirective } from 'ng-zorro-antd/icon';
 
 @Component({

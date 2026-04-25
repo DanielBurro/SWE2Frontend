@@ -11,14 +11,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import {
-  CdkDragDrop,
-} from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../core/services/event.service';
 import { CompactType, Gridster, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
-import { BaseCard } from '../../../components/base-card/base-card';
-import { TextCard } from '../../../components/text-card/text-card';
+import { BaseCard } from '../../../components/event-cards/base-card/base-card';
+import { TextCard } from '../../../components/event-cards/text-card/text-card';
 
 // Definition für die Buttons im Header (Blueprint)
 interface BuilderElementDefinition {
@@ -181,48 +178,5 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
    */
   public removeElement(id: string) {
     this.eventService.removeElement(id);
-  }
-
-  /**
-   * Behandelt das Verschieben von Elementen im Gitter
-   */
-  onDrop(event: CdkDragDrop<any>) {
-    this.eventService.reorderElements(event.previousIndex, event.currentIndex);
-  }
-
-  /**
-   * Ändert die Spaltenbreite eines Elements (1, 2 oder 3)
-   */
-  changeSize(id: string, cols: number) {
-    this.eventService.updateElementSize(id, cols);
-  }
-
-  startResize(event: MouseEvent, element: any) {
-    event.preventDefault();
-    const startX = event.clientX;
-    const startCols = element.cols;
-    const containerWidth = this.headerContainer.nativeElement.offsetWidth; // Grobe Referenz
-    const colWidth = containerWidth / 3;
-
-    const onMouseMove = (moveEvent: MouseEvent) => {
-      const deltaX = moveEvent.clientX - startX;
-      const newColsAdd = Math.round(deltaX / colWidth);
-      let finalCols = startCols + newColsAdd;
-
-      // Grenzen einhalten
-      finalCols = Math.max(1, Math.min(finalCols, 4 - element.start));
-
-      if (finalCols !== element.cols) {
-        this.eventService.updateElementPos(element.id, element.start, finalCols);
-      }
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
   }
 }
