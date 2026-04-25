@@ -1,6 +1,5 @@
 <div class="header-sticky-wrapper">
   <nz-header class="secondary-header" #headerContainer>
-
     <div class="status-pill" #pillElement>
       <span class="dot"></span>
       <span class="pill-text">Hinzufügen:</span>
@@ -9,7 +8,7 @@
     <div class="header-controls">
       <div class="main-actions">
         @for (item of visibleItems; track item.id) {
-          <button class="action-item ripple">
+          <button class="action-item ripple" (click)="addItem(item)">
             <span nz-icon [nzType]="item.icon"></span>
             <span class="label">{{ item.label }}</span>
           </button>
@@ -34,12 +33,52 @@
     <div class="grid-card">
       <div class="grid-container">
         @for (item of overflowItems; track item.id) {
-          <div class="grid-item">
+          <button class="grid-item" (click)="addItem(item)">
             <span nz-icon [nzType]="item.icon"></span>
             <span class="grid-label">{{ item.label }}</span>
-          </div>
+          </button>
         }
       </div>
     </div>
   }
+</div>
+
+<div class="builder-content-area">
+  <div class="elements-grid" cdkDropList (cdkDropListDropped)="onDrop($event)">
+    @for (element of eventService.builderElements(); track element.id) {
+      <div
+        class="element-wrapper"
+        [style.grid-column]="element.start + ' / span ' + element.cols"
+        cdkDrag
+      >
+        <div class="drag-handle-outside" cdkDragHandle>
+          <span nz-icon nzType="holder"></span>
+        </div>
+
+        <div class="content-card">
+          <div class="card-header">
+            <span nz-icon [nzType]="element.icon" class="type-icon"></span>
+            <span class="type-label">{{ element.label }}</span>
+
+            <button class="delete-btn" (click)="removeElement(element.id)">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </div>
+
+          <div class="card-body">
+            <textarea
+              nz-input
+              [(ngModel)]="element.data.text"
+              placeholder="Inhalt hier eingeben..."
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="resizer-handle" (mousedown)="startResize($event, element)"></div>
+        </div>
+
+        <div class="quick-pos-info">Spalte {{element.start}}, Breite {{element.cols}}</div>
+      </div>
+    }
+  </div>
 </div>

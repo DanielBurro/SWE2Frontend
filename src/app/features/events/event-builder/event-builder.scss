@@ -1,5 +1,5 @@
 // ==========================================================================
-// 1. VARIABLEN & GRUNDSTEUERUNG
+// 1. VARIABLEN & BASIS
 // ==========================================================================
 $gold-primary: #c9a96e;
 $gold-light:   #d4b87a;
@@ -14,7 +14,7 @@ $text-muted:   rgba(232, 228, 220, 0.6);
 }
 
 // ==========================================================================
-// 2. STICKY WRAPPER & HEADER (NG-ZORRO)
+// 2. HEADER & STICKY NAVIGATION
 // ==========================================================================
 .header-sticky-wrapper {
   position: sticky;
@@ -26,37 +26,30 @@ $text-muted:   rgba(232, 228, 220, 0.6);
 
 nz-header.secondary-header {
   display: flex;
-  flex-direction: row;        // Zwingt Pille und Controls nebeneinander
   justify-content: space-between;
   align-items: center;
-
-  height: auto;               // Zorro-Reset
-  line-height: normal;        // Zorro-Reset
+  height: auto;
+  line-height: normal;
   padding: 10px 16px;
   background: rgba($bg-sider, 0.85);
   backdrop-filter: blur(12px);
   border-radius: 14px;
   border: 1px solid rgba($gold-primary, 0.2);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-
   width: 100%;
-  overflow: hidden;           // Verhindert das "Rausgleiten" von Elementen
+  overflow: hidden;
 }
 
-// ==========================================================================
-// 3. STATUS-PILL (Links)
-// ==========================================================================
 .status-pill {
-  flex-shrink: 0;             // Pille darf niemals schrumpfen
+  flex-shrink: 0;
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 8px;
   padding: 6px 16px;
   background: rgba($gold-primary, 0.1);
   border: 1px solid rgba($gold-primary, 0.3);
   border-radius: 20px;
-  margin-right: 16px;         // Mindestabstand zu den Buttons
+  margin-right: 16px;
 
   .dot {
     width: 6px;
@@ -64,57 +57,46 @@ nz-header.secondary-header {
     background-color: $gold-primary;
     border-radius: 50%;
     box-shadow: 0 0 8px $gold-primary;
-    flex-shrink: 0;
   }
 
   .pill-text {
     color: $gold-primary;
     font-size: 13px;
     font-weight: 500;
-    white-space: nowrap;      // Text darf nicht umbrechen
   }
 }
 
-// ==========================================================================
-// 4. HEADER-CONTROLS & MAIN-ACTIONS (Rechts)
-// ==========================================================================
 .header-controls {
   display: flex;
-  flex-direction: row;
-  flex: 1;                    // Nimmt den restlichen Platz ein
-  min-width: 0;               // ERMÖGLICHT DAS SCHRUMPFEN (Fix gegen das Gleiten)
+  flex: 1;
+  min-width: 0;
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
-}
 
-.main-actions {
-  display: flex;
-  flex-direction: row;        // Buttons nebeneinander
-  gap: 8px;
-  align-items: center;
-  min-width: 0;               // Fix für Flex-Child-Berechnung
-  flex-shrink: 1;             // Lässt den Container kleiner werden, damit TS-Logik greift
+  .main-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
 }
 
 .action-item {
-  flex-shrink: 0;             // Die Buttons selbst behalten ihre Größe
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: $text-main;
   padding: 8px 14px;
-  min-width: 100px;           // Korrespondiert mit itemWidth in TS (115px inkl. Gap)
+  min-width: 100px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 8px;
   transition: all 0.2s ease;
 
-  .anticon { color: $gold-primary; font-size: 14px; }
-  .label { font-size: 13px; white-space: nowrap; }
+  .anticon { color: $gold-primary; }
 
   &:hover {
     background: rgba($gold-primary, 0.12);
@@ -123,9 +105,8 @@ nz-header.secondary-header {
   }
 
   &.more-button {
-    min-width: 44px;          // Kleiner für den Plus/Close Button
+    min-width: 44px;
     background: rgba($gold-primary, 0.1);
-
     &.active {
       background: $gold-primary !important;
       color: $bg-dark !important;
@@ -135,7 +116,7 @@ nz-header.secondary-header {
 }
 
 // ==========================================================================
-// 5. CUSTOM GRID-CARD (Dropdown Ersatz)
+// 3. GRID DROPDOWN (BIG CARD)
 // ==========================================================================
 .grid-card-overlay {
   position: fixed;
@@ -146,7 +127,7 @@ nz-header.secondary-header {
 
 .grid-card {
   position: absolute;
-  top: calc(100% - 8px);      // Direkt unter den Header kleben
+  top: calc(100% - 8px);
   right: 24px;
   width: 360px;
   background: rgba($bg-sider, 0.95);
@@ -157,49 +138,183 @@ nz-header.secondary-header {
   z-index: 101;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
   animation: slideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
 
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); // 3-Spalten Raster
-  gap: 12px;
-}
-
-.grid-item {
-  display: flex;
-  flex-direction: column;     // Icon über Text
-  align-items: center;
-  justify-content: center;
-  padding: 16px 8px;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  .anticon {
-    font-size: 24px;
-    color: $gold-primary;
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
 
-  span:not(.anticon) {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: rgba(232, 228, 220, 0.7);
-  }
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 8px;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none; // Reset button styles
 
-  &:hover {
-    background: rgba($gold-primary, 0.15);
-    border-color: $gold-primary;
-    transform: translateY(-4px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    .anticon { font-size: 24px; color: $gold-primary; }
+    .grid-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: $text-muted; }
+
+    &:hover {
+      background: rgba($gold-primary, 0.15);
+      transform: translateY(-4px);
+    }
   }
 }
 
 // ==========================================================================
-// 6. ANIMATIONEN
+// 4. BUILDER CONTENT AREA & INTERACTIVE GRID
+// ==========================================================================
+.builder-content-area {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 100px 70px; // Padding links erhöht für die Handles
+}
+
+.elements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  min-height: 400px;
+  align-items: start;
+}
+
+.element-wrapper {
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+
+  // Das 6-Punkte Handle (Notion-Style)
+  .drag-handle-outside {
+    position: absolute;
+    left: -45px;
+    top: 20px; // Oben ausgerichtet wie bei Editoren üblich
+    cursor: grab;
+    color: rgba($gold-primary, 0.4);
+    font-size: 22px;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    padding: 5px;
+
+    &:active { cursor: grabbing; }
+    &:hover { color: $gold-primary; }
+  }
+
+  &:hover .drag-handle-outside {
+    opacity: 1;
+  }
+}
+
+// ==========================================================================
+// 5. CONTENT CARD & EDITOR
+// ==========================================================================
+.content-card {
+  background: rgba($bg-sider, 0.6);
+  border: 1px solid rgba($gold-primary, 0.15);
+  border-radius: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba($bg-sider, 0.8);
+    border-color: rgba($gold-primary, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    .resizer-handle { opacity: 1; }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .type-icon { color: $gold-primary; }
+    .type-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: $text-muted; flex: 1; }
+
+    .delete-btn {
+      background: transparent; border: none;
+      color: rgba($text-main, 0.2); cursor: pointer;
+      &:hover { color: #ff4d4f; }
+    }
+  }
+
+  .card-body {
+    padding: 15px;
+
+    textarea {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: #ffffff; // Strahlend weißer Text
+      padding: 14px;
+      font-size: 15px;
+      width: 100%;
+      min-height: 100px;
+      resize: none;
+      transition: all 0.3s;
+
+      &:focus {
+        border-color: $gold-primary;
+        background: rgba(255, 255, 255, 0.06);
+        outline: none;
+        box-shadow: 0 0 15px rgba($gold-primary, 0.1);
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// 6. INTERACTIVE HANDLES (RESIZE & DRAG)
+// ==========================================================================
+.resizer-handle {
+  position: absolute;
+  right: -6px;
+  top: 15%;
+  height: 70%;
+  width: 12px;
+  cursor: col-resize;
+  background: linear-gradient(to bottom, transparent, $gold-primary, transparent);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.2s, width 0.2s;
+  z-index: 10;
+
+  &:hover {
+    opacity: 1;
+    width: 16px;
+  }
+}
+
+// ==========================================================================
+// 7. CDK DRAG & DROP OVERRIDES
+// ==========================================================================
+.cdk-drag-preview {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  border: 1px solid $gold-primary !important;
+  opacity: 0.9;
+  border-radius: 20px;
+
+  .drag-handle-outside { display: none; }
+}
+
+.custom-placeholder {
+  background: rgba($gold-primary, 0.03);
+  border: 2px dashed rgba($gold-primary, 0.2);
+  border-radius: 20px;
+  height: 100%;
+  min-height: 120px;
+}
+
+// ==========================================================================
+// 8. ANIMATIONEN
 // ==========================================================================
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-10px); }

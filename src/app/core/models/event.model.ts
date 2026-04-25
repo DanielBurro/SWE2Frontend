@@ -20,3 +20,16 @@ export interface CreateEventDto {
 }
 
 export type EventStatus = Event['status'];
+
+export interface EventElement {
+  id: string;      // Eindeutige ID (z.B. Date.now() oder UUID)
+  type: string;    // 'text', 'image', 'video' etc.
+  config: any;     // Die spezifischen Daten (z.B. { text: 'Hallo', color: 'gold' })
+  order: number;   // Wichtig für die Sortierung
+}
+
+export interface EventData {
+  id?: string;     // Datenbank-ID (leer bei neuem Event)
+  title: string;
+  elements: EventElement[];
+}
