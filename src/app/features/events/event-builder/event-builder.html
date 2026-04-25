@@ -44,14 +44,11 @@
 </div>
 
 <div class="builder-content-area">
-  <div class="elements-grid" cdkDropList (cdkDropListDropped)="onDrop($event)">
+  <gridster [options]="options" class="gold-gridster">
     @for (element of eventService.builderElements(); track element.id) {
-      <div
-        class="element-wrapper"
-        [style.grid-column]="element.start + ' / span ' + element.cols"
-        cdkDrag
-      >
-        <div class="drag-handle-outside" cdkDragHandle>
+      <gridster-item [item]="element">
+
+        <div class="drag-handle-outside">
           <span nz-icon nzType="holder"></span>
         </div>
 
@@ -59,7 +56,6 @@
           <div class="card-header">
             <span nz-icon [nzType]="element.icon" class="type-icon"></span>
             <span class="type-label">{{ element.label }}</span>
-
             <button class="delete-btn" (click)="removeElement(element.id)">
               <span nz-icon nzType="delete"></span>
             </button>
@@ -69,16 +65,12 @@
             <textarea
               nz-input
               [(ngModel)]="element.data.text"
-              placeholder="Inhalt hier eingeben..."
-              rows="3"
+              placeholder="Schreib etwas..."
             ></textarea>
           </div>
-
-          <div class="resizer-handle" (mousedown)="startResize($event, element)"></div>
         </div>
 
-        <div class="quick-pos-info">Spalte {{element.start}}, Breite {{element.cols}}</div>
-      </div>
+      </gridster-item>
     }
-  </div>
+  </gridster>
 </div>

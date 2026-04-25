@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
   private allEvents = signal<Event[]>([]);
   activeTab = signal<string>('alle');
   isLoading = true;
-  skeletonParagraph = { rows: 3 }; 
+  skeletonParagraph = { rows: 3 };
 
   tabs = [
     { key: 'alle',    label: 'Alle' },
@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (!this.isLoggedIn()) return; 
+    if (!this.isLoggedIn()) return;
 
     this.eventService.getAll().subscribe({
       next: (events) => {

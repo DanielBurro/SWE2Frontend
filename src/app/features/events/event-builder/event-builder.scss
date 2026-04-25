@@ -1,5 +1,5 @@
 // ==========================================================================
-// 1. VARIABLEN & BASIS
+// 1. VARIABLEN
 // ==========================================================================
 $gold-primary: #c9a96e;
 $gold-light:   #d4b87a;
@@ -14,7 +14,7 @@ $text-muted:   rgba(232, 228, 220, 0.6);
 }
 
 // ==========================================================================
-// 2. HEADER & STICKY NAVIGATION
+// 2. HEADER & NAVIGATION (Sticky)
 // ==========================================================================
 .header-sticky-wrapper {
   position: sticky;
@@ -36,8 +36,6 @@ nz-header.secondary-header {
   border-radius: 14px;
   border: 1px solid rgba($gold-primary, 0.2);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  width: 100%;
-  overflow: hidden;
 }
 
 .status-pill {
@@ -52,37 +50,24 @@ nz-header.secondary-header {
   margin-right: 16px;
 
   .dot {
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     background-color: $gold-primary;
     border-radius: 50%;
     box-shadow: 0 0 8px $gold-primary;
   }
-
-  .pill-text {
-    color: $gold-primary;
-    font-size: 13px;
-    font-weight: 500;
-  }
+  .pill-text { color: $gold-primary; font-size: 13px; font-weight: 500; }
 }
 
 .header-controls {
   display: flex;
   flex: 1;
-  min-width: 0;
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
-
-  .main-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  .main-actions { display: flex; gap: 8px; }
 }
 
 .action-item {
-  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: $text-main;
@@ -97,12 +82,7 @@ nz-header.secondary-header {
   transition: all 0.2s ease;
 
   .anticon { color: $gold-primary; }
-
-  &:hover {
-    background: rgba($gold-primary, 0.12);
-    border-color: $gold-primary;
-    transform: translateY(-1px);
-  }
+  &:hover { background: rgba($gold-primary, 0.12); border-color: $gold-primary; transform: translateY(-1px); }
 
   &.more-button {
     min-width: 44px;
@@ -116,98 +96,50 @@ nz-header.secondary-header {
 }
 
 // ==========================================================================
-// 3. GRID DROPDOWN (BIG CARD)
+// 3. DROPDOWN MENU (Big Card)
 // ==========================================================================
-.grid-card-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  z-index: 99;
-}
-
+.grid-card-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99; }
 .grid-card {
-  position: absolute;
-  top: calc(100% - 8px);
-  right: 24px;
-  width: 360px;
-  background: rgba($bg-sider, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba($gold-primary, 0.3);
-  border-radius: 16px;
-  padding: 16px;
-  z-index: 101;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  position: absolute; top: calc(100% - 8px); right: 24px; width: 360px;
+  background: rgba($bg-sider, 0.95); backdrop-filter: blur(20px);
+  border: 1px solid rgba($gold-primary, 0.3); border-radius: 16px;
+  padding: 16px; z-index: 101; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
   animation: slideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
+  .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .grid-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 8px;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none; // Reset button styles
-
+    display: flex; flex-direction: column; align-items: center; padding: 16px 8px; gap: 10px;
+    background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: none; cursor: pointer;
     .anticon { font-size: 24px; color: $gold-primary; }
-    .grid-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: $text-muted; }
-
-    &:hover {
-      background: rgba($gold-primary, 0.15);
-      transform: translateY(-4px);
-    }
+    .grid-label { font-size: 10px; text-transform: uppercase; color: $text-muted; }
+    &:hover { background: rgba($gold-primary, 0.15); transform: translateY(-4px); }
   }
 }
 
 // ==========================================================================
-// 4. BUILDER CONTENT AREA & INTERACTIVE GRID
+// 4. GRIDSTER AREA
 // ==========================================================================
+
 .builder-content-area {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px 100px 70px; // Padding links erhöht für die Handles
+  // Mindesthöhe, damit man scrollen kann, auch wenn wenig drin ist
+  min-height: calc(100vh - 160px);
+  padding: 40px 40px 40px 80px;
+  background: rgba(255, 255, 255, 0.01); // Ganz leichter Schimmer
 }
 
-.elements-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  min-height: 400px;
-  align-items: start;
+.gold-gridster {
+  // Gridster berechnet Breiten oft basierend auf dem ersten Render.
+  // Wir stellen sicher, dass es nie breiter als der Parent wird.
+  max-width: 100% !important;
+  background: transparent;
 }
 
-.element-wrapper {
-  position: relative;
-  transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
-
-  // Das 6-Punkte Handle (Notion-Style)
+gridster-item {
+  // Das Handle links muss nun auch kleiner/feiner sein
   .drag-handle-outside {
-    position: absolute;
-    left: -45px;
-    top: 20px; // Oben ausgerichtet wie bei Editoren üblich
-    cursor: grab;
-    color: rgba($gold-primary, 0.4);
-    font-size: 22px;
-    opacity: 0;
-    transition: opacity 0.2s, color 0.2s;
-    padding: 5px;
-
-    &:active { cursor: grabbing; }
-    &:hover { color: $gold-primary; }
-  }
-
-  &:hover .drag-handle-outside {
-    opacity: 1;
+    left: -35px;
+    top: 8px; // Weiter oben für flache Zeilen
+    font-size: 18px;
   }
 }
 
@@ -215,106 +147,110 @@ nz-header.secondary-header {
 // 5. CONTENT CARD & EDITOR
 // ==========================================================================
 .content-card {
-  background: rgba($bg-sider, 0.6);
+  // Zwingt die Karte auf die Größe des Gridster-Items
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+
+  display: flex;
+  flex-direction: column;
+  background: rgba($bg-sider, 0.7);
   border: 1px solid rgba($gold-primary, 0.15);
-  border-radius: 20px;
-  position: relative;
-  transition: all 0.3s ease;
+  border-radius: 12px;
+  box-sizing: border-box; // Wichtig für die Berechnung!
+  transition: border-color 0.3s;
 
   &:hover {
-    background: rgba($bg-sider, 0.8);
     border-color: rgba($gold-primary, 0.4);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-
-    .resizer-handle { opacity: 1; }
   }
 
   .card-header {
+    flex-shrink: 0; // Header darf nicht kleiner werden
+    height: 22px;   // Feste, kleine Höhe für 45px rows
+    padding: 2px 10px;
     display: flex;
     align-items: center;
-    padding: 12px 16px;
-    gap: 12px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
-    .type-icon { color: $gold-primary; }
-    .type-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: $text-muted; flex: 1; }
-
-    .delete-btn {
-      background: transparent; border: none;
-      color: rgba($text-main, 0.2); cursor: pointer;
-      &:hover { color: #ff4d4f; }
-    }
+    .type-icon { font-size: 11px; color: $gold-primary; }
+    .type-label { font-size: 9px; text-transform: uppercase; color: $text-muted; flex: 1; }
+    .delete-btn { font-size: 11px; cursor: pointer; border: none; background: none; color: rgba(255,255,255,0.2); &:hover { color: #ff4d4f; } }
   }
 
   .card-body {
-    padding: 15px;
+    flex: 1; // Nimmt den gesamten restlichen Platz der Karte ein
+    display: flex;
+    padding: 4px 10px;
+    overflow: hidden;
 
     textarea {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      color: #ffffff; // Strahlend weißer Text
-      padding: 14px;
-      font-size: 15px;
       width: 100%;
-      min-height: 100px;
+      height: 100%; // Füllt den Body komplett aus
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.3;
       resize: none;
-      transition: all 0.3s;
-
-      &:focus {
-        border-color: $gold-primary;
-        background: rgba(255, 255, 255, 0.06);
-        outline: none;
-        box-shadow: 0 0 15px rgba($gold-primary, 0.1);
-      }
+      padding: 0;
+      &:focus { outline: none; }
     }
   }
 }
-
 // ==========================================================================
-// 6. INTERACTIVE HANDLES (RESIZE & DRAG)
+// 6. GRIDSTER UI OVERRIDES
 // ==========================================================================
-.resizer-handle {
-  position: absolute;
-  right: -6px;
-  top: 15%;
-  height: 70%;
-  width: 12px;
-  cursor: col-resize;
-  background: linear-gradient(to bottom, transparent, $gold-primary, transparent);
-  border-radius: 10px;
-  opacity: 0;
-  transition: opacity 0.2s, width 0.2s;
-  z-index: 10;
+::ng-deep {
+  // Die Resize-Ecken stylen
+  .gridster-item-resizable-handler {
+    &.handle-s, &.handle-e, &.handle-se {
+      border-color: $gold-primary !important;
+    }
+  }
 
-  &:hover {
-    opacity: 1;
-    width: 16px;
+  // Preview-Schatten beim Verschieben
+  .gridster-preview {
+    background: rgba($gold-primary, 0.05) !important;
+    border: 2px dashed rgba($gold-primary, 0.2) !important;
+    border-radius: 20px !important;
   }
 }
 
-// ==========================================================================
-// 7. CDK DRAG & DROP OVERRIDES
-// ==========================================================================
-.cdk-drag-preview {
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-  border: 1px solid $gold-primary !important;
-  opacity: 0.9;
-  border-radius: 20px;
-
-  .drag-handle-outside { display: none; }
+// Fix für die Gridster-Engine
+::ng-deep gridster {
+  background: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.custom-placeholder {
-  background: rgba($gold-primary, 0.03);
-  border: 2px dashed rgba($gold-primary, 0.2);
-  border-radius: 20px;
-  height: 100%;
-  min-height: 120px;
+gridster-item {
+  // Das Item selbst muss ein Flex-Container sein
+  display: flex !important;
+  flex-direction: column;
+  background: transparent !important;
+  overflow: visible !important; // Wichtig für das Handle links
+
+  .drag-handle-outside {
+    position: absolute;
+    left: -35px;
+    top: 50%;
+    transform: translateY(-50%); // Zentriert am Rand
+    cursor: grab;
+    color: rgba($gold-primary, 0.4);
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+    &:hover { color: $gold-primary; }
+  }
+
+  &:hover .drag-handle-outside { opacity: 1; }
 }
 
 // ==========================================================================
-// 8. ANIMATIONEN
+// 7. ANIMATIONEN
 // ==========================================================================
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-10px); }

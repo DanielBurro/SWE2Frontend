@@ -1,19 +1,19 @@
 // event.services.ts
 
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, Signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, CreateEventDto, EventStatus } from '../models/event.model';
 import { environment } from '../../../environments/environment';
+import { GridsterItemConfig } from 'angular-gridster2';
+import * as crypto from 'node:crypto';
 
 // Interface für die Builder-Elemente
-export interface BuilderElement {
+export interface BuilderElement extends GridsterItemConfig {
   id: string;
   type: string;
   label: string;
   icon: string;
-  cols: number; // Breite (1-3)
-  start: number; // Start-Position (1-3)
   data: any;
 }
 
@@ -27,7 +27,7 @@ export class EventService {
   private _builderElements = signal<BuilderElement[]>([]);
 
   // Read-only Zugriff für die Komponenten
-  public builderElements = computed(() => this._builderElements());
+  public builderElements: Signal<BuilderElement[]> = computed(() => this._builderElements());
 
   // --- BUILDER FUNKTIONEN (Frontend-Only für jetzt) ---
 
@@ -36,15 +36,16 @@ export class EventService {
    */
   addElement(type: string, label: string, icon: string) {
     const newElement: BuilderElement = {
-      id: crypto.randomUUID(), // Browser-native UUID Generierung
+      x: 0,
+      y: 0,
+      cols: 3,
+      rows: 1, // Startet jetzt als schlanke Zeile
+      id: window.crypto.randomUUID(),
       type,
       label,
       icon,
-      cols: 3, // Standardmäßig volle Breite
-      start: 1,
       data: this.getDefaultDataForType(type),
     };
-
     this._builderElements.update((elements) => [...elements, newElement]);
   }
 

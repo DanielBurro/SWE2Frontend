@@ -21,6 +21,7 @@ import {
 import { NzInputDirective } from 'ng-zorro-antd/input';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../core/services/event.service';
+import { CompactType, Gridster, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
 
 // Definition für die Buttons im Header (Blueprint)
 interface BuilderElementDefinition {
@@ -38,12 +39,10 @@ interface BuilderElementDefinition {
     CommonModule,
     NzIconModule,
     NzLayoutModule,
-    CdkDragPlaceholder,
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
     NzInputDirective,
     FormsModule,
+    Gridster,
+    GridsterItem,
   ],
 })
 export class EventBuilder implements AfterViewInit, OnDestroy {
@@ -52,6 +51,35 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
 
   // Der Service ist jetzt unser "Single Source of Truth"
   public eventService = inject(EventService);
+
+  // Gridster
+  options: GridsterConfig = {
+    gridType: GridType.VerticalFixed, // Spalten passen sich der Breite an
+    fixedRowHeight: 40, // Eine "Unit" ist 40px
+    // Ein Item mit rows: 4 ist also 160px hoch + Margins. Das ist "fitted".
+
+    minCols: 3,
+    maxCols: 3,
+    margin: 15,
+    outerMargin: true,
+    setGridSize: true,
+
+    draggable: {
+      enabled: true,
+      ignoreContent: true,
+      dragHandleClass: 'drag-handle-outside',
+    },
+    resizable: {
+      enabled: true, // User kann es sich so hoch ziehen wie er will
+    },
+    displayGrid: 'onDrag&Resize',
+    compactType: CompactType.None,
+  };
+
+  itemChange(item: GridsterItem, itemComponent: any) {
+    console.log('Item moved/resized', item);
+    this.cdr.detectChanges();
+  }
 
   // Blueprint-Liste für die Header-Buttons
   readonly allElements: BuilderElementDefinition[] = [
@@ -89,6 +117,12 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     if (this.headerContainer) {
       this.resizeObserver.observe(this.headerContainer.nativeElement);
     }
+
+    setTimeout(() => {
+      if (window) {
+        window.dispatchEvent(new Event('resize'));
+      }
+    }, 500);
   }
 
   ngOnDestroy(): void {
@@ -127,7 +161,6 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
   }
 
   // --- LOGIK FÜR DEN BUILDER-CONTENT (Interaktion mit Service) ---
-
   /**
    * Wird aufgerufen, wenn ein Button im Header geklickt wird.
    * Erstellt eine neue Instanz im Service.
