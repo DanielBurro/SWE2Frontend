@@ -12,16 +12,13 @@ import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import {
-  CdkDrag,
   CdkDragDrop,
-  CdkDragHandle,
-  CdkDragPlaceholder,
-  CdkDropList,
 } from '@angular/cdk/drag-drop';
-import { NzInputDirective } from 'ng-zorro-antd/input';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../../core/services/event.service';
 import { CompactType, Gridster, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
+import { BaseCard } from '../../../components/base-card/base-card';
+import { TextCard } from '../../../components/text-card/text-card';
 
 // Definition für die Buttons im Header (Blueprint)
 interface BuilderElementDefinition {
@@ -39,10 +36,12 @@ interface BuilderElementDefinition {
     CommonModule,
     NzIconModule,
     NzLayoutModule,
-    NzInputDirective,
     FormsModule,
     Gridster,
     GridsterItem,
+    BaseCard,
+    TextCard,
+    BaseCard,
   ],
 })
 export class EventBuilder implements AfterViewInit, OnDestroy {
@@ -54,32 +53,30 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
 
   // Gridster
   options: GridsterConfig = {
-    gridType: GridType.VerticalFixed, // Spalten passen sich der Breite an
-    fixedRowHeight: 40, // Eine "Unit" ist 40px
-    // Ein Item mit rows: 4 ist also 160px hoch + Margins. Das ist "fitted".
-
+    gridType: GridType.VerticalFixed,
+    fixedRowHeight: 45,
     minCols: 3,
     maxCols: 3,
-    margin: 15,
+    margin: 10,
     outerMargin: true,
     setGridSize: true,
 
+    // DAS HIER FIXT DAS GLEITEN:
+    compactType: CompactType.None, // Verhindert das automatische "Nach-Oben-Rücken"
+    pushItems: false, // Verhindert, dass Items sich gegenseitig wegkicken
+    enableEmptyCellPush: false, // Verhindert, dass das Gitter beim Halten "Platz macht"
+
     draggable: {
       enabled: true,
-      ignoreContent: true,
+      ignoreContent: true, // Drag nur über das Handle
       dragHandleClass: 'drag-handle-outside',
+      dropOverItems: false,
     },
     resizable: {
-      enabled: true, // User kann es sich so hoch ziehen wie er will
+      enabled: true,
     },
     displayGrid: 'onDrag&Resize',
-    compactType: CompactType.None,
   };
-
-  itemChange(item: GridsterItem, itemComponent: any) {
-    console.log('Item moved/resized', item);
-    this.cdr.detectChanges();
-  }
 
   // Blueprint-Liste für die Header-Buttons
   readonly allElements: BuilderElementDefinition[] = [
@@ -94,6 +91,11 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     { id: 'video', label: 'Video', icon: 'video-camera' },
     { id: 'table', label: 'Table', icon: 'table' },
   ];
+
+  adjustTitleHeight(textarea: HTMLTextAreaElement) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
 
   // Variablen für das dynamische Header-Layout
   visibleItems: BuilderElementDefinition[] = [];
@@ -177,7 +179,7 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
   /**
    * Löscht ein Element anhand seiner UUID
    */
-  protected removeElement(id: string) {
+  public removeElement(id: string) {
     this.eventService.removeElement(id);
   }
 

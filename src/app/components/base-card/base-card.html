@@ -1,0 +1,23 @@
+<div class="drag-handle-outside">
+  <span nz-icon nzType="holder"></span>
+</div>
+
+<div
+  class="content-card"
+  [class.is-focused]="isFocused"
+  (focusin)="isFocused = true"
+  (focusout)="isFocused = false"
+>
+  <div class="hover-toolbar">
+    <span nz-icon [nzType]="element.icon" class="type-icon"></span>
+    <span class="type-label">{{ element.label }}</span>
+    <div class="spacer"></div>
+    <button class="delete-btn" (click)="onDelete()">
+      <span nz-icon nzType="delete"></span>
+    </button>
+  </div>
+
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</div>

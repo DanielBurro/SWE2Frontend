@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { Event, CreateEventDto, EventStatus } from '../models/event.model';
 import { environment } from '../../../environments/environment';
 import { GridsterItemConfig } from 'angular-gridster2';
-import * as crypto from 'node:crypto';
 
 // Interface für die Builder-Elemente
 export interface BuilderElement extends GridsterItemConfig {
@@ -28,6 +27,12 @@ export class EventService {
 
   // Read-only Zugriff für die Komponenten
   public builderElements: Signal<BuilderElement[]> = computed(() => this._builderElements());
+
+  public eventTitle = signal<string>('');
+
+  updateTitle(newTitle: string) {
+    this.eventTitle.set(newTitle);
+  }
 
   // --- BUILDER FUNKTIONEN (Frontend-Only für jetzt) ---
 

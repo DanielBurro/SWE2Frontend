@@ -42,35 +42,34 @@
     </div>
   }
 </div>
+<div class="builder-page-wrapper">
+  <div class="builder-canvas">
 
-<div class="builder-content-area">
-  <gridster [options]="options" class="gold-gridster">
-    @for (element of eventService.builderElements(); track element.id) {
-      <gridster-item [item]="element">
+    <div class="title-container">
+      <textarea
+        #titleArea
+        class="notion-title"
+        placeholder="Unbenanntes Event"
+        [(ngModel)]="eventService.eventTitle"
+        (input)="adjustTitleHeight(titleArea)"
+        rows="1"
+      ></textarea>
+      <div class="title-underline"></div>
+    </div>
 
-        <div class="drag-handle-outside">
-          <span nz-icon nzType="holder"></span>
-        </div>
+    <div class="builder-content-area">
+      <gridster [options]="options" class="gold-gridster">
+        @for (element of eventService.builderElements(); track element.id) {
+          <gridster-item [item]="element">
+            <app-base-card [element]="element" (delete)="removeElement($event)">
+              @switch (element.type) {
+                @case ('text') { <app-text-card [(text)]="element.data.text"></app-text-card> }
+              }
+            </app-base-card>
+          </gridster-item>
+        }
+      </gridster>
+    </div>
 
-        <div class="content-card">
-          <div class="card-header">
-            <span nz-icon [nzType]="element.icon" class="type-icon"></span>
-            <span class="type-label">{{ element.label }}</span>
-            <button class="delete-btn" (click)="removeElement(element.id)">
-              <span nz-icon nzType="delete"></span>
-            </button>
-          </div>
-
-          <div class="card-body">
-            <textarea
-              nz-input
-              [(ngModel)]="element.data.text"
-              placeholder="Schreib etwas..."
-            ></textarea>
-          </div>
-        </div>
-
-      </gridster-item>
-    }
-  </gridster>
+  </div>
 </div>
