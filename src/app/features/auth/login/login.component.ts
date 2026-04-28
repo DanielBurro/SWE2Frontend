@@ -36,25 +36,25 @@ export class LoginComponent {
   isSubmitting = false;
   passwordVisible = false;
 
-submit(): void {
-  if (!this.form.email || !this.form.password) {
-    this.message.warning('Bitte fülle alle Felder aus.');
-    return;
+  submit(): void {
+    if (!this.form.email || !this.form.password) {
+      this.message.warning('Bitte fülle alle Felder aus.');
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    this.authService.login(this.form).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.cdr.markForCheck(); 
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        this.cdr.markForCheck(); 
+        this.message.error(err?.error?.error ?? 'Anmeldung fehlgeschlagen.');
+      },
+    });
   }
-
-  this.isSubmitting = true;
-
-  this.authService.login(this.form).subscribe({
-    next: () => {
-      this.isSubmitting = false;
-      this.cdr.markForCheck(); 
-      this.router.navigate(['/']);
-    },
-    error: (err) => {
-      this.isSubmitting = false;
-      this.cdr.markForCheck(); 
-      this.message.error(err?.error?.error ?? 'Anmeldung fehlgeschlagen.');
-    },
-  });
-}
 }

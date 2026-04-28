@@ -7,6 +7,13 @@ export interface User {
   lastName: string;
   email: string;
   createdAt: string;
+  bio?: string;
+  profilePicUrl?: string;
+}
+
+export interface LoginDto {
+  email: string;
+  password: string;
 }
 
 export interface RegisterDto {
@@ -15,6 +22,8 @@ export interface RegisterDto {
   lastName: string;
   email: string;
   password: string;
+  bio?: string;
+  profilePicUrl?: string;
 }
 
 export interface UpdateUserDto {
@@ -22,6 +31,8 @@ export interface UpdateUserDto {
   firstName?: string;
   lastName?: string;
   email?: string;
+  bio?: string;
+  profilePicUrl?: string;
 }
 
 export interface ChangePasswordDto {

@@ -11,23 +11,29 @@
 
     <nz-divider />
 
-    <div class="avatar-section">
-      <nz-upload [nzBeforeUpload]="beforeUpload" nzShowUploadList="false" nzAccept="image/*">
-        <div class="avatar-trigger">
-          @if (avatarUrl) {
-            <img ngSrc="avatarUrl" class="avatar-preview" alt="Profilbild" fill/>
-          } @else {
-            <nz-avatar [nzSize]="80" nzIcon="user" class="avatar-placeholder" />
-          }
-          <div class="avatar-overlay">
-            <span nz-icon nzType="camera" nzTheme="outline"></span>
-          </div>
-        </div>
-      </nz-upload>
-      <p class="avatar-hint">Profilbild hochladen</p>
-    </div>
-
     <form nz-form [formGroup]="form" (ngSubmit)="submit()" nzLayout="vertical" class="register-form">
+
+      <div class="avatar-section">
+        <nz-form-item>
+          <nz-form-label>Profilbild <span class="optional">(optional)</span></nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzPrefix]="picIcon">
+              <input
+                nz-input
+                formControlName="profilePicUrl"
+                placeholder="https://example.com/mein-bild.jpg"
+                type="url" />
+            </nz-input-group>
+            <ng-template #picIcon><span nz-icon nzType="picture"></span></ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        @if (form.get('profilePicUrl')?.value) {
+          <img [src]="form.get('profilePicUrl')?.value" class="avatar-preview" alt="Vorschau" />
+        } @else {
+          <nz-avatar [nzSize]="80" nzIcon="user" class="avatar-placeholder" />
+        }
+      </div>
 
       <div class="form-row">
         <nz-form-item class="half">
