@@ -18,8 +18,8 @@
           Alle Events
         </a>
         <div class="event-status-badge">
-          <span class="status-dot" [style.background]="event.status === 'offen' ? '#4caf82' : '#c9a96e'"></span>
-          {{ event.status | titlecase }}
+          <span class="status-dot" [style.background]="getEventStatusColor(event.status)"></span>
+          {{ getEventStatusLabel(event.status) }}
         </div>
         <h1 class="event-banner-title">{{ event.title }}</h1>
         <div class="banner-meta">

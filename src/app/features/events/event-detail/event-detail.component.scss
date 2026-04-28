@@ -49,14 +49,21 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
-  color: rgba(232,228,220,0.5);
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.5px;
+
+  font-size: 12px;
+  font-weight: 400;
+
+  color: rgba(232,228,220,0.6);
+
+  margin-bottom: 0.6rem;
+
+  background: none;
+  border: none;
+  padding: 0;
 
   .status-dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
   }
 }

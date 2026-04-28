@@ -109,6 +109,26 @@ export class EventDetailComponent implements OnInit {
     });
   }
 
+  getEventStatusColor(status: string): string {
+    const map: Record<string, string> = {
+      ACTIVE: '#4caf82',
+      PLANNED: '#c9a96e',
+      CANCELLED: '#e86464',
+      DONE: '#5a82c9',
+    };
+    return map[status] ?? '#888';
+  }
+
+  getEventStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      ACTIVE: 'Aktiv',
+      PLANNED: 'Geplant',
+      CANCELLED: 'Abgesagt',
+      DONE: 'Beendet',
+    };
+    return map[status] ?? status;
+}
+
   getStatusColor(status: string): string {
     const map: Record<string, string> = {
       ACCEPTED: '#4caf82',
