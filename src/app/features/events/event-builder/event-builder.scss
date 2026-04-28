@@ -364,3 +364,21 @@ gridster-item:hover .drag-handle-outside {
   // Wir entfernen das Padding hier, da die Canvas schon Padding hat
   padding: 0;
 }
+
+.canvas-cover-wrapper {
+  position: relative;
+  height: 200px;
+  width: calc(100% + 90px); // Um das Canvas-Padding auszugleichen
+  margin: -60px -50px 30px -50px; // Zieht das Cover bis an den Rand des Kastens
+  border-radius: 24px 24px 0 0;
+  background: rgba(255, 255, 255, 0.03); // Standard-Hintergrund
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 20px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
