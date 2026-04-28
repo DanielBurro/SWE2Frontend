@@ -127,7 +127,7 @@ export class EventCreateComponent implements OnInit {
     this.eventService.create({
       title,
       description,
-      date: d.toISOString(),
+      date: d.toLocaleString(),
       hostId: this.hostId,
       locationId,
     }).pipe(
