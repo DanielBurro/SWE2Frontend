@@ -40,7 +40,8 @@ export class HomeComponent implements OnInit {
   private authService   = inject(AuthService);
   private cdr           = inject(ChangeDetectorRef);
 
-  isLoggedIn = this.authService.isAuthenticated;  // ← Signal
+  isLoggedIn = this.authService.isAuthenticated; 
+  isSearching = this.searchService.isSearching;
 
   private allEvents = signal<Event[]>([]);
   activeTab = signal<string>('alle');

@@ -1,24 +1,26 @@
 <app-header />
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <p class="hero-eyebrow">Event-Planning, neu gedacht</p>
-  <h1 class="hero-title">Plane Events, die<br><em>unvergesslich</em> werden</h1>
-  <p class="hero-sub">
-    Oystr ist dein persönlicher Event-Assistent — von der Einladung bis zur Gästeliste.
-  </p>
-  @if (isLoggedIn()) {
-    <div class="hero-actions">
-      <button nz-button routerLink="/events/create" class="btn-gold">
-        Event erstellen
-      </button>
-      <button nz-button class="btn-outline">
-        Events entdecken
-      </button>
-    </div>
-  }
-</section>
+@if (!isSearching()) {
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <p class="hero-eyebrow">Event-Planning, neu gedacht</p>
+    <h1 class="hero-title">Plane Events, die<br><em>unvergesslich</em> werden</h1>
+    <p class="hero-sub">
+      Oystr ist dein persönlicher Event-Assistent — von der Einladung bis zur Gästeliste.
+    </p>
+    @if (isLoggedIn()) {
+      <div class="hero-actions">
+        <button nz-button routerLink="/events/create" class="btn-gold">
+          Event erstellen
+        </button>
+        <button nz-button class="btn-outline">
+          Events entdecken
+        </button>
+      </div>
+    }
+  </section>
+}
 
 <!-- CTA BANNER -->
 <div class="cta-banner">

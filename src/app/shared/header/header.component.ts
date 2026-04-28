@@ -69,8 +69,16 @@ export class HeaderComponent {
     return (first + last).toUpperCase();
   }
 
+  onHomeClick(): void {
+    this.searchQuery = '';
+    this.searchService.query.set('');
+    this.searchService.isSearching.set(false);
+  }
+
   onSearch(): void {
-    this.searchService.query.set(this.searchQuery.trim());
+    const value = this.searchQuery.trim();
+    this.searchService.query.set(value);
+    this.searchService.isSearching.set(!!value); 
   }
 
   onLogout(): void {
