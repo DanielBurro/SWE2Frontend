@@ -49,8 +49,8 @@ export class HomeComponent implements OnInit {
 
   tabs = [
     { key: 'alle',    label: 'Alle' },
-    { key: 'offen',   label: 'Offen' },
-    { key: 'geplant', label: 'Geplant' },
+    { key: 'ACTIVE',   label: 'Aktiv' },
+    { key: 'PLANNED', label: 'Geplant' },
   ];
 
   filteredEvents = computed(() => {
@@ -59,14 +59,16 @@ export class HomeComponent implements OnInit {
     let events = this.allEvents();
 
     if (tab !== 'alle') {
-      events = events.filter(e => e.status.toLowerCase() === tab);
+      events = events.filter(e => e.status === tab);
     }
+
     if (q) {
       events = events.filter(e =>
         e.title.toLowerCase().includes(q) ||
         e.description.toLowerCase().includes(q)
       );
     }
+
     return events;
   });
 
@@ -117,14 +119,30 @@ export class HomeComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    return status === 'offen' ? '#4caf82' : '#c9a96e';
+    switch (status) {
+      case 'ACTIVE': return '#4caf82';     // grün
+      case 'PLANNED': return '#c9a96e';    // gold
+      case 'CANCELLED': return '#c95a6e';  // rot
+      case 'DONE': return '#5a82c9';       // blau
+      default: return '#999';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'ACTIVE': return 'Aktiv';
+      case 'PLANNED': return 'Geplant';
+      case 'CANCELLED': return 'Abgesagt';
+      case 'DONE': return 'Beendet';
+      default: return status;
+    }
   }
 
   private getDemoEvents(): Event[] {
     return [
-      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'offen',   hostName: 'Laura Huber',   locationName: 'Heidelberg' },
-      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'geplant', hostName: 'Thomas Maier', locationName: 'Heilbronn'  },
-      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'offen',   hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
+      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'ACTIVE',   hostName: 'Laura Huber',   locationName: 'Heidelberg' },
+      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'PLANNEND', hostName: 'Thomas Maier', locationName: 'Heilbronn'  },
+      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'PLANNEND',   hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
     ];
   }
 }

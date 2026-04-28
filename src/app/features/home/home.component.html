@@ -85,7 +85,7 @@
             <div class="card-body">
               <div class="status-row">
                 <span class="status-dot" [style.background]="getStatusColor(event.status)"></span>
-                <span class="status-text">{{ event.status | titlecase }}</span>
+                <span class="status-text">{{ getStatusLabel(event.status) }}</span>
               </div>
 
               <h3 class="event-title">{{ event.title }}</h3>
