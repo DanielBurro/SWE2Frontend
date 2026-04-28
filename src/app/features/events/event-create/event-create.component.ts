@@ -124,10 +124,13 @@ export class EventCreateComponent implements OnInit {
       d.setHours(new Date(time).getHours(), new Date(time).getMinutes());
     }
 
+    const tzoffset = d.getTimezoneOffset() * 60000; // Offset in Millisekunden
+    const localISOTime = new Date(d.getTime() - tzoffset).toISOString().slice(0, -1);
+
     this.eventService.create({
       title,
       description,
-      date: d.toLocaleString(),
+      date: localISOTime,
       hostId: this.hostId,
       locationId,
     }).pipe(
@@ -140,8 +143,8 @@ export class EventCreateComponent implements OnInit {
         this.message.success('Event erfolgreich erstellt!');
         this.router.navigate(['/events', event.id]);
       },
-      error: () => {
-        this.message.error('Fehler beim Erstellen. Bitte versuche es erneut.');
+      error: (err) => {
+        this.message.error(err?.error?.error ?? 'Fehler beim Erstellen. Bitte versuche es erneut.');
       },
     });
   }
