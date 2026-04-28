@@ -8,7 +8,9 @@ export interface Event {
   //status: 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'COMPLETED';
   status: string;
   hostName: string;
+  hostId: number;
   locationName: string;
+  locationId: number;
 }
 
 export interface CreateEventDto {

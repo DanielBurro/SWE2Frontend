@@ -99,6 +99,30 @@ $font-sans: 'DM Sans', sans-serif;
   }
 }
 
+.btn-edit {
+  height: 28px;
+  line-height: 26px;
+  padding: 0 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+
+  ::ng-deep & {
+    background: transparent;
+    border-color: rgba(201, 169, 110, 0.35);
+    color: $gold-primary;
+
+    &:hover {
+      border-color: $gold-primary;
+      background: rgba(201, 169, 110, 0.08);
+      color: $gold-primary;
+    }
+  }
+}
+
 // --- Sektionen & Listen ---
 .profile-section {
   padding: 1.5rem 0;

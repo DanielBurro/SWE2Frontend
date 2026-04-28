@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { InvitationService } from '../../core/services/invitation.service';
 import { EventService } from '../../core/services/event.service';
 import { Invitation } from '../../core/models/invitation.model';
@@ -17,6 +18,7 @@ import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     HeaderComponent,
     NzButtonModule,
     CtaBanner,
