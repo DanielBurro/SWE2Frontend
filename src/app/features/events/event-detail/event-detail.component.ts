@@ -6,6 +6,7 @@ import { InvitationService } from '../../../core/services/invitation.service';
 import { Event } from '../../../core/models/event.model';
 import { Invitation } from '../../../core/models/invitation.model';
 import { HeaderComponent } from '../../../shared/header/header.component';
+import { AuthService } from '../../../auth/auth';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -45,6 +46,7 @@ export class EventDetailComponent implements OnInit {
   private invitationService = inject(InvitationService);
   private message           = inject(NzMessageService);
   private cdr               = inject(ChangeDetectorRef);
+  private authService       = inject(AuthService);
 
   event: Event | null = null;
   invitations: Invitation[] = [];
@@ -63,10 +65,13 @@ export class EventDetailComponent implements OnInit {
   }
 
   loadEvent(id: number): void {
+    const currentUser = this.authService.currentUser();
+    this.currentUserId = currentUser?.id ?? 1;
+
     this.eventService.getAll().subscribe({
       next: (events) => {
         this.event = events.find((e) => e.id === id) ?? null;
-        this.isHost = this.event?.hostName === 'Laura Huber'; // TODO: echte Auth
+        this.isHost = this.event?.hostId === this.currentUserId;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
@@ -75,9 +80,9 @@ export class EventDetailComponent implements OnInit {
           id, title: 'Rooftop Vernissage — Frühjahr 2026',
           description: 'Eine exklusive Vernissage auf dem Rooftop mit Blick über die Stadt. Kunstwerke lokaler Künstler, Fingerfood und gute Gespräche.',
           date: '2026-04-12T18:00:00Z', status: 'offen',
-          hostName: 'Laura Huber', locationName: 'Rooftop Heidelberg',
+          hostName: 'Laura Huber', hostId: 1, locationName: 'Rooftop Heidelberg', locationId: 2,
         };
-        this.isHost = true;
+        this.isHost = this.currentUserId === 1;
         this.isLoading = false;
         this.cdr.markForCheck();
       },

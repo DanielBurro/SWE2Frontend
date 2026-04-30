@@ -12,6 +12,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HeaderComponent } from '../../../shared/header/header.component';
+import { AuthService } from '../../../auth/auth';
 
 @Component({
   selector: 'app-register',
@@ -55,7 +56,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
       bio: [''],
-      profilePicUrl: [''], 
+      profilePicUrl: [''],
     },
     { validators: this.passwordMatchValidator },
   );
@@ -110,6 +111,7 @@ export class RegisterComponent {
     const { firstName, lastName, username, email, password, bio, profilePicUrl } = this.form.value;
 
     this.authService.register({ firstName, lastName, username, email, password, bio, profilePicUrl }).subscribe({
+    this.authService.register({ firstName, lastName, username, email, password }).subscribe({
       next: () => {
         this.message.success('Konto erfolgreich erstellt!');
         this.router.navigate(['/']);

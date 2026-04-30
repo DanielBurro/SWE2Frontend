@@ -140,3 +140,94 @@ html, body {
     color: #c9a96e !important;
   }
 }
+// In styles.scss oder via ::ng-deep umschlossen
+.oystr-confirmation-modal {
+
+  // 1. MODAL CONTAINER & BACKGROUNDS
+  .ant-modal-content,
+  .ant-modal-confirm-body-wrapper {
+    background-color: #111118 !important;
+    color: #e8e4dc !important;
+  }
+
+  .ant-modal-body {
+    background-color: #111118 !important;
+    color: #e8e4dc !important;
+  }
+
+  .ant-modal-header {
+    background: #111118 !important;
+    border-bottom-color: rgba(201, 169, 110, 0.1) !important;
+    .ant-modal-title { color: #e8e4dc !important; }
+  }
+
+  // 2. TEXT & ICON COLORS
+  .ant-modal-confirm-body {
+    .ant-modal-confirm-title {
+      color: #e8e4dc !important;
+      font-family: 'Playfair Display', serif;
+    }
+    .ant-modal-confirm-content {
+      color: rgba(232, 228, 220, 0.7) !important; // Etwas dezenterer Text
+      font-family: 'DM Sans', sans-serif;
+    }
+    .anticon {
+      top: 4px; // Feinjustierung Icon-Position
+    }
+  }
+
+  // 3. FOOTER & BUTTON ACTIONS
+  .ant-modal-footer,
+  .ant-modal-confirm-btns {
+    background-color: #111118 !important;
+    border-top: none !important; // Meist schöner ohne Trennlinie bei diesem Design
+    padding-top: 20px !important;
+  }
+
+  // Gemeinsame Button-Basis
+  .ant-modal-confirm-btns .ant-btn {
+    height: 40px;
+    padding: 0 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: none;
+  }
+
+  // --- ABBRECHEN BUTTON (Style von .btn-ghost) ---
+  .ant-modal-confirm-btns .ant-btn:not(.ant-btn-primary):not(.ant-btn-dangerous) {
+    background: transparent !important;
+    color: rgba(232, 228, 220, 0.45) !important;
+    border: 0.5px solid rgba(232, 228, 220, 0.15) !important;
+
+    &:hover, &:focus {
+      color: #e8e4dc !important;
+      border-color: rgba(232, 228, 220, 0.3) !important;
+      background: transparent !important;
+    }
+  }
+
+  // --- LÖSCHEN BUTTON (Style von .btn-delete mit Glow) ---
+  .ant-modal-confirm-btns .ant-btn-dangerous {
+    background: rgba(232, 100, 100, 0.08) !important;
+    border-color: #e86464 !important;
+    color: #e86464 !important;
+
+    &:hover, &:focus {
+      background: #e86464 !important;
+      border-color: #e86464 !important;
+      color: #ffffff !important;
+
+      // Glow-Effekt
+      box-shadow: 0 0 15px rgba(232, 100, 100, 0.4),
+      0 0 5px rgba(232, 100, 100, 0.2) !important;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
