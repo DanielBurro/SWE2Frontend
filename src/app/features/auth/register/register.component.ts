@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -111,7 +110,6 @@ export class RegisterComponent {
     const { firstName, lastName, username, email, password, bio, profilePicUrl } = this.form.value;
 
     this.authService.register({ firstName, lastName, username, email, password, bio, profilePicUrl }).subscribe({
-    this.authService.register({ firstName, lastName, username, email, password }).subscribe({
       next: () => {
         this.message.success('Konto erfolgreich erstellt!');
         this.router.navigate(['/']);

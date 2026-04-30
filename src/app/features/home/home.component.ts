@@ -144,9 +144,6 @@ export class HomeComponent implements OnInit {
       { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'offen',   hostName: 'Laura Huber', hostId: 1, locationName: 'Heidelberg', locationId: 2 },
       { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'geplant', hostName: 'Thomas Maier', hostId: 2, locationName: 'Heilbronn',  locationId: 1 },
       { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'offen',   hostName: 'Sarah Weber',   hostId: 3, locationName: 'Neckarsulm', locationId: 1 },
-      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'ACTIVE',   hostName: 'Laura Huber',   locationName: 'Heidelberg' },
-      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'PLANNEND', hostName: 'Thomas Maier', locationName: 'Heilbronn'  },
-      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'PLANNEND',   hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
     ];
   }
 }
