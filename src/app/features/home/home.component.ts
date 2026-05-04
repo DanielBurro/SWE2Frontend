@@ -2,9 +2,9 @@ import { Component, OnInit, inject, computed, signal, ChangeDetectorRef  } from 
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
-import { Event } from '../../core/models/event.model';
+import { Event, EventStatus, getEventStatusLabel, getEventStatusColor } from '../../core/models/event.model';
 import { HeaderComponent } from '../../shared/header/header.component';
-import { AuthService } from '../../auth/auth';
+import { AuthService } from '../../core/services/auth.service';
 import { SearchService } from '../../core/services/search.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -40,18 +40,18 @@ export class HomeComponent implements OnInit {
   private authService   = inject(AuthService);
   private cdr           = inject(ChangeDetectorRef);
 
-  isLoggedIn = this.authService.isAuthenticated; 
+  isLoggedIn  = this.authService.isAuthenticated;
   isSearching = this.searchService.isSearching;
 
   private allEvents = signal<Event[]>([]);
   activeTab = signal<string>('alle');
   isLoading = true;
-  skeletonParagraph = { rows: 3 }; 
+  skeletonParagraph = { rows: 3 };
 
   tabs = [
-    { key: 'alle',    label: 'Alle' },
-    { key: 'ACTIVE',   label: 'Aktiv' },
-    { key: 'PLANNED', label: 'Geplant' },
+    { key: 'alle',      label: 'Alle' },
+    { key: 'ACTIVE',    label: 'Aktiv' },
+    { key: 'PLANNED',   label: 'Geplant' },
   ];
 
   filteredEvents = computed(() => {
@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
     if (q) {
       events = events.filter(e =>
         e.title.toLowerCase().includes(q) ||
-        e.description.toLowerCase().includes(q)
+        e.description?.toLowerCase().includes(q)
       );
     }
 
@@ -74,7 +74,8 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (!this.isLoggedIn()) return; 
+    // isAuthenticated ist ein computed Signal → als Funktion aufrufen
+    if (!this.isLoggedIn()) return;
 
     this.eventService.getAll().subscribe({
       next: (events) => {
@@ -119,31 +120,20 @@ export class HomeComponent implements OnInit {
     return colors[index % colors.length];
   }
 
+  // Delegieren an Model-Converter
   getStatusColor(status: string): string {
-    switch (status) {
-      case 'ACTIVE': return '#4caf82';     // grün
-      case 'PLANNED': return '#c9a96e';    // gold
-      case 'CANCELLED': return '#c95a6e';  // rot
-      case 'DONE': return '#5a82c9';       // blau
-      default: return '#999';
-    }
+    return getEventStatusColor(status as EventStatus);
   }
 
   getStatusLabel(status: string): string {
-    switch (status) {
-      case 'ACTIVE': return 'Aktiv';
-      case 'PLANNED': return 'Geplant';
-      case 'CANCELLED': return 'Abgesagt';
-      case 'DONE': return 'Beendet';
-      default: return status;
-    }
+    return getEventStatusLabel(status as EventStatus);
   }
 
   private getDemoEvents(): Event[] {
     return [
       { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'ACTIVE',   hostName: 'Laura Huber',   locationName: 'Heidelberg' },
-      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'PLANNEND', hostName: 'Thomas Maier', locationName: 'Heilbronn'  },
-      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'PLANNEND',   hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
+      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'PLANNED',  hostName: 'Thomas Maier',  locationName: 'Heilbronn'  },
+      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'PLANNED',  hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
     ];
   }
 }
