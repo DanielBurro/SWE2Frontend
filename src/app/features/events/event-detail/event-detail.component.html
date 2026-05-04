@@ -146,22 +146,22 @@
             </div>
           }
 
-          <!-- HOST ACTIONS -->
-          @if (isHost) {
-            <div class="sidebar-card">
-              <p class="sidebar-label">Event verwalten</p>
-              <div class="host-actions">
-                <button nz-button nzBlock class="btn-gold">
-                  <span nz-icon nzType="user-add"></span>
-                  Gast einladen
-                </button>
-                <button nz-button nzBlock class="btn-outline-gold">
-                  <span nz-icon nzType="edit"></span>
-                  Event bearbeiten
-                </button>
-              </div>
-            </div>
-          }
+           <!-- HOST ACTIONS -->
+           @if (isHost) {
+             <div class="sidebar-card">
+               <p class="sidebar-label">Event verwalten</p>
+               <div class="host-actions">
+                 <button nz-button nzBlock class="btn-gold">
+                   <span nz-icon nzType="user-add"></span>
+                   Gast einladen
+                 </button>
+                 <button nz-button nzBlock [routerLink]="['/events', event.id, 'edit']" class="btn-outline-gold">
+                   <span nz-icon nzType="edit"></span>
+                   Event bearbeiten
+                 </button>
+               </div>
+             </div>
+           }
 
           <!-- EVENT INFO -->
           <div class="sidebar-card">
