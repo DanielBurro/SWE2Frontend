@@ -7,6 +7,12 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, RegisterDto, LoginDto } from '../models/user.model';
 
+interface JwtPayload {
+  sub: string;
+  name: string;
+  exp: number; // Unix-Timestamp in Sekunden
+}
+
 interface AuthResponse {
   token: string;
   user: User;
