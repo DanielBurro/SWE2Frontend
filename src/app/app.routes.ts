@@ -21,6 +21,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'events/:id/edit',
+    loadComponent: () =>
+      import('./features/events/event-edit/event-edit').then(
+        (m) => m.EventEditComponent
+      ),
+  },
+  {
     path: 'profile',
     loadComponent: () =>
       import('./features/profile/profile.component').then(

@@ -12,6 +12,7 @@ import { Invitation, InvitationStatus, getInvitationStatusLabel, getInvitationSt
 import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { HeaderComponent } from '../../../shared/header/header.component';
+import { AuthService } from '../../../auth/auth';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -57,6 +58,7 @@ export class EventDetailComponent implements OnInit {
   private authService       = inject(AuthService);
   private message           = inject(NzMessageService);
   private cdr               = inject(ChangeDetectorRef);
+  private authService       = inject(AuthService);
 
   event: Event | null = null;
   invitations: Invitation[] = [];
@@ -126,19 +128,24 @@ export class EventDetailComponent implements OnInit {
   }
 
   loadEvent(id: number): void {
+    const currentUser = this.authService.currentUser();
+    this.currentUserId = currentUser?.id ?? 1;
+
     this.eventService.getAll().subscribe({
       next: (events) => {
         this.event = events.find((e) => e.id === id) ?? null;
+        this.isHost = this.event?.hostId === this.currentUserId;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: () => {
         this.event = {
           id, title: 'Rooftop Vernissage — Frühjahr 2026',
-          description: 'Eine exklusive Vernissage auf dem Rooftop mit Blick über die Stadt.',
+          description: 'Eine exklusive Vernissage auf dem Rooftop mit Blick über die Stadt. Kunstwerke lokaler Künstler, Fingerfood und gute Gespräche.',
           date: '2026-04-12T18:00:00Z', status: 'ACTIVE',
-          hostName: 'laura.huber', locationName: 'Rooftop Heidelberg',
+          hostName: 'Laura Huber', hostId: 1, locationName: 'Rooftop Heidelberg', locationId: 2,
         };
+        this.isHost = this.currentUserId === 1;
         this.isLoading = false;
         this.cdr.markForCheck();
       },

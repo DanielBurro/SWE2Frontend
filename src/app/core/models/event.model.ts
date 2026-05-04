@@ -9,7 +9,9 @@ export interface Event {
   date: string;
   status: EventStatus;
   hostName: string;
+  hostId: number;
   locationName: string;
+  locationId: number;
 }
 
 export interface CreateEventDto {
