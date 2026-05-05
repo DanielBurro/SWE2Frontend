@@ -4,6 +4,7 @@
 
 <div
   class="content-card"
+  [id]="element.id"
   [class.is-focused]="isFocused"
   (focusin)="isFocused = true"
   (focusout)="isFocused = false"

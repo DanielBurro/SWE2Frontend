@@ -1,29 +1,42 @@
 <div class="header-sticky-wrapper">
   <nz-header class="secondary-header" #headerContainer>
-    <div class="status-pill" #pillElement>
-      <span class="dot"></span>
-      <span class="pill-text">Hinzufügen:</span>
-    </div>
+    <div class="header-left">
+      <div class="status-pill" #pillElement>
+        <span class="dot"></span>
+        <span class="pill-text">Hinzufügen:</span>
+      </div>
 
-    <div class="header-controls">
-      <div class="main-actions">
-        @for (item of visibleItems; track item.id) {
-          <button class="action-item ripple" (click)="addItem(item)">
-            <span nz-icon [nzType]="item.icon"></span>
-            <span class="label">{{ item.label }}</span>
+      <div class="header-controls">
+        <div class="main-actions">
+          @for (item of visibleItems; track item.id) {
+            <button class="action-item ripple" (click)="addItem(item)">
+              <span nz-icon [nzType]="item.icon"></span>
+              <span class="label">{{ item.label }}</span>
+            </button>
+          }
+        </div>
+
+        @if (overflowItems.length > 0) {
+          <button
+            class="action-item more-button"
+            [class.active]="isMenuOpen"
+            (click)="toggleMenu()"
+          >
+            <span nz-icon [nzType]="isMenuOpen ? 'close' : 'plus'"></span>
           </button>
         }
       </div>
+    </div>
 
-      @if (overflowItems.length > 0) {
-        <button
-          class="action-item more-button"
-          [class.active]="isMenuOpen"
-          (click)="toggleMenu()"
-        >
-          <span nz-icon [nzType]="isMenuOpen ? 'close' : 'plus'"></span>
-        </button>
-      }
+    <div class="header-right">
+      <button class="action-item-secondary" (click)="onSettings()">
+        <span nz-icon nzType="setting"></span>
+        <span>Einstellungen</span>
+      </button>
+      <button class="btn-publish" (click)="onPublish()">
+        <span nz-icon nzType="cloud-upload"></span>
+        <span>Veröffentlichen</span>
+      </button>
     </div>
   </nz-header>
 
@@ -44,7 +57,17 @@
 </div>
 <div class="builder-page-wrapper">
   <div class="builder-canvas">
-    <div class="canvas-cover-wrapper"></div>
+    <div
+      class="canvas-cover-wrapper"
+      [style.background]="eventService.coverGradient()"
+      (click)="pickGradient()"
+    >
+      <div class="cover-overlay">
+        <span nz-icon nzType="bg-colors"></span>
+        <span>Farbe ändern</span>
+      </div>
+    </div>
+
     <div class="title-container">
       <textarea
         #titleArea
@@ -58,18 +81,41 @@
     </div>
 
     <div class="builder-content-area">
-      <gridster [options]="options" class="gold-gridster">
+      <div
+        cdkDropList
+        class="element-list"
+        (cdkDropListDropped)="drop($event)"
+      >
         @for (element of eventService.builderElements(); track element.id) {
-          <gridster-item [item]="element">
+          <div class="element-wrapper" cdkDrag>
             <app-base-card [element]="element" (delete)="removeElement($event)">
               @switch (element.type) {
-                @case ('text') { <app-text-card [(text)]="element.data.text"></app-text-card> }
+                @case ('text') {
+                  <app-text-card [(text)]="element.data.text"></app-text-card>
+                }
+                @case ('heading') {
+                  <app-heading-card [(text)]="element.data.text" [level]="element.data.level"></app-heading-card>
+                }
+                @case ('image') {
+                  <app-image-card [(url)]="element.data.url"></app-image-card>
+                }
+                @default {
+                  <div class="placeholder-element">
+                    <span nz-icon [nzType]="element.icon"></span>
+                    {{ element.label }}
+                  </div>
+                }
               }
             </app-base-card>
-          </gridster-item>
+            
+            <!-- CDK Drag Preview -->
+            <div *cdkDragPreview class="drag-preview">
+              <span nz-icon [nzType]="element.icon"></span>
+              {{ element.label }}
+            </div>
+          </div>
         }
-      </gridster>
+      </div>
     </div>
-
   </div>
 </div>

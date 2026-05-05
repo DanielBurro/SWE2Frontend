@@ -1,99 +1,31 @@
-// --- Variablen ---
-$gold-primary: #c9a96e;
-$gold-light:   #d4b87a;
-$bg-dark:      #0a0a0f;
-$bg-sider:     #12121a;
-$text-main:    #e8e4dc;
-$text-muted:   rgba(232, 228, 220, 0.6);
-
-:host {
-  display: block;
-  width: 100%;
-  min-height: 100vh;
-  background: $bg-dark;
-}
-
-.main-layout {
-  min-height: 100vh;
-  background: $bg-dark;
-}
-
-// --- Sidebar ---
-.gold-sider {
-  background: $bg-sider !important;
-  border-right: 1px solid rgba($gold-primary, 0.1);
-
-  .sider-toggle-container {
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-  }
-}
-
-// --- Content Bereich ---
-.gold-content {
-  background: $bg-dark;
-  padding: 0; // Padding auf 0, damit der Sticky-Header der Unterkomponente bis zum Rand geht
+.event-create-container {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
+  padding-bottom: 80px;
 }
 
-// --- Vorschau Button (Fixiert) ---
 .btn-preview-fixed {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
+  bottom: 24px;
+  right: 24px;
   z-index: 1000;
-  height: 48px;
-  padding: 0 28px;
-  background: $gold-primary;
+  height: 44px;
+  padding: 0 24px;
+  background: #c9a96e;
   border: none;
-  color: $bg-dark;
+  color: #0a0a0f;
   font-weight: 600;
-  border-radius: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba($gold-primary, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s;
+  border-radius: 22px;
 
   &:hover {
-    background: $gold-light;
-    transform: translateY(-2px);
-    color: $bg-dark;
-  }
-}
-
-// --- NG-ZORRO Sidebar Menu Overrides ---
-:host ::ng-deep {
-  .ant-menu.gold-menu {
-    background: transparent;
-    border: none;
-    color: $text-muted;
-
-    .ant-menu-item {
-      height: 50px;
-      line-height: 50px;
-      margin-block: 4px;
-
-      &:hover { color: $gold-light !important; }
-
-      &.ant-menu-item-selected {
-        background: rgba($gold-primary, 0.1) !important;
-        color: $gold-primary !important;
-        &::after { border-right: 3px solid $gold-primary; }
-      }
-    }
+    background: #d4b87a;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
   }
 
-  .btn-gold-icon {
-    background: rgba($gold-primary, 0.1);
-    border: 1px solid $gold-primary;
-    color: $gold-primary;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  .anticon {
+    margin-right: 8px;
   }
 }

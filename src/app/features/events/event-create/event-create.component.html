@@ -1,45 +1,7 @@
-<nz-layout class="main-layout">
-  <app-header />
+<div class="event-create-container">
+  <app-event-builder />
 
-  <nz-layout>
-    <nz-sider
-      class="gold-sider"
-      [nzCollapsed]="isCollapsed"
-      [nzTrigger]="null"
-      nzCollapsible
-      [nzWidth]="260"
-      [nzCollapsedWidth]="80"
-    >
-      <div class="sider-toggle-container">
-        <button class="btn-gold-icon" (click)="toggleCollapsed()">
-          <span nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
-        </button>
-      </div>
-
-      <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="gold-menu">
-        <li nz-menu-item nzSelected>
-          <span nz-icon nzType="edit"></span>
-          <span>Event erstellen</span>
-        </li>
-        <li nz-menu-item>
-          <span nz-icon nzType="control"></span>
-          <span>Templates</span>
-        </li>
-        <li nz-menu-item>
-          <span nz-icon nzType="setting"></span>
-          <span>Einstellungen</span>
-        </li>
-        <li nz-menu-item>
-          <span nz-icon nzType="user"></span>
-          <span>Mein Profil</span>
-        </li>
-      </ul>
-    </nz-sider>
-    <nz-content class="gold-content">
-      <app-event-builder/>
-      <button nz-button nzShape="round" class="btn-preview-fixed">
-        <span nz-icon nzType="eye"></span> Vorschau
-      </button>
-    </nz-content>
-  </nz-layout>
-</nz-layout>
+  <button nz-button nzShape="round" class="btn-preview-fixed" (click)="showPreview()">
+    <span nz-icon nzType="eye"></span> Vorschau
+  </button>
+</div>

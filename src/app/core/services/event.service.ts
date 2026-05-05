@@ -5,10 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, CreateEventDto, EventStatus } from '../models/event.model';
 import { environment } from '../../../environments/environment';
-import { GridsterItemConfig } from 'angular-gridster2';
 
-// Interface für die Builder-Elemente
-export interface BuilderElement extends GridsterItemConfig {
+// Simplified Interface for the Builder-Elemente (Document-style)
+export interface BuilderElement {
   id: string;
   type: string;
   label: string;
@@ -21,30 +20,30 @@ export class EventService {
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/events`;
 
-  // --- BUILDER STATE (NEU) ---
-  // Wir nutzen Signals für maximale Performance und einfaches Handling im Frontend
+  // --- BUILDER STATE ---
   private _builderElements = signal<BuilderElement[]>([]);
-
-  // Read-only Zugriff für die Komponenten
   public builderElements: Signal<BuilderElement[]> = computed(() => this._builderElements());
 
   public eventTitle = signal<string>('');
+  
+  // Persistent gradient state
+  public color1 = signal<string>('#c9a96e');
+  public color2 = signal<string>('#111118');
+  public coverGradient = computed(() => `linear-gradient(135deg, ${this.color1()} 0%, ${this.color2()} 100%)`);
 
   updateTitle(newTitle: string) {
     this.eventTitle.set(newTitle);
   }
 
-  // --- BUILDER FUNKTIONEN (Frontend-Only für jetzt) ---
+  updateColors(c1: string, c2: string) {
+    this.color1.set(c1);
+    this.color2.set(c2);
+  }
 
-  /**
-   * Fügt ein neues Element basierend auf dem Typ hinzu
-   */
+  // --- BUILDER FUNKTIONEN ---
+
   addElement(type: string, label: string, icon: string) {
     const newElement: BuilderElement = {
-      x: 0,
-      y: 0,
-      cols: 3,
-      rows: 1, // Startet jetzt als schlanke Zeile
       id: window.crypto.randomUUID(),
       type,
       label,
@@ -54,31 +53,16 @@ export class EventService {
     this._builderElements.update((elements) => [...elements, newElement]);
   }
 
-  /**
-   * Entfernt ein Element aus dem Builder
-   */
   removeElement(id: string) {
     this._builderElements.update((elements) => elements.filter((el) => el.id !== id));
   }
 
-  /**
-   * Ändert die Spaltenbreite (1, 2 oder 3)
-   */
-  updateElementSize(id: string, cols: number) {
+  updateElement(id: string, updates: Partial<BuilderElement>) {
     this._builderElements.update((elements) =>
-      elements.map((el) => (el.id === id ? { ...el, cols } : el)),
+      elements.map((el) => (el.id === id ? { ...el, ...updates } : el)),
     );
   }
 
-  updateElementPos(id: string, start: number, cols: number) {
-    this._builderElements.update((elements) =>
-      elements.map((el) => (el.id === id ? { ...el, start, cols } : el)),
-    );
-  }
-
-  /**
-   * Sortiert die Elemente um (wird vom CDK Drag & Drop aufgerufen)
-   */
   reorderElements(previousIndex: number, currentIndex: number) {
     this._builderElements.update((elements) => {
       const newArray = [...elements];
@@ -94,15 +78,67 @@ export class EventService {
   private getDefaultDataForType(type: string): any {
     switch (type) {
       case 'text':
-        return { text: '', placeholder: 'Dein Text hier...' };
+        return { text: '' };
       case 'heading':
         return { text: '', level: 2 };
       case 'image':
-        return { url: '', caption: '' };
-      case 'video':
-        return { url: '', provider: 'youtube' };
+        return { url: '' };
       default:
         return {};
+    }
+  }
+
+  /**
+   * Hilfsfunktion für Standard-Inhalte je nach Typ
+   */
+  applyTemplate(templateType: string) {
+    if (templateType === 'birthday') {
+      this.eventTitle.set('Mein Geburtstag 🎂');
+      this._builderElements.set([
+        {
+          id: window.crypto.randomUUID(),
+          type: 'heading',
+          label: 'Heading',
+          icon: 'font-size',
+          data: { text: 'Herzlich Willkommen zu meiner Party!', level: 1 },
+        },
+        {
+          id: window.crypto.randomUUID(),
+          type: 'text',
+          label: 'Text',
+          icon: 'align-left',
+          data: { text: 'Ich feiere meinen Geburtstag und würde mich freuen, wenn du dabei bist!' },
+        },
+      ]);
+    } else if (templateType === 'wedding') {
+      this.eventTitle.set('Unsere Hochzeit ❤️');
+      this._builderElements.set([
+        {
+          id: window.crypto.randomUUID(),
+          type: 'heading',
+          label: 'Heading',
+          icon: 'font-size',
+          data: { text: 'Wir trauen uns!', level: 1 },
+        },
+        {
+          id: window.crypto.randomUUID(),
+          type: 'image',
+          label: 'Image',
+          icon: 'picture',
+          data: { url: '' },
+        },
+      ]);
+    } else if (templateType === 'party') {
+      this.eventTitle.set('Hausparty! 🥳');
+      this._builderElements.set([
+        {
+          id: window.crypto.randomUUID(),
+          type: 'heading',
+          label: 'Heading',
+          icon: 'font-size',
+          data: { text: 'Bier & Beats', level: 1 },
+        },
+      ]);
     }
   }
 

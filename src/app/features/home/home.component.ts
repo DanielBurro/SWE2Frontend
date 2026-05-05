@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
 import { Event } from '../../core/models/event.model';
-import { HeaderComponent } from '../../shared/header/header.component';
 import { AuthService } from '../../auth/auth';
 import { SearchService } from '../../core/services/search.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -21,7 +20,6 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
   imports: [
     CommonModule,
     RouterLink,
-    HeaderComponent,
     NzButtonModule,
     NzCardModule,
     NzTagModule,

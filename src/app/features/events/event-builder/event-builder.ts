@@ -7,17 +7,73 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   inject,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { FormsModule } from '@angular/forms';
-import { EventService } from '../../../core/services/event.service';
-import { CompactType, Gridster, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
+import { BuilderElement, EventService } from '../../../core/services/event.service';
 import { BaseCard } from '../../../components/event-cards/base-card/base-card';
 import { TextCard } from '../../../components/event-cards/text-card/text-card';
+import { HeadingCard } from '../../../components/event-cards/heading-card/heading-card';
+import { ImageCard } from '../../../components/event-cards/image-card/image-card';
+import { NzModalService, NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { EventSettingsComponent } from '../event-settings/event-settings.component';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
-// Definition für die Buttons im Header (Blueprint)
+@Component({
+  selector: 'app-color-picker-modal',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NzButtonModule],
+  template: `
+    <div class="color-picker-container">
+      <div class="picker-row">
+        <label>Startfarbe:</label>
+        <input type="color" [(ngModel)]="color1" />
+      </div>
+      <div class="picker-row">
+        <label>Endfarbe:</label>
+        <input type="color" [(ngModel)]="color2" />
+      </div>
+      <div class="preview-box" [style.background]="getGradient()"></div>
+      
+      <div class="modal-footer">
+        <button nz-button nzType="primary" (click)="handleOk()">Übernehmen</button>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .color-picker-container { padding: 10px 0; }
+    .picker-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .preview-box { height: 120px; border-radius: 12px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.1); }
+    label { color: #e8e4dc; font-weight: 500; }
+    .modal-footer { margin-top: 24px; display: flex; justify-content: flex-end; }
+  `]
+})
+export class ColorPickerModal implements OnInit {
+  color1 = '#c9a96e';
+  color2 = '#111118';
+  
+  private modalData = inject(NZ_MODAL_DATA, { optional: true });
+  private modalRef = inject(NzModalRef);
+
+  ngOnInit() {
+    if (this.modalData) {
+      this.color1 = this.modalData.color1;
+      this.color2 = this.modalData.color2;
+    }
+  }
+
+  handleOk() {
+    this.modalRef.close({ color1: this.color1, color2: this.color2 });
+  }
+
+  getGradient() { return `linear-gradient(135deg, ${this.color1} 0%, ${this.color2} 100%)`; }
+}
+
 interface BuilderElementDefinition {
   id: string;
   label: string;
@@ -34,48 +90,22 @@ interface BuilderElementDefinition {
     NzIconModule,
     NzLayoutModule,
     FormsModule,
-    Gridster,
-    GridsterItem,
     BaseCard,
     TextCard,
-    BaseCard,
+    HeadingCard,
+    ImageCard,
+    DragDropModule,
   ],
+  providers: [NzModalService]
 })
 export class EventBuilder implements AfterViewInit, OnDestroy {
   @ViewChild('headerContainer', { read: ElementRef }) headerContainer!: ElementRef;
   @ViewChild('pillElement') pillElement!: ElementRef;
 
-  // Der Service ist jetzt unser "Single Source of Truth"
   public eventService = inject(EventService);
+  private modal = inject(NzModalService);
+  private message = inject(NzMessageService);
 
-  // Gridster
-  options: GridsterConfig = {
-    gridType: GridType.VerticalFixed,
-    fixedRowHeight: 45,
-    minCols: 3,
-    maxCols: 3,
-    margin: 10,
-    outerMargin: true,
-    setGridSize: true,
-
-    // DAS HIER FIXT DAS GLEITEN:
-    compactType: CompactType.None, // Verhindert das automatische "Nach-Oben-Rücken"
-    pushItems: false, // Verhindert, dass Items sich gegenseitig wegkicken
-    enableEmptyCellPush: false, // Verhindert, dass das Gitter beim Halten "Platz macht"
-
-    draggable: {
-      enabled: true,
-      ignoreContent: true, // Drag nur über das Handle
-      dragHandleClass: 'drag-handle-outside',
-      dropOverItems: false,
-    },
-    resizable: {
-      enabled: true,
-    },
-    displayGrid: 'onDrag&Resize',
-  };
-
-  // Blueprint-Liste für die Header-Buttons
   readonly allElements: BuilderElementDefinition[] = [
     { id: 'text', label: 'Text', icon: 'align-left' },
     { id: 'image', label: 'Image', icon: 'picture' },
@@ -89,12 +119,6 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     { id: 'table', label: 'Table', icon: 'table' },
   ];
 
-  adjustTitleHeight(textarea: HTMLTextAreaElement) {
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-  }
-
-  // Variablen für das dynamische Header-Layout
   visibleItems: BuilderElementDefinition[] = [];
   overflowItems: BuilderElementDefinition[] = [];
   isMenuOpen = false;
@@ -116,19 +140,11 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     if (this.headerContainer) {
       this.resizeObserver.observe(this.headerContainer.nativeElement);
     }
-
-    setTimeout(() => {
-      if (window) {
-        window.dispatchEvent(new Event('resize'));
-      }
-    }, 500);
   }
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
   }
-
-  // --- LOGIK FÜR DAS HEADER-LAYOUT ---
 
   calculateLayout(): void {
     if (!this.headerContainer || !this.pillElement) return;
@@ -136,8 +152,9 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     const containerWidth = this.headerContainer.nativeElement.offsetWidth;
     const pillWidth = this.pillElement.nativeElement.offsetWidth + 24;
     const moreBtnWidth = 60;
+    const rightActionsWidth = 250;
 
-    const availableWidth = containerWidth - pillWidth - moreBtnWidth;
+    const availableWidth = containerWidth - pillWidth - moreBtnWidth - rightActionsWidth;
     const itemWidth = 115;
 
     let maxVisible = Math.floor(availableWidth / itemWidth);
@@ -159,24 +176,61 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  // --- LOGIK FÜR DEN BUILDER-CONTENT (Interaktion mit Service) ---
-  /**
-   * Wird aufgerufen, wenn ein Button im Header geklickt wird.
-   * Erstellt eine neue Instanz im Service.
-   */
   protected addItem(item: BuilderElementDefinition) {
     this.eventService.addElement(item.id, item.label, item.icon);
-
-    // Falls das Item aus dem Dropdown hinzugefügt wurde, Menü schließen
     if (this.isMenuOpen) {
       this.isMenuOpen = false;
     }
   }
 
-  /**
-   * Löscht ein Element anhand seiner UUID
-   */
   public removeElement(id: string) {
     this.eventService.removeElement(id);
+  }
+
+  onSettings() {
+    this.modal.create({
+      nzTitle: 'Event Einstellungen',
+      nzContent: EventSettingsComponent,
+      nzWidth: 500,
+      nzFooter: null,
+      nzCentered: true,
+      nzClassName: 'dark-modal'
+    });
+  }
+
+  onPublish() {
+    this.message.loading('Event wird veröffentlicht...', { nzDuration: 2000 }).onClose.subscribe(() => {
+      this.message.success('Dein Event wurde erfolgreich veröffentlicht!');
+    });
+  }
+
+  pickGradient() {
+    const modal = this.modal.create({
+      nzTitle: 'Hintergrund anpassen',
+      nzContent: ColorPickerModal,
+      nzData: {
+        color1: this.eventService.color1(),
+        color2: this.eventService.color2()
+      },
+      nzWidth: 400,
+      nzFooter: null,
+      nzClassName: 'dark-modal',
+      nzMaskClosable: false, // Prevent accidental closure
+    });
+
+    modal.afterClose.subscribe(result => {
+      if (result) {
+        this.eventService.updateColors(result.color1, result.color2);
+      }
+    });
+  }
+
+  adjustTitleHeight(textarea: HTMLTextAreaElement) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
+  drop(event: CdkDragDrop<BuilderElement[]>) {
+    this.eventService.reorderElements(event.previousIndex, event.currentIndex);
   }
 }

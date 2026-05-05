@@ -1,20 +1,18 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HeaderComponent } from '../../../shared/header/header.component';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzContentComponent, NzLayoutComponent, NzSiderComponent } from 'ng-zorro-antd/layout';
-import { NzMenuDirective, NzMenuItemComponent } from 'ng-zorro-antd/menu';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { EventBuilder } from '../event-builder/event-builder';
+import { EventService } from '../../../core/services/event.service';
+import { LayoutService } from '../../../core/services/layout.service';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { EventPreviewComponent } from '../event-preview/event-preview.component';
+import { EventSettingsComponent } from '../event-settings/event-settings.component';
 
 @Component({
   selector: 'app-event-create',
@@ -23,33 +21,59 @@ import { EventBuilder } from '../event-builder/event-builder';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HeaderComponent,
-    NzFormModule,
-    NzInputModule,
     NzButtonModule,
     NzIconModule,
-    NzSelectModule,
-    NzDatePickerModule,
-    NzTimePickerModule,
-    NzDividerModule,
     NzModalModule,
-    NzInputNumberModule,
-    NzLayoutComponent,
-    NzSiderComponent,
-    NzContentComponent,
-    NzMenuDirective,
-    NzMenuItemComponent,
+    NzSwitchModule,
     EventBuilder,
   ],
   templateUrl: './event-create.component.html',
   styleUrl: './event-create.component.scss',
 })
-export class EventCreateComponent implements OnInit {
-  protected isCollapsed: boolean = false;
+export class EventCreateComponent implements OnInit, OnDestroy {
+  private modal = inject(NzModalService);
+  private message = inject(NzMessageService);
+  private layoutService = inject(LayoutService);
+  private router = inject(Router);
 
-  ngOnInit() {}
+  private subs = new Subscription();
 
-  toggleCollapsed(): void {
-    this.isCollapsed = !this.isCollapsed;
+  ngOnInit() {
+    this.subs.add(this.layoutService.settingsRequested$.subscribe(() => this.showSettings()));
+    this.subs.add(this.layoutService.templatesRequested$.subscribe(() => this.showTemplates()));
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
+
+  showPreview(): void {
+    this.modal.create({
+      nzTitle: undefined,
+      nzContent: EventPreviewComponent,
+      nzFooter: null,
+      nzWidth: '1000px',
+      nzCentered: true,
+      nzClassName: 'preview-modal-wrap dark-modal',
+      nzStyle: { top: '20px' }
+    });
+  }
+
+  showSettings(): void {
+    this.modal.create({
+      nzTitle: 'Event Einstellungen',
+      nzContent: EventSettingsComponent,
+      nzFooter: null,
+      nzCentered: true,
+      nzClassName: 'dark-modal'
+    });
+  }
+
+  showTemplates(): void {
+    this.router.navigate(['/events/templates']);
+  }
+
+  deleteEvent(): void {
+    this.message.warning('Event löschen ist noch nicht implementiert.');
   }
 }

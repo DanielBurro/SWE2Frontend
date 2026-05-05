@@ -17,7 +17,6 @@ import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
   imports: [
     CommonModule,
     FormsModule,
-    HeaderComponent,
     NzButtonModule,
     CtaBanner,
     NzTabComponent,

@@ -26,19 +26,34 @@ $text-muted:   rgba(232, 228, 220, 0.6);
 
 nz-header.secondary-header {
   display: flex;
-  flex-direction: row; // Zwingt Pille und Buttons nebeneinander
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   height: auto;
   line-height: normal;
-  padding: 10px 16px;
-  background: rgba($bg-sider, 0.85);
+  padding: 8px 16px;
+  background: rgba($bg-sider, 0.9);
   backdrop-filter: blur(12px);
   border-radius: 14px;
   border: 1px solid rgba($gold-primary, 0.2);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: 16px;
 }
 
 .status-pill {
@@ -47,8 +62,8 @@ nz-header.secondary-header {
   align-items: center;
   gap: 8px;
   padding: 6px 16px;
-  background: rgba($gold-primary, 0.1);
-  border: 1px solid rgba($gold-primary, 0.3);
+  background: rgba($gold-primary, 0.08);
+  border: 1px solid rgba($gold-primary, 0.2);
   border-radius: 20px;
   margin-right: 16px;
 
@@ -63,9 +78,7 @@ nz-header.secondary-header {
 
 .header-controls {
   display: flex;
-  flex: 1;
-  min-width: 0; // Erlaubt das Schrumpfen für die calculateLayout() Logik
-  justify-content: flex-end;
+  min-width: 0;
   align-items: center;
   gap: 8px;
 
@@ -74,7 +87,56 @@ nz-header.secondary-header {
     flex-direction: row;
     gap: 8px;
     min-width: 0;
-    flex-shrink: 1;
+  }
+}
+
+.action-item-secondary {
+  background: transparent;
+  border: 1px solid rgba($text-main, 0.15);
+  color: rgba($text-main, 0.7);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: $text-main;
+    border-color: rgba($text-main, 0.3);
+  }
+
+  .anticon {
+    font-size: 14px;
+  }
+}
+
+.btn-publish {
+  background: $gold-primary;
+  color: $bg-dark;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba($gold-primary, 0.2);
+
+  &:hover {
+    background: $gold-light;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba($gold-primary, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
@@ -164,6 +226,13 @@ gridster-item {
   flex-direction: column;
   background: transparent !important;
   overflow: visible !important;
+
+  &:has(app-image-card) {
+    // Allows images to slightly overflow for that "Notion" look if cols: 3
+    &.gridster-item-content {
+      overflow: visible;
+    }
+  }
 }
 
 // ==========================================================================
@@ -315,21 +384,22 @@ gridster-item:hover .drag-handle-outside {
 
 // builder-canvas: Der "Kasten", den man bearbeitet
 .builder-canvas {
-  width: 100%;
-  max-width: 1100px; // Standard Breite wie bei Notion
-  background: $bg-sider; // Dein normales Sider-Dunkel
-  border: 1px solid rgba($gold-primary, 0.15);
-  border-radius: 24px;
-  padding: 60px 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  width: 95%;
+  max-width: 900px; 
+  background: $bg-sider; 
+  border: 1px solid rgba($gold-primary, 0.1);
+  border-radius: 20px;
+  padding: 0;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  margin: 0 auto;
 }
 
 // Notion-Style Title
 .title-container {
-  margin-bottom: 40px;
-  padding: 0 10px;
+  margin: 40px 50px 20px 50px;
   position: relative;
 
   .notion-title {
@@ -338,7 +408,7 @@ gridster-item:hover .drag-handle-outside {
     border: none;
     outline: none;
     color: $text-main;
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     font-weight: 800;
     resize: none;
     overflow: hidden;
@@ -354,31 +424,75 @@ gridster-item:hover .drag-handle-outside {
   .title-underline {
     height: 1px;
     width: 100%;
-    background: linear-gradient(to right, rgba($gold-primary, 0.3), transparent);
-    margin-top: 10px;
+    background: linear-gradient(to right, rgba($gold-primary, 0.2), transparent);
+    margin-top: 8px;
   }
 }
 
 .builder-content-area {
   flex: 1;
-  // Wir entfernen das Padding hier, da die Canvas schon Padding hat
-  padding: 0;
+  padding: 0 40px 60px 40px;
+}
+
+.element-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.element-wrapper {
+  position: relative;
+  
+  &.cdk-drag-placeholder {
+    opacity: 0.3;
+    border: 1px dashed $gold-primary;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+}
+
+.drag-preview {
+  background: rgba($bg-sider, 0.95);
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid $gold-primary;
+  color: $text-main;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .canvas-cover-wrapper {
   position: relative;
-  height: 200px;
-  width: calc(100% + 90px); // Um das Canvas-Padding auszugleichen
-  margin: -60px -50px 30px -50px; // Zieht das Cover bis an den Rand des Kastens
-  border-radius: 24px 24px 0 0;
-  background: rgba(255, 255, 255, 0.03); // Standard-Hintergrund
+  height: 220px;
+  width: 100%;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  padding: 20px;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
+  cursor: pointer;
+
+  .cover-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+    padding: 10px 18px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+  }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
+    .cover-overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

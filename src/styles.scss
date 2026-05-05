@@ -23,7 +23,38 @@ html, body {
 .ant-modal-content,
 .ant-modal-header,
 .ant-modal-footer,
-.ant-modal-body       { background: #111118 !important; }
+.ant-modal-body       { background: #111118 !important; color: #e8e4dc !important; }
+
+// Ensure all text inside modal is readable
+.ant-modal-body p,
+.ant-modal-body div,
+.ant-modal-body span,
+.ant-modal-body label {
+  color: #e8e4dc !important;
+}
+
+// Global Message Overrides
+.ant-message-notice-content {
+  background: #1a1a1a !important;
+  color: #e8e4dc !important;
+  border: 1px solid rgba(201, 169, 110, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+// Global Dropdown/Menu Overrides
+.ant-dropdown-menu {
+  background-color: #1a1a1a !important;
+  border: 1px solid rgba(201, 169, 110, 0.2) !important;
+  .ant-dropdown-menu-item {
+    color: #e8e4dc !important;
+    &:hover {
+      background-color: rgba(201, 169, 110, 0.1) !important;
+      color: #c9a96e !important;
+    }
+  }
+}
+
+.ant-modal-title { color: #c9a96e !important; }
 
 .ant-input,
 .ant-input-affix-wrapper,
