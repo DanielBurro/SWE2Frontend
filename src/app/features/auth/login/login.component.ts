@@ -1,15 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../auth/auth';
+import { AuthService } from '../../../core/services/auth.service';
 import { HeaderComponent } from '../../../shared/header/header.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +30,7 @@ export class LoginComponent {
   private router      = inject(Router);
   private authService = inject(AuthService);
   private message     = inject(NzMessageService);
+  private cdr         = inject(ChangeDetectorRef);
 
   form = { email: '', password: '' };
   isSubmitting = false;
@@ -44,14 +44,16 @@ export class LoginComponent {
 
     this.isSubmitting = true;
 
-    this.authService.login(this.form).pipe(
-      finalize(() => this.isSubmitting = false)   // ← immer ausgeführt
-    ).subscribe({
+    this.authService.login(this.form).subscribe({
       next: () => {
+        this.isSubmitting = false;
+        this.cdr.markForCheck(); 
         this.router.navigate(['/']);
       },
       error: (err) => {
-        this.message.error(err?.error?.message ?? 'Anmeldung fehlgeschlagen.');
+        this.isSubmitting = false;
+        this.cdr.markForCheck(); 
+        this.message.error(err?.error?.error ?? 'Anmeldung fehlgeschlagen.');
       },
     });
   }

@@ -9,7 +9,8 @@ import { Event } from '../../core/models/event.model';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CtaBanner } from '../../components/cta-banner/cta-banner';
-import { AuthService, User } from '../../auth/auth';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
 
 @Component({

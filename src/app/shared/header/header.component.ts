@@ -8,7 +8,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { AuthService } from '../../auth/auth';
+import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
 import { SearchService } from '../../core/services/search.service';
@@ -69,8 +69,16 @@ export class HeaderComponent {
     return (first + last).toUpperCase();
   }
 
+  onHomeClick(): void {
+    this.searchQuery = '';
+    this.searchService.query.set('');
+    this.searchService.isSearching.set(false);
+  }
+
   onSearch(): void {
-    this.searchService.query.set(this.searchQuery.trim());
+    const value = this.searchQuery.trim();
+    this.searchService.query.set(value);
+    this.searchService.isSearching.set(!!value); 
   }
 
   onLogout(): void {

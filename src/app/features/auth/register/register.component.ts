@@ -1,7 +1,8 @@
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,7 +12,6 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HeaderComponent } from '../../../shared/header/header.component';
-import { AuthService } from '../../../auth/auth';
 
 @Component({
   selector: 'app-register',
@@ -29,7 +29,6 @@ import { AuthService } from '../../../auth/auth';
     NzUploadModule,
     NzAvatarModule,
     NzDividerModule,
-    NgOptimizedImage,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -56,6 +55,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
       bio: [''],
+      profilePicUrl: [''],
     },
     { validators: this.passwordMatchValidator },
   );
@@ -102,21 +102,20 @@ export class RegisterComponent {
       return;
     }
 
-    // setTimeout verhindert den ExpressionChanged Fehler
     setTimeout(() => {
       this.isSubmitting = true;
       this.cdr.detectChanges();
     });
 
-    const { firstName, lastName, username, email, password } = this.form.value;
+    const { firstName, lastName, username, email, password, bio, profilePicUrl } = this.form.value;
 
-    this.authService.register({ firstName, lastName, username, email, password }).subscribe({
+    this.authService.register({ firstName, lastName, username, email, password, bio, profilePicUrl }).subscribe({
       next: () => {
         this.message.success('Konto erfolgreich erstellt!');
         this.router.navigate(['/']);
       },
-      error: () => {
-        this.message.error('Registrierung fehlgeschlagen. Bitte versuche es erneut.');
+      error: (err) => {
+        this.message.error(err?.error?.error ?? 'Registrierung fehlgeschlagen. Bitte versuche es erneut.');
         setTimeout(() => {
           this.isSubmitting = false;
           this.cdr.detectChanges();
