@@ -1,7 +1,4 @@
-// event.model.ts
-
 export type EventStatus = 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'DONE';
-
 export interface Event {
   id: number;
   title: string;
@@ -21,8 +18,6 @@ export interface CreateEventDto {
   hostId: number;
   locationId: number;
 }
-
-// ── Status-Converter ──
 
 const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
   PLANNED:   'Geplant',

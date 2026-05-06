@@ -2,108 +2,108 @@
 
 <div class="create-page">
   <div class="create-container">
-
     <div class="page-header">
-      <a routerLink="/" class="back-link">
+      <a class="back-link" (click)="navigateBack($event)">
         <span nz-icon nzType="arrow-left"></span>
         Zurück
       </a>
-      <p class="page-eyebrow">Neues Event</p>
-      <h1 class="page-title">Was planst du?</h1>
+      <p class="page-eyebrow">{{ getEyebrow() }}</p>
+      <h1 class="page-title">{{ getPageTitle() }}</h1>
     </div>
 
     <nz-divider />
 
-    <form nz-form [formGroup]="form" (ngSubmit)="submit()" nzLayout="vertical" class="create-form">
-
-      <nz-form-item>
-        <nz-form-label nzRequired>Titel</nz-form-label>
-        <nz-form-control nzErrorTip="Titel ist erforderlich">
-          <input nz-input formControlName="title" placeholder="z.B. Sommerfest 2026" nzSize="large" />
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label>Beschreibung</nz-form-label>
-        <nz-form-control>
-          <textarea
-            nz-input
-            formControlName="description"
-            placeholder="Erzähl deinen Gästen, was sie erwartet…"
-            [nzAutosize]="{ minRows: 4, maxRows: 8 }">
-          </textarea>
-        </nz-form-control>
-      </nz-form-item>
-
-      <div class="form-row">
+    @if (isInitialLoading) {
+      <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 6 }"></nz-skeleton>
+    } @else {
+      <form nz-form [formGroup]="form" (ngSubmit)="submit()" nzLayout="vertical" class="create-form">
         <nz-form-item>
-          <nz-form-label nzRequired>Datum</nz-form-label>
-          <nz-form-control nzErrorTip="Datum ist erforderlich">
-            <nz-date-picker
-              formControlName="date"
-              nzSize="large"
-              nzFormat="dd.MM.yyyy"
-              [nzDisabledDate]="disablePastDates"
-              nzPlaceHolder="Datum wählen"
-              style="width: 100%">
-            </nz-date-picker>
+          <nz-form-label nzRequired>Titel</nz-form-label>
+          <nz-form-control nzErrorTip="Titel ist erforderlich">
+            <input nz-input formControlName="title" placeholder="z.B. Sommerfest 2026" nzSize="large" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label>Uhrzeit</nz-form-label>
+          <nz-form-label>Beschreibung</nz-form-label>
           <nz-form-control>
-            <nz-time-picker
-              formControlName="time"
-              nzSize="large"
-              nzFormat="HH:mm"
-              nzPlaceHolder="Uhrzeit wählen"
-              style="width: 100%">
-            </nz-time-picker>
+            <textarea
+              nz-input
+              formControlName="description"
+              placeholder="Erzähl deinen Gästen, was sie erwartet..."
+              [nzAutosize]="{ minRows: 4, maxRows: 8 }">
+            </textarea>
           </nz-form-control>
         </nz-form-item>
-      </div>
 
-      <nz-form-item>
-        <nz-form-label nzRequired>Location</nz-form-label>
-        <nz-form-control nzErrorTip="Bitte wähle eine Location">
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <nz-select
-              formControlName="locationId"
-              nzSize="large"
-              nzPlaceHolder="Location auswählen…"
-              style="flex: 1">
-              @for (loc of locations; track loc.id) {
-                <nz-option
-                  [nzValue]="loc.id"
-                  [nzLabel]="loc.name + ' — ' + loc.city + ' (' + loc.capacity + ' Personen)'">
-                </nz-option>
-              }
-            </nz-select>
-            <button
-              nz-button
-              type="button"
-              nzSize="large"
-              (click)="openLocationModal()"
-              title="Neue Location erstellen">
-              <span nz-icon nzType="plus"></span>
-            </button>
-          </div>
-        </nz-form-control>
-      </nz-form-item>
+        <div class="form-row">
+          <nz-form-item>
+            <nz-form-label nzRequired>Datum</nz-form-label>
+            <nz-form-control nzErrorTip="Datum ist erforderlich">
+              <nz-date-picker
+                formControlName="date"
+                nzSize="large"
+                nzFormat="dd.MM.yyyy"
+                [nzDisabledDate]="disablePastDates"
+                nzPlaceHolder="Datum wählen"
+                style="width: 100%">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
 
-      <div class="form-actions">
-        <a routerLink="/" class="btn-ghost">Abbrechen</a>
-        <button nz-button nzType="primary" [nzLoading]="isSubmitting" type="submit" class="btn-gold">
-          Event erstellen →
-        </button>
-      </div>
+          <nz-form-item>
+            <nz-form-label>Uhrzeit</nz-form-label>
+            <nz-form-control>
+              <nz-time-picker
+                formControlName="time"
+                nzSize="large"
+                nzFormat="HH:mm"
+                nzPlaceHolder="Uhrzeit wählen"
+                style="width: 100%">
+              </nz-time-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
 
-    </form>
+        <nz-form-item>
+          <nz-form-label nzRequired>Location</nz-form-label>
+          <nz-form-control nzErrorTip="Bitte wähle eine Location">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <nz-select
+                formControlName="locationId"
+                nzSize="large"
+                nzPlaceHolder="Location auswählen..."
+                style="flex: 1">
+                @for (loc of locations; track loc.id) {
+                  <nz-option
+                    [nzValue]="loc.id"
+                    [nzLabel]="loc.name + ' - ' + loc.city + ' (' + loc.capacity + ' Personen)'">
+                  </nz-option>
+                }
+              </nz-select>
+              <button
+                nz-button
+                type="button"
+                nzSize="large"
+                (click)="openLocationModal()"
+                title="Neue Location erstellen">
+                <span nz-icon nzType="plus"></span>
+              </button>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="form-actions">
+          <a class="btn-ghost" (click)="navigateBack($event)">Abbrechen</a>
+          <button nz-button nzType="primary" [nzLoading]="isSubmitting" type="submit" class="btn-gold">
+            {{ getSubmitLabel() }}
+          </button>
+        </div>
+      </form>
+    }
   </div>
 </div>
 
-<!-- LOCATION MODAL -->
 <nz-modal
   [(nzVisible)]="showLocationModal"
   nzTitle="Neue Location erstellen"
@@ -113,10 +113,8 @@
   [nzOkLoading]="isCreatingLocation"
   nzOkText="Erstellen"
   nzCancelText="Abbrechen">
-
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="locationForm" nzLayout="vertical">
-
       <nz-form-item>
         <nz-form-label nzRequired>Name</nz-form-label>
         <nz-form-control nzErrorTip="Pflichtfeld">
@@ -166,7 +164,6 @@
           </nz-input-number>
         </nz-form-control>
       </nz-form-item>
-
     </form>
   </ng-container>
 </nz-modal>

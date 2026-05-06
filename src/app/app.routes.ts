@@ -16,17 +16,17 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'events/:id/edit',
+    loadComponent: () =>
+      import('./features/events/event-create/event-create.component').then(
+        (m) => m.EventCreateComponent
+      ),
+  },
+  {
     path: 'events/:id',
     loadComponent: () =>
       import('./features/events/event-detail/event-detail.component').then(
         (m) => m.EventDetailComponent
-      ),
-  },
-  {
-    path: 'events/:id/edit',
-    loadComponent: () =>
-      import('./features/events/event-edit/event-edit').then(
-        (m) => m.EventEditComponent
       ),
   },
   {
