@@ -2,9 +2,9 @@ import { Component, OnInit, inject, computed, signal, ChangeDetectorRef  } from 
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EventService } from '../../core/services/event.service';
-import { Event } from '../../core/models/event.model';
+import { Event, EventStatus, getEventStatusLabel, getEventStatusColor } from '../../core/models/event.model';
 import { HeaderComponent } from '../../shared/header/header.component';
-import { AuthService } from '../../auth/auth';
+import { AuthService } from '../../core/services/auth.service';
 import { SearchService } from '../../core/services/search.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -40,17 +40,18 @@ export class HomeComponent implements OnInit {
   private authService   = inject(AuthService);
   private cdr           = inject(ChangeDetectorRef);
 
-  isLoggedIn = this.authService.isAuthenticated;  // ← Signal
+  isLoggedIn  = this.authService.isAuthenticated;
+  isSearching = this.searchService.isSearching;
 
   private allEvents = signal<Event[]>([]);
   activeTab = signal<string>('alle');
   isLoading = true;
-  skeletonParagraph = { rows: 3 }; 
+  skeletonParagraph = { rows: 3 };
 
   tabs = [
-    { key: 'alle',    label: 'Alle' },
-    { key: 'offen',   label: 'Offen' },
-    { key: 'geplant', label: 'Geplant' },
+    { key: 'alle',      label: 'Alle' },
+    { key: 'ACTIVE',    label: 'Aktiv' },
+    { key: 'PLANNED',   label: 'Geplant' },
   ];
 
   filteredEvents = computed(() => {
@@ -59,25 +60,27 @@ export class HomeComponent implements OnInit {
     let events = this.allEvents();
 
     if (tab !== 'alle') {
-      events = events.filter(e => e.status.toLowerCase() === tab);
+      events = events.filter(e => e.status === tab);
     }
+
     if (q) {
       events = events.filter(e =>
         e.title.toLowerCase().includes(q) ||
-        e.description.toLowerCase().includes(q)
+        e.description?.toLowerCase().includes(q)
       );
     }
+
     return events;
   });
 
   ngOnInit(): void {
-    if (!this.isLoggedIn()) return;  // ← kein API-Call wenn nicht eingeloggt
+    if (!this.isLoggedIn()) return;
 
     this.eventService.getAll().subscribe({
       next: (events) => {
         this.allEvents.set(events);
         this.isLoading = false;
-        this.cdr.markForCheck(); // ← DAS FIXT ES
+        this.cdr.markForCheck();
       },
       error: () => {
         this.allEvents.set(this.getDemoEvents());
@@ -116,15 +119,20 @@ export class HomeComponent implements OnInit {
     return colors[index % colors.length];
   }
 
+  // Delegieren an Model-Converter
   getStatusColor(status: string): string {
-    return status === 'offen' ? '#4caf82' : '#c9a96e';
+    return getEventStatusColor(status as EventStatus);
+  }
+
+  getStatusLabel(status: string): string {
+    return getEventStatusLabel(status as EventStatus);
   }
 
   private getDemoEvents(): Event[] {
     return [
-      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'offen',   hostName: 'Laura Huber',   locationName: 'Heidelberg' },
-      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'geplant', hostName: 'Thomas Maier', locationName: 'Heilbronn'  },
-      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'offen',   hostName: 'Sarah Weber',   locationName: 'Neckarsulm' },
+      { id: 1, title: 'Rooftop Vernissage — Frühjahr 2026', description: '', date: '2026-04-12T18:00:00Z', status: 'ACTIVE',   hostName: 'Laura Huber', hostId: 1, locationName: 'Heidelberg', locationId: 2 },
+      { id: 2, title: 'Gartenparty im Weinberg',            description: '', date: '2026-04-19T15:00:00Z', status: 'PLANNED', hostName: 'Thomas Maier', hostId: 2, locationName: 'Heilbronn',  locationId: 1 },
+      { id: 3, title: 'Firmen-Sommerfest 2026',             description: '', date: '2026-05-03T12:00:00Z', status: 'PLANNED',   hostName: 'Sarah Weber',   hostId: 3, locationName: 'Neckarsulm', locationId: 1 },
     ];
   }
 }

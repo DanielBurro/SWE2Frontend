@@ -1,13 +1,14 @@
+export type EventStatus = 'PLANNED' | 'ACTIVE' | 'CANCELLED' | 'DONE';
 export interface Event {
   id: number;
   title: string;
   description: string;
   date: string;
-  status: string;
-  hostId?: number;
+  status: EventStatus;
   hostName: string;
-  locationId?: number;
+  hostId: number;
   locationName: string;
+  locationId: number;
 }
 
 export interface CreateEventDto {
@@ -18,4 +19,24 @@ export interface CreateEventDto {
   locationId: number;
 }
 
-export type EventStatus = Event['status'];
+const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
+  PLANNED:   'Geplant',
+  ACTIVE:    'Aktiv',
+  CANCELLED: 'Abgesagt',
+  DONE:      'Beendet',
+};
+
+const EVENT_STATUS_COLORS: Record<EventStatus, string> = {
+  PLANNED:   '#c9a96e',
+  ACTIVE:    '#4caf82',
+  CANCELLED: '#e86464',
+  DONE:      '#5a82c9',
+};
+
+export function getEventStatusLabel(status: EventStatus): string {
+  return EVENT_STATUS_LABELS[status] ?? status;
+}
+
+export function getEventStatusColor(status: EventStatus): string {
+  return EVENT_STATUS_COLORS[status] ?? '#888';
+}

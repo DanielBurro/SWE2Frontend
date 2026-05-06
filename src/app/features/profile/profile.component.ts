@@ -9,10 +9,11 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
-import { AuthService, User } from '../../auth/auth';
 import { CtaBanner } from '../../components/cta-banner/cta-banner';
 import { Event } from '../../core/models/event.model';
 import { Invitation } from '../../core/models/invitation.model';
+import { User } from '../../core/models/user.model';
+import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { InvitationService } from '../../core/services/invitation.service';
 import { HeaderComponent } from '../../shared/header/header.component';
@@ -52,22 +53,25 @@ export class ProfileComponent implements OnInit {
   myEventsError = signal(false);
 
   initials = computed(() => {
-    const u = this.user();
-    if (!u) return '??';
-    return `${u.firstName[0]}${u.lastName[0]}`.toUpperCase();
+    const user = this.user();
+    if (!user) {
+      return '??';
+    }
+
+    return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
   });
 
   editForm = { username: '', firstName: '', lastName: '', email: '', bio: '' };
 
   constructor() {
     effect(() => {
-      const u = this.user();
-      if (u) {
-        this.syncEditForm(u);
+      const user = this.user();
+      if (user) {
+        this.syncEditForm(user);
 
-        if (this.lastLoadedUserId !== u.id) {
-          this.lastLoadedUserId = u.id;
-          this.loadRelatedData(u.id);
+        if (this.lastLoadedUserId !== user.id) {
+          this.lastLoadedUserId = user.id;
+          this.loadRelatedData(user.id);
         }
         return;
       }
@@ -87,51 +91,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private loadRelatedData(userId: number): void {
-    this.loadInvitations(userId);
-    this.loadMyEvents(userId);
-  }
-
-  private loadInvitations(userId: number): void {
-    this.invitationsLoading.set(true);
-    this.invitationService
-      .getByUser(userId)
-      .pipe(finalize(() => this.invitationsLoading.set(false)))
-      .subscribe({
-        next: (inv) => this.invitations.set(inv),
-        error: () => this.invitations.set([]),
-      });
-  }
-
-  private loadMyEvents(userId: number): void {
-    this.myEventsLoading.set(true);
-    this.myEventsError.set(false);
-    this.eventService
-      .getByHost(userId)
-      .pipe(finalize(() => this.myEventsLoading.set(false)))
-      .subscribe({
-        next: (ev) => this.myEvents.set(ev),
-        error: () => {
-          this.myEvents.set([]);
-          this.myEventsError.set(true);
-        },
-      });
-  }
-
-  private syncEditForm(user: User): void {
-    this.editForm = {
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      bio: user.bio || '',
-    };
-  }
-
   protected reloadMyEvents(): void {
-    const u = this.user();
-    if (u) {
-      this.loadMyEvents(u.id);
+    const user = this.user();
+    if (user) {
+      this.loadMyEvents(user.id);
     }
   }
 
@@ -155,6 +118,8 @@ export class ProfileComponent implements OnInit {
   protected getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
       case 'offen':
+      case 'planned':
+        return '#c9a96e';
       case 'active':
       case 'accepted':
         return '#4caf82';
@@ -162,6 +127,8 @@ export class ProfileComponent implements OnInit {
       case 'cancelled':
       case 'declined':
         return '#e86464';
+      case 'done':
+        return '#5a82c9';
       default:
         return '#c9a96e';
     }
@@ -180,7 +147,48 @@ export class ProfileComponent implements OnInit {
       .slice(0, 2);
   }
 
-  protected saveProfile() {
+  protected saveProfile(): void {
     console.log('Speichere:', this.editForm);
+  }
+
+  private loadRelatedData(userId: number): void {
+    this.loadInvitations(userId);
+    this.loadMyEvents(userId);
+  }
+
+  private loadInvitations(userId: number): void {
+    this.invitationsLoading.set(true);
+    this.invitationService
+      .getByUser(userId)
+      .pipe(finalize(() => this.invitationsLoading.set(false)))
+      .subscribe({
+        next: (invitations) => this.invitations.set(invitations),
+        error: () => this.invitations.set([]),
+      });
+  }
+
+  private loadMyEvents(userId: number): void {
+    this.myEventsLoading.set(true);
+    this.myEventsError.set(false);
+    this.eventService
+      .getByHost(userId)
+      .pipe(finalize(() => this.myEventsLoading.set(false)))
+      .subscribe({
+        next: (events) => this.myEvents.set(events),
+        error: () => {
+          this.myEvents.set([]);
+          this.myEventsError.set(true);
+        },
+      });
+  }
+
+  private syncEditForm(user: User): void {
+    this.editForm = {
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      bio: user.bio || '',
+    };
   }
 }

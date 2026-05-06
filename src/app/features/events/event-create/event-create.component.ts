@@ -178,10 +178,13 @@ export class EventCreateComponent implements OnInit {
       d.setHours(new Date(time).getHours(), new Date(time).getMinutes());
     }
 
+    const tzoffset = d.getTimezoneOffset() * 60000;
+    const localISOTime = new Date(d.getTime() - tzoffset).toISOString().slice(0, -1);
+
     const payload = {
       title,
       description,
-      date: d.toISOString(),
+      date: localISOTime,
       hostId: this.hostId,
       locationId,
     };
@@ -207,14 +210,15 @@ export class EventCreateComponent implements OnInit {
           );
           this.router.navigate(['/events', event.id], { state: { event } });
         },
-        error: () => {
-          this.message.error(
-            this.isEditMode
+      error: (err) => {
+        this.message.error(
+          err?.error?.error ??
+            (this.isEditMode
               ? 'Fehler beim Aktualisieren. Bitte versuche es erneut.'
-              : 'Fehler beim Erstellen. Bitte versuche es erneut.',
-          );
-        },
-      });
+              : 'Fehler beim Erstellen. Bitte versuche es erneut.'),
+        );
+      },
+    });
   }
 
   // ── Location Modal ────────────────────────────────────────────
