@@ -11,6 +11,112 @@
       <div class="profile-since">Mitglied seit {{ user.createdAt | date: 'longDate' }}</div>
     </div>
 
+    <section class="profile-editor-card">
+      <div class="editor-header">
+        <div>
+          <p class="section-eyebrow">Profildetails bearbeiten</p>
+          <h2>Deine Angaben aktuell halten</h2>
+        </div>
+        @if (profileForm.dirty) {
+          <span class="editor-status">Ungespeicherte Änderungen</span>
+        }
+      </div>
+
+      <p class="editor-copy">
+        Hier kannst du Vorname, Nachname, Username, E-Mail und Bio aktualisieren.
+      </p>
+
+      <form
+        nz-form
+        nzLayout="vertical"
+        [formGroup]="profileForm"
+        (ngSubmit)="saveProfile()"
+        class="profile-editor-form">
+        <div class="form-row">
+          <nz-form-item class="half">
+            <nz-form-label nzRequired>Vorname</nz-form-label>
+            <nz-form-control [nzErrorTip]="firstNameErr">
+              <input nz-input formControlName="firstName" placeholder="Max" />
+            </nz-form-control>
+            <ng-template #firstNameErr>
+              @if (getControl('firstName').hasError('required')) { Pflichtfeld }
+            </ng-template>
+          </nz-form-item>
+
+          <nz-form-item class="half">
+            <nz-form-label nzRequired>Nachname</nz-form-label>
+            <nz-form-control [nzErrorTip]="lastNameErr">
+              <input nz-input formControlName="lastName" placeholder="Muster" />
+            </nz-form-control>
+            <ng-template #lastNameErr>
+              @if (getControl('lastName').hasError('required')) { Pflichtfeld }
+            </ng-template>
+          </nz-form-item>
+        </div>
+
+        <div class="form-row">
+          <nz-form-item class="half">
+            <nz-form-label nzRequired>Username</nz-form-label>
+            <nz-form-control [nzErrorTip]="usernameErr">
+              <input nz-input formControlName="username" placeholder="maxmuster" />
+            </nz-form-control>
+            <ng-template #usernameErr>
+              @if (getControl('username').hasError('required')) { Pflichtfeld }
+              @else if (getControl('username').hasError('minlength')) { Mindestens 3 Zeichen }
+            </ng-template>
+          </nz-form-item>
+
+          <nz-form-item class="half">
+            <nz-form-label nzRequired>E-Mail</nz-form-label>
+            <nz-form-control [nzErrorTip]="emailErr">
+              <input nz-input formControlName="email" type="email" placeholder="max@example.com" />
+            </nz-form-control>
+            <ng-template #emailErr>
+              @if (getControl('email').hasError('required')) { Pflichtfeld }
+              @else if (getControl('email').hasError('email')) { Ungültige E-Mail }
+            </ng-template>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <div class="bio-header">
+            <nz-form-label>Bio</nz-form-label>
+            <span class="field-hint">{{ bioLength }}/280</span>
+          </div>
+          <nz-form-control [nzErrorTip]="bioErr">
+            <textarea
+              nz-input
+              formControlName="bio"
+              placeholder="Erzähl etwas über dich..."
+              [nzAutosize]="{ minRows: 4, maxRows: 6 }">
+            </textarea>
+          </nz-form-control>
+          <ng-template #bioErr>
+            @if (getControl('bio').hasError('maxlength')) { Maximal 280 Zeichen }
+          </ng-template>
+        </nz-form-item>
+
+        <div class="form-actions">
+          <button
+            nz-button
+            type="button"
+            class="btn-secondary"
+            (click)="resetProfileForm()"
+            [disabled]="profileSaving() || !profileForm.dirty">
+            Änderungen verwerfen
+          </button>
+          <button
+            nz-button
+            type="submit"
+            class="btn-primary"
+            [nzLoading]="profileSaving()"
+            [disabled]="profileForm.invalid || !profileForm.dirty">
+            Änderungen speichern
+          </button>
+        </div>
+      </form>
+    </section>
+
     <nz-tabs>
       <nz-tab nzTitle="Einladungen" class="tab-btn">
         <div class="profile-section">
