@@ -14,7 +14,13 @@ Bearbeitbare Felder:
 
 ## Frontend-Verhalten
 
-Die Profilseite stellt dafür ein Bearbeitungsformular bereit. Der aktuelle Stand des eingeloggten Users wird in das Formular geladen und kann dort angepasst werden.
+Die Profilseite zeigt einen Button `Profildetails bearbeiten`. Dieser fuehrt auf eine eigene Bearbeitungsseite unter:
+
+```http
+GET /profile/edit
+```
+
+Dort wird der aktuelle Stand des eingeloggten Users in ein Formular geladen und kann angepasst werden.
 
 Beim Speichern gilt:
 
@@ -28,7 +34,7 @@ Nach erfolgreichem Speichern:
 
 - wird der aktualisierte User in der laufenden Session ersetzt
 - Profilseite und Header zeigen direkt die neuen Werte an
-- der Formularzustand wird wieder als gespeichert markiert
+- die Bearbeitungsseite navigiert zur Profiluebersicht zurueck
 
 ## API-Anbindung
 
@@ -66,4 +72,4 @@ Erwartete Antwort:
 
 ## Technische Entscheidung
 
-Der aktualisierte User wird nicht nur im Formular gehalten, sondern direkt in die gespeicherte Auth-Session zurückgeschrieben. Dadurch bleiben Profilseite, Header und andere session-basierte UI-Bereiche konsistent, ohne dass ein zusätzlicher Reload nötig ist.
+Der aktualisierte User wird nicht nur im Formular gehalten, sondern direkt in die gespeicherte Auth-Session zurueckgeschrieben. Dadurch bleiben Profilseite, Header und andere session-basierte UI-Bereiche konsistent, ohne dass ein zusaetzlicher Reload noetig ist.

@@ -22,16 +22,6 @@ $font-sans: 'DM Sans', sans-serif;
   padding: 0 1.5rem 5rem;
 }
 
-.profile-editor-card {
-  background:
-    radial-gradient(circle at top right, rgba($gold-primary, 0.12), transparent 32%),
-    rgba(232, 228, 220, 0.03);
-  border: 0.5px solid rgba(232, 228, 220, 0.08);
-  border-radius: 20px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
 .profile-hero {
   max-width: 700px;
   margin: 0 auto;
@@ -92,12 +82,18 @@ $font-sans: 'DM Sans', sans-serif;
   }
 }
 
-.editor-header {
+.profile-action-card {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 20px;
+  border: 0.5px solid rgba(232, 228, 220, 0.08);
+  background:
+    radial-gradient(circle at top right, rgba($gold-primary, 0.12), transparent 32%),
+    rgba(232, 228, 220, 0.03);
 
   h2 {
     margin: 0;
@@ -108,55 +104,16 @@ $font-sans: 'DM Sans', sans-serif;
   }
 }
 
-.editor-copy {
-  margin: 0 0 1.5rem;
+.action-copy {
+  max-width: 620px;
+  margin: 0.75rem 0 0;
   font-size: 14px;
   line-height: 1.7;
   color: $text-muted;
 }
 
-.editor-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  border: 0.5px solid rgba($gold-primary, 0.25);
-  background: rgba($gold-primary, 0.08);
-  color: $gold-primary;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.profile-editor-form {
-  .form-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .half {
-    min-width: 0;
-  }
-}
-
-.bio-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.field-hint {
-  font-size: 12px;
-  color: rgba($text-main, 0.4);
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+.action-button {
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -179,29 +136,6 @@ $font-sans: 'DM Sans', sans-serif;
   &:hover {
     background: $gold-light;
     transform: translateY(-1px);
-  }
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-
-  ::ng-deep & {
-    background: transparent;
-    border-color: rgba($gold-primary, 0.25);
-    color: $gold-primary;
-
-    &:hover:not(:disabled) {
-      border-color: rgba($gold-light, 0.45);
-      background: rgba($gold-primary, 0.08);
-      color: $gold-primary;
-    }
   }
 }
 
@@ -450,62 +384,20 @@ $font-sans: 'DM Sans', sans-serif;
     padding: 0 1rem 4rem;
   }
 
-  .editor-header,
+  .profile-action-card,
   .section-header,
-  .card-footer,
-  .form-actions {
+  .card-footer {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .profile-editor-form .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .section-link {
+  .section-link,
+  .action-button {
     width: fit-content;
   }
 }
 
 :host ::ng-deep {
-  .profile-editor-card {
-    .ant-form-item {
-      margin-bottom: 1rem;
-    }
-
-    .ant-form-item-label > label {
-      color: $text-main;
-      font-size: 13px;
-    }
-
-    .ant-form-item-explain-error {
-      font-size: 12px;
-      color: #ff9a8b;
-    }
-
-    .ant-input,
-    textarea.ant-input {
-      background: rgba(10, 10, 15, 0.65);
-      border-color: rgba($gold-primary, 0.18);
-      color: $text-main;
-      border-radius: 12px;
-
-      &::placeholder {
-        color: rgba($text-main, 0.3);
-      }
-
-      &:hover {
-        border-color: rgba($gold-primary, 0.35);
-      }
-
-      &:focus,
-      &.ant-input-focused {
-        border-color: $gold-primary;
-        box-shadow: 0 0 0 2px rgba($gold-primary, 0.08);
-      }
-    }
-  }
-
   .ant-tabs {
     color: $text-main;
 
