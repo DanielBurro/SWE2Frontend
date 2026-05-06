@@ -13,16 +13,15 @@ import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { FormsModule } from '@angular/forms';
-import { BuilderElement, EventService } from '../../../core/services/event.service';
-import { BaseCard } from '../../../components/event-cards/base-card/base-card';
-import { TextCard } from '../../../components/event-cards/text-card/text-card';
-import { HeadingCard } from '../../../components/event-cards/heading-card/heading-card';
-import { ImageCard } from '../../../components/event-cards/image-card/image-card';
+import { EventService } from '../../../core/services/event.service';
 import { NzModalService, NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { EventSettingsComponent } from '../event-settings/event-settings.component';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import EditorJS from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import List from '@editorjs/list';
 
 @Component({
   selector: 'app-color-picker-modal',
@@ -39,7 +38,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
         <input type="color" [(ngModel)]="color2" />
       </div>
       <div class="preview-box" [style.background]="getGradient()"></div>
-      
+
       <div class="modal-footer">
         <button nz-button nzType="primary" (click)="handleOk()">Übernehmen</button>
       </div>
@@ -56,7 +55,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 export class ColorPickerModal implements OnInit {
   color1 = '#c9a96e';
   color2 = '#111118';
-  
+
   private modalData = inject(NZ_MODAL_DATA, { optional: true });
   private modalRef = inject(NzModalRef);
 
@@ -90,21 +89,20 @@ interface BuilderElementDefinition {
     NzIconModule,
     NzLayoutModule,
     FormsModule,
-    BaseCard,
-    TextCard,
-    HeadingCard,
-    ImageCard,
     DragDropModule,
   ],
-  providers: [NzModalService]
+  providers: [NzModalService],
 })
 export class EventBuilder implements AfterViewInit, OnDestroy {
   @ViewChild('headerContainer', { read: ElementRef }) headerContainer!: ElementRef;
   @ViewChild('pillElement') pillElement!: ElementRef;
+  @ViewChild('rightActions') rightActions!: ElementRef;
 
   public eventService = inject(EventService);
   private modal = inject(NzModalService);
   private message = inject(NzMessageService);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
 
   readonly allElements: BuilderElementDefinition[] = [
     { id: 'text', label: 'Text', icon: 'align-left' },
@@ -122,15 +120,13 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
   visibleItems: BuilderElementDefinition[] = [];
   overflowItems: BuilderElementDefinition[] = [];
   isMenuOpen = false;
+  private editorInstance?: EditorJS;
 
   private resizeObserver: ResizeObserver | null = null;
 
-  constructor(
-    private ngZone: NgZone,
-    private cdr: ChangeDetectorRef,
-  ) {}
-
   ngAfterViewInit(): void {
+    this.initEditor();
+
     setTimeout(() => this.calculateLayout(), 150);
 
     this.resizeObserver = new ResizeObserver(() => {
@@ -144,21 +140,72 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
+    if (this.editorInstance) {
+      this.editorInstance.destroy();
+    }
+  }
+
+  private initEditor() {
+    this.editorInstance = new EditorJS({
+      holder: 'editor-holder',
+      tools: {
+        header: {
+          class: Header as any,
+          inlineToolbar: ['link'],
+          config: {
+            placeholder: 'Überschrift...',
+            levels: [2, 3, 4],
+            defaultLevel: 2
+          }
+        },
+        list: {
+          class: List as any,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          }
+        },
+      },
+      placeholder: 'Erzähle deinen Gästen mehr über das Event...',
+      /**
+       * Drag and drop is enabled by default in Editor.js.
+       * The 'six dots' handle is the native drag handle.
+       */
+      onReady: () => {
+        console.log('Editor.js is ready with Oystr Event Tools');
+      },
+    });
   }
 
   calculateLayout(): void {
-    if (!this.headerContainer || !this.pillElement) return;
+    if (!this.headerContainer || !this.pillElement || !this.rightActions) return;
 
     const containerWidth = this.headerContainer.nativeElement.offsetWidth;
-    const pillWidth = this.pillElement.nativeElement.offsetWidth + 24;
-    const moreBtnWidth = 60;
-    const rightActionsWidth = 250;
+    const padding = 32; // Header horizontal padding (16px * 2)
+    const pillWidth = this.pillElement.nativeElement.offsetWidth + 24; // Width + margin
+    const rightActionsWidth = this.rightActions.nativeElement.offsetWidth + 16; // Width + margin
+    const safetyMargin = 12; // Extra space to prevent tight-fitting issues
 
-    const availableWidth = containerWidth - pillWidth - moreBtnWidth - rightActionsWidth;
-    const itemWidth = 115;
+    // 1. Calculate available width without the 'more' button first
+    const availableTotal = containerWidth - padding - pillWidth - rightActionsWidth - safetyMargin;
 
-    let maxVisible = Math.floor(availableWidth / itemWidth);
-    maxVisible = Math.max(0, Math.min(maxVisible, this.allElements.length));
+    // Each item is roughly 100px min-width + 8px gap
+    const itemFullWidth = 112;
+
+    // 2. Check how many can fit
+    const countThatFits = Math.floor(availableTotal / itemFullWidth);
+
+    let maxVisible: number;
+
+    if (countThatFits >= this.allElements.length) {
+      // Everything fits! No need for overflow items.
+      maxVisible = this.allElements.length;
+    } else {
+      // Not everything fits, we need the 'more' button.
+      const moreBtnWidth = 52;
+      const availableWithMore = availableTotal - moreBtnWidth;
+      maxVisible = Math.max(0, Math.floor(availableWithMore / itemFullWidth));
+    }
 
     if (this.visibleItems.length !== maxVisible) {
       this.visibleItems = this.allElements.slice(0, maxVisible);
@@ -171,20 +218,52 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
     }
   }
 
+
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
     this.cdr.detectChanges();
   }
 
   protected addItem(item: BuilderElementDefinition) {
-    this.eventService.addElement(item.id, item.label, item.icon);
+    // If it's a standard text/list item, we can add it to EditorJS
+    if (['text', 'heading', 'list', 'quote', 'divider'].includes(item.id)) {
+      this.addItemToEditor(item);
+    } else {
+      // Fallback to custom elements for complex items like image, location, etc.
+      this.eventService.addElement(item.id, item.label, item.icon);
+    }
+
     if (this.isMenuOpen) {
       this.isMenuOpen = false;
     }
   }
 
-  public removeElement(id: string) {
-    this.eventService.removeElement(id);
+  private addItemToEditor(item: BuilderElementDefinition) {
+    if (!this.editorInstance) return;
+
+    let type = 'paragraph';
+    let data = {};
+
+    switch(item.id) {
+      case 'heading':
+        type = 'header';
+        data = { text: '', level: 2 };
+        break;
+      case 'list':
+        type = 'list';
+        data = { style: 'unordered', items: [] };
+        break;
+      case 'quote':
+        type = 'quote';
+        data = { text: '', caption: '', alignment: 'left' };
+        break;
+      case 'divider':
+        type = 'delimiter';
+        break;
+    }
+
+    this.editorInstance.blocks.insert(type, data);
+    this.editorInstance.caret.setToLastBlock();
   }
 
   onSettings() {
@@ -194,14 +273,16 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
       nzWidth: 500,
       nzFooter: null,
       nzCentered: true,
-      nzClassName: 'dark-modal'
+      nzClassName: 'dark-modal',
     });
   }
 
   onPublish() {
-    this.message.loading('Event wird veröffentlicht...', { nzDuration: 2000 }).onClose.subscribe(() => {
-      this.message.success('Dein Event wurde erfolgreich veröffentlicht!');
-    });
+    this.message
+      .loading('Event wird veröffentlicht...', { nzDuration: 2000 })
+      .onClose.subscribe(() => {
+        this.message.success('Dein Event wurde erfolgreich veröffentlicht!');
+      });
   }
 
   pickGradient() {
@@ -210,7 +291,7 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
       nzContent: ColorPickerModal,
       nzData: {
         color1: this.eventService.color1(),
-        color2: this.eventService.color2()
+        color2: this.eventService.color2(),
       },
       nzWidth: 400,
       nzFooter: null,
@@ -218,7 +299,7 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
       nzMaskClosable: false, // Prevent accidental closure
     });
 
-    modal.afterClose.subscribe(result => {
+    modal.afterClose.subscribe((result) => {
       if (result) {
         this.eventService.updateColors(result.color1, result.color2);
       }
@@ -228,9 +309,5 @@ export class EventBuilder implements AfterViewInit, OnDestroy {
   adjustTitleHeight(textarea: HTMLTextAreaElement) {
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
-  }
-
-  drop(event: CdkDragDrop<BuilderElement[]>) {
-    this.eventService.reorderElements(event.previousIndex, event.currentIndex);
   }
 }

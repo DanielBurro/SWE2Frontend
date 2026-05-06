@@ -6,17 +6,27 @@
         <span class="pill-text">Hinzufügen:</span>
       </div>
 
-      <div class="header-controls">
+      <div class="header-controls"
+           cdkDropList
+           [cdkDropListSortingDisabled]="true">
         <div class="main-actions">
           @for (item of visibleItems; track item.id) {
-            <button class="action-item ripple" (click)="addItem(item)">
+            <button class="action-item ripple"
+                    (click)="addItem(item)"
+                    cdkDrag
+                    [cdkDragData]="item">
               <span nz-icon [nzType]="item.icon"></span>
               <span class="label">{{ item.label }}</span>
+
+              <!-- Placeholder while dragging -->
+              <div *cdkDragPlaceholder></div>
             </button>
           }
         </div>
 
         @if (overflowItems.length > 0) {
+          <div class="controls-spacer"></div>
+
           <button
             class="action-item more-button"
             [class.active]="isMenuOpen"
@@ -28,7 +38,7 @@
       </div>
     </div>
 
-    <div class="header-right">
+    <div class="header-right" #rightActions>
       <button class="action-item-secondary" (click)="onSettings()">
         <span nz-icon nzType="setting"></span>
         <span>Einstellungen</span>
@@ -55,6 +65,7 @@
     </div>
   }
 </div>
+
 <div class="builder-page-wrapper">
   <div class="builder-canvas">
     <div
@@ -64,7 +75,7 @@
     >
       <div class="cover-overlay">
         <span nz-icon nzType="bg-colors"></span>
-        <span>Farbe ändern</span>
+        <span>Cover anpassen</span>
       </div>
     </div>
 
@@ -81,41 +92,8 @@
     </div>
 
     <div class="builder-content-area">
-      <div
-        cdkDropList
-        class="element-list"
-        (cdkDropListDropped)="drop($event)"
-      >
-        @for (element of eventService.builderElements(); track element.id) {
-          <div class="element-wrapper" cdkDrag>
-            <app-base-card [element]="element" (delete)="removeElement($event)">
-              @switch (element.type) {
-                @case ('text') {
-                  <app-text-card [(text)]="element.data.text"></app-text-card>
-                }
-                @case ('heading') {
-                  <app-heading-card [(text)]="element.data.text" [level]="element.data.level"></app-heading-card>
-                }
-                @case ('image') {
-                  <app-image-card [(url)]="element.data.url"></app-image-card>
-                }
-                @default {
-                  <div class="placeholder-element">
-                    <span nz-icon [nzType]="element.icon"></span>
-                    {{ element.label }}
-                  </div>
-                }
-              }
-            </app-base-card>
-            
-            <!-- CDK Drag Preview -->
-            <div *cdkDragPreview class="drag-preview">
-              <span nz-icon [nzType]="element.icon"></span>
-              {{ element.label }}
-            </div>
-          </div>
-        }
-      </div>
+      <!-- EditorJS Holder - OUTSIDE cdkDropList to avoid conflict -->
+      <div id="editor-holder" class="editor-js-wrapper"></div>
     </div>
   </div>
 </div>
