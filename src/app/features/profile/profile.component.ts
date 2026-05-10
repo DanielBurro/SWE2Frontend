@@ -25,7 +25,6 @@ import { HeaderComponent } from '../../shared/header/header.component';
     CommonModule,
     FormsModule,
     RouterLink,
-    HeaderComponent,
     NzButtonModule,
     CtaBanner,
     NzTabComponent,

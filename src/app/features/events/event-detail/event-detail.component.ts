@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, timeout } from 'rxjs';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -15,6 +14,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { FormsModule } from '@angular/forms';
+import EditorJS, { ToolConstructable } from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import List from '@editorjs/list';
+import Quote from '@editorjs/quote';
+import Embed from '@editorjs/embed';
 import { Event, EventStatus, getEventStatusColor, getEventStatusLabel } from '../../../core/models/event.model';
 import {
   Invitation,
@@ -28,6 +33,16 @@ import { EventService } from '../../../core/services/event.service';
 import { InvitationService } from '../../../core/services/invitation.service';
 import { UserService } from '../../../core/services/user.service';
 import { HeaderComponent } from '../../../shared/header/header.component';
+
+class CustomList extends List {
+  override renderSettings() {
+    return super.renderSettings().filter(
+      (item: any) => {
+        const label = item.label || item.title;
+        return ['Unordered', 'Ordered'].includes(label);
+      });
+  }
+}
 
 @Component({
   selector: 'app-event-detail',
@@ -52,9 +67,9 @@ import { HeaderComponent } from '../../../shared/header/header.component';
   templateUrl: './event-detail.component.html',
   styleUrl: './event-detail.component.scss',
 })
-export class EventDetailComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private eventService = inject(EventService);
+export class EventDetailComponent implements OnInit, OnDestroy {
+  private route             = inject(ActivatedRoute);
+  private eventService      = inject(EventService);
   private invitationService = inject(InvitationService);
   private userService = inject(UserService);
   private authService = inject(AuthService);
@@ -66,6 +81,9 @@ export class EventDetailComponent implements OnInit {
   allUsers: User[] = [];
   isLoading = true;
 
+  private editorInstance?: EditorJS;
+
+  // Invite Modal
   isInviteModalOpen = false;
   isSendingInvite = false;
   selectedGuest: User | null = null;
@@ -126,24 +144,78 @@ export class EventDetailComponent implements OnInit {
       .subscribe((query) => this.applySearch(query));
   }
 
-  loadEvent(id: number): void {
-    this.eventService
-      .getById(id)
-      .pipe(timeout(8000))
-      .subscribe({
-        next: (event) => {
-          this.event = event;
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        },
-        error: () => {
-          if (!this.event) {
-            this.event = this.buildFallbackEvent(id);
+  ngOnDestroy(): void {
+    if (this.editorInstance) {
+      this.editorInstance.destroy();
+    }
+  }
+
+  initEditor(description: string) {
+    let data;
+    try {
+      data = JSON.parse(description);
+      if (!data || !data.blocks) throw new Error("Not EditorJS format");
+    } catch (e) {
+      // Convert old string to EditorJS format
+      data = {
+        time: new Date().getTime(),
+        blocks: [
+          {
+            type: "paragraph",
+            data: {
+              text: description || ''
+            }
           }
-          this.isLoading = false;
-          this.cdr.markForCheck();
+        ],
+        version: "2.30.2"
+      };
+    }
+
+    if (this.editorInstance) {
+      this.editorInstance.destroy();
+    }
+
+    this.editorInstance = new EditorJS({
+      holder: 'event-detail-editor',
+      readOnly: true,
+      data: data,
+      tools: {
+        header: { class: Header as any },
+        list: {
+          class: CustomList as unknown as ToolConstructable,
+          toolbox: [
+            { data: { style: 'ordered' } },
+            { data: { style: 'unordered' } },
+          ],
         },
-      });
+        quote: { class: Quote as any },
+        embed: { class: Embed },
+      },
+    });
+  }
+
+  loadEvent(id: number): void {
+    this.eventService.getAll().subscribe({
+      next: (events) => {
+        this.event = events.find((e) => e.id === id) ?? null;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        if (this.event) {
+          setTimeout(() => this.initEditor(this.event!.description), 0);
+        }
+      },
+      error: () => {
+        this.event = {
+          id, title: 'Rooftop Vernissage — Frühjahr 2026',
+          description: 'Eine exklusive Vernissage auf dem Rooftop mit Blick über die Stadt.',
+          date: '2026-04-12T18:00:00Z', status: 'ACTIVE',
+          hostName: 'laura.huber', hostId: 1, locationName: 'Rooftop Heidelberg', locationId: 2,
+        };
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        setTimeout(() => this.initEditor(this.event!.description), 0);
+      },
+    });
   }
 
   loadInvitations(eventId: number): void {

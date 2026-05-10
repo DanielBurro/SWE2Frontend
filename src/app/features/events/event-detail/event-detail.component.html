@@ -48,9 +48,9 @@
           <div class="detail-card">
             <h2 class="card-title">Über dieses Event</h2>
             <nz-divider />
-            <p class="event-description">
-              {{ event.description || 'Keine Beschreibung vorhanden.' }}
-            </p>
+            <div class="event-description">
+              <div id="event-detail-editor" class="editor-js-wrapper read-only-editor"></div>
+            </div>
           </div>
 
           <div class="detail-card">
@@ -325,7 +325,7 @@
             </nz-avatar>
             <div class="user-row-info">
               <span class="user-row-name">{{ user.firstName }} {{ user.lastName }}</span>
-              <span class="user-row-meta">@{{ user.username }} · {{ user.email }}</span>
+              <span class="user-row-meta">&#64;{{ user.username }} · {{ user.email }}</span>
             </div>
             @if (selectedGuest?.id === user.id) {
               <span nz-icon nzType="check-circle" nzTheme="fill" class="user-row-check"></span>
