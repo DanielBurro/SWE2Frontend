@@ -80,7 +80,7 @@
               </nz-form-control>
               <ng-template #emailErr>
                 @if (getControl('email').hasError('required')) { Pflichtfeld }
-                @else if (getControl('email').hasError('email')) { Ungueltige E-Mail }
+                @else if (getControl('email').hasError('email')) { Ungültige E-Mail }
               </ng-template>
             </nz-form-item>
           </div>
@@ -94,7 +94,7 @@
               <textarea
                 nz-input
                 formControlName="bio"
-                placeholder="Erzaehl etwas ueber dich..."
+                placeholder="Erzähl etwas über dich..."
                 [nzAutosize]="{ minRows: 4, maxRows: 6 }">
               </textarea>
             </nz-form-control>
