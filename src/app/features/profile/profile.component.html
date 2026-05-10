@@ -10,6 +10,19 @@
       <div class="profile-since">Mitglied seit {{ user.createdAt | date: 'longDate' }}</div>
     </div>
 
+    <section class="profile-action-card">
+      <div>
+        <p class="section-eyebrow">Profil verwalten</p>
+        <h2>Ändere deine persönlichen Angaben</h2>
+        <p class="action-copy">
+          Bearbeite deine Bio sowie Vor- und Nachname für dein Profil
+        </p>
+      </div>
+      <button nz-button routerLink="/profile/edit" class="btn-primary action-button">
+        Profildaten bearbeiten
+      </button>
+    </section>
+
     <nz-tabs>
       <nz-tab nzTitle="Einladungen" class="tab-btn">
         <div class="profile-section">

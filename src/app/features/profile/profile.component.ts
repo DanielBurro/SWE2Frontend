@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -12,7 +11,6 @@ import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
 import { CtaBanner } from '../../components/cta-banner/cta-banner';
 import { Event } from '../../core/models/event.model';
 import { Invitation } from '../../core/models/invitation.model';
-import { User } from '../../core/models/user.model';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { InvitationService } from '../../core/services/invitation.service';
@@ -23,16 +21,15 @@ import { HeaderComponent } from '../../shared/header/header.component';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     RouterLink,
     NzButtonModule,
-    CtaBanner,
-    NzTabComponent,
-    NzTabsComponent,
-    NzAvatarModule,
     NzDividerModule,
     NzIconModule,
     NzSkeletonModule,
+    NzAvatarModule,
+    NzTabsComponent,
+    NzTabComponent,
+    CtaBanner,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -60,14 +57,10 @@ export class ProfileComponent implements OnInit {
     return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
   });
 
-  editForm = { username: '', firstName: '', lastName: '', email: '', bio: '' };
-
   constructor() {
     effect(() => {
       const user = this.user();
       if (user) {
-        this.syncEditForm(user);
-
         if (this.lastLoadedUserId !== user.id) {
           this.lastLoadedUserId = user.id;
           this.loadRelatedData(user.id);
@@ -146,10 +139,6 @@ export class ProfileComponent implements OnInit {
       .slice(0, 2);
   }
 
-  protected saveProfile(): void {
-    console.log('Speichere:', this.editForm);
-  }
-
   private loadRelatedData(userId: number): void {
     this.loadInvitations(userId);
     this.loadMyEvents(userId);
@@ -179,15 +168,5 @@ export class ProfileComponent implements OnInit {
           this.myEventsError.set(true);
         },
       });
-  }
-
-  private syncEditForm(user: User): void {
-    this.editForm = {
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      bio: user.bio || '',
-    };
   }
 }

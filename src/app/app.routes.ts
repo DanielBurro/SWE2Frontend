@@ -30,6 +30,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'profile/edit',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/profile/profile-edit.component').then(
+        (m) => m.ProfileEditComponent
+      ),
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () =>

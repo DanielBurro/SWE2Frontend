@@ -82,6 +82,40 @@ $font-sans: 'DM Sans', sans-serif;
   }
 }
 
+.profile-action-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 20px;
+  border: 0.5px solid rgba(232, 228, 220, 0.08);
+  background:
+    radial-gradient(circle at top right, rgba($gold-primary, 0.12), transparent 32%),
+    rgba(232, 228, 220, 0.03);
+
+  h2 {
+    margin: 0;
+    font-family: $font-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: $text-main;
+  }
+}
+
+.action-copy {
+  max-width: 620px;
+  margin: 0.75rem 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: $text-muted;
+}
+
+.action-button {
+  flex-shrink: 0;
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -350,13 +384,15 @@ $font-sans: 'DM Sans', sans-serif;
     padding: 0 1rem 4rem;
   }
 
+  .profile-action-card,
   .section-header,
   .card-footer {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .section-link {
+  .section-link,
+  .action-button {
     width: fit-content;
   }
 }
