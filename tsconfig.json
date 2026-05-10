@@ -29,5 +29,6 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ]
+  ],
+  "include": ["src/**/*", "declarations.d.ts"]
 }

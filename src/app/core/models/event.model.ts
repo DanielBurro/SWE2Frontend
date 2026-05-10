@@ -22,8 +22,6 @@ export interface CreateEventDto {
   locationId: number;
 }
 
-// ── Status-Converter ──
-
 const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
   PLANNED:   'Geplant',
   ACTIVE:    'Aktiv',
@@ -45,3 +43,17 @@ export function getEventStatusLabel(status: EventStatus): string {
 export function getEventStatusColor(status: EventStatus): string {
   return EVENT_STATUS_COLORS[status] ?? '#888';
 }
+
+export interface EventElement {
+  id: string;      // Eindeutige ID (z.B. Date.now() oder UUID)
+  type: string;    // 'text', 'image', 'video' etc.
+  config: any;     // Die spezifischen Daten (z.B. { text: 'Hallo', color: 'gold' })
+  order: number;   // Wichtig für die Sortierung
+}
+
+export interface EventData {
+  id?: string;     // Datenbank-ID (leer bei neuem Event)
+  title: string;
+  elements: EventElement[];
+}
+
