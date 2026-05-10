@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -7,7 +8,9 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  effect,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -46,9 +49,6 @@ class CustomList extends List {
   }
 }
 
-
-
-
 interface BuilderElementDefinition {
   id: string;
   label: string;
@@ -58,6 +58,7 @@ interface BuilderElementDefinition {
 @Component({
   selector: 'app-event-builder',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './event-builder.html',
   styleUrls: ['./event-builder.scss'],
   imports: [CommonModule, NzIconModule, NzLayoutModule, FormsModule, DragDropModule, NzButtonModule, NzAvatarModule, NzDividerModule, NzEmptyModule],
@@ -87,6 +88,8 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
   overflowItems: BuilderElementDefinition[] = [];
   isMenuOpen = false;
   private editorInstance?: EditorJS;
+  private editorReady = signal(false);
+  private isEditorInitializedWithData = false;
 
   private resizeObserver: ResizeObserver | null = null;
 
@@ -94,6 +97,21 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
   showPreview = false;
   private previewEditorInstance?: EditorJS;
   currentUser: User | null = null;
+
+  constructor() {
+    // Sync editor data if it arrives after initialization (e.g. from API)
+    effect(() => {
+      const content = this.eventService.eventContent();
+      const ready = this.editorReady();
+
+      if (content && ready && this.editorInstance && !this.isEditorInitializedWithData) {
+        this.editorInstance.render(content).then(() => {
+            this.isEditorInitializedWithData = true;
+            this.cdr.detectChanges();
+        });
+      }
+    });
+  }
 
   ngOnInit() {
     this.userService.getMe().subscribe({
@@ -144,10 +162,16 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
     // delay initialization slightly to allow eventContent to settle when loading existing events
     setTimeout(() => {
         const existingData = this.eventService.eventContent();
+        if (existingData && Object.keys(existingData).length > 0) {
+            this.isEditorInitializedWithData = true;
+        }
 
         this.editorInstance = new EditorJS({
           holder: 'editor-holder',
           data: existingData || undefined,
+          onReady: () => {
+            this.editorReady.set(true);
+          },
           onChange: async () => {
             if (this.editorInstance) {
               try {
@@ -191,6 +215,7 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
         });
     }, 100);
   }
+
 
   calculateLayout(): void {
     if (!this.headerContainer || !this.pillElement || !this.rightActions) return;

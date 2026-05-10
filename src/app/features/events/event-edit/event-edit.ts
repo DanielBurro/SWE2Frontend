@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -34,6 +34,7 @@ export class EventEditComponent implements OnInit, OnDestroy {
   private eventService = inject(EventService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   private subs = new Subscription();
   eventId: number | null = null;
@@ -59,6 +60,7 @@ export class EventEditComponent implements OnInit, OnDestroy {
   private loadEvent(): void {
     this.eventService.getById(this.eventId!).subscribe({
       next: (event) => {
+        console.log('Event Edit - Loaded Data:', event);
         this.eventService.currentEventId.set(event.id);
         this.eventService.eventTitle.set(event.title);
         
@@ -68,12 +70,8 @@ export class EventEditComponent implements OnInit, OnDestroy {
             this.eventService.eventDate.set(null);
         }
 
-        // We assume we have the locationName in the event model
-        // We ideally should have locationId as well, so we can edit it in settings.
-        // If your backend doesn't send locationId, we might need a workaround.
-        // Assuming your backend DOES send it for EventEdit.
-        if ((event as any).locationId) {
-            this.eventService.eventLocationId.set((event as any).locationId);
+        if (event.locationId) {
+            this.eventService.eventLocationId.set(event.locationId);
             this.eventService.eventLocation.set(event.locationName);
         }
 
@@ -82,7 +80,8 @@ export class EventEditComponent implements OnInit, OnDestroy {
                 const parsed = JSON.parse(event.description);
                 this.eventService.eventContent.set(parsed);
             } catch(e) {
-                // Legacy
+                console.warn('Event Edit - Failed to parse description JSON, using fallback', e);
+                // Legacy / Fallback
                 this.eventService.eventContent.set({
                     time: new Date().getTime(),
                     blocks: [
@@ -97,6 +96,8 @@ export class EventEditComponent implements OnInit, OnDestroy {
                 });
             }
         }
+        
+        this.cdr.markForCheck();
       },
       error: () => {
         this.message.error('Event konnte nicht geladen werden.');

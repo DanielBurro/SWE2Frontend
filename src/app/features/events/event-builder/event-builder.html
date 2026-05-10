@@ -73,7 +73,8 @@
         #titleArea
         class="notion-title"
         placeholder="Unbenanntes Event"
-        [(ngModel)]="eventService.eventTitle"
+        [ngModel]="eventService.eventTitle()"
+        (ngModelChange)="eventService.eventTitle.set($event)"
         (input)="adjustTitleHeight(titleArea)"
         rows="1"
       ></textarea>

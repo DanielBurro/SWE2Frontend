@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ import { Location } from '../../../core/models/location.model';
 @Component({
   selector: 'app-event-settings',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, NzButtonModule, NzDividerModule, NzSelectModule, NzIconModule],
   template: `
     <div class="settings-modal-content">
@@ -36,7 +37,7 @@ import { Location } from '../../../core/models/location.model';
           <div class="setting-label">Ort</div>
           <div class="setting-desc">Wo findet das Event statt?</div>
         </div>
-        
+
         @if (eventService.eventLocationId()) {
           <div class="location-display">
             {{ eventService.eventLocation() || ('Ort erfolgreich hinterlegt. (ID: ' + eventService.eventLocationId() + ')') }}
@@ -83,7 +84,7 @@ import { Location } from '../../../core/models/location.model';
           <div class="setting-label">Mitglieder einladen</div>
           <div class="setting-desc">Lade Freunde und Gäste ein.</div>
         </div>
-        
+
         @if (!eventService.currentEventId()) {
           <p style="color: #c9a96e; font-size: 13px; font-weight: 500;">Bitte veröffentliche das Event zuerst, um Gäste einzuladen.</p>
         } @else {
@@ -178,17 +179,6 @@ import { Location } from '../../../core/models/location.model';
         color: #d4b87a;
       }
     }
-    .btn-danger-solid {
-      background-color: #e86464;
-      border-color: #e86464;
-      color: #ffffff;
-      border-radius: 8px;
-    }
-    .btn-danger-solid:hover {
-      background-color: #ff4d4f;
-      border-color: #ff4d4f;
-      color: #ffffff;
-    }
     .danger-zone {
       margin-top: 10px;
     }
@@ -203,7 +193,7 @@ import { Location } from '../../../core/models/location.model';
       font-size: 12px;
       margin-bottom: 12px;
     }
-    ::ng-deep .custom-select .ant-select-selector {
+    ::ng-deep .custom-select  {
       background-color: #111118 !important;
       border: 1px solid rgba(201, 169, 110, 0.3) !important;
       color: #e8e4dc !important;
@@ -212,25 +202,25 @@ import { Location } from '../../../core/models/location.model';
       display: flex;
       align-items: center;
     }
-    ::ng-deep .custom-select.ant-select-focused .ant-select-selector {
+    ::ng-deep .custom-select {
       border-color: #c9a96e !important;
       box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2) !important;
     }
-    ::ng-deep .ant-select-dropdown {
+    ::ng-deep {
       background-color: #1a1a22 !important;
       border: 1px solid rgba(201, 169, 110, 0.3) !important;
     }
-    ::ng-deep .ant-select-item {
+    ::ng-deep  {
       color: #e8e4dc !important;
     }
-    ::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    ::ng-deep {
       background-color: rgba(201, 169, 110, 0.1) !important;
     }
-    ::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    ::ng-deep {
       background-color: rgba(201, 169, 110, 0.2) !important;
       color: #c9a96e !important;
     }
-    ::ng-deep .ant-empty-description {
+    ::ng-deep {
       color: rgba(232,228,220,0.3) !important;
     }
   `]
@@ -243,12 +233,13 @@ export class EventSettingsComponent implements OnInit {
   private userService = inject(UserService);
   private invitationService = inject(InvitationService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   // Location Form
   existingLocations: Location[] = [];
   selectedLocationId: number | null = null;
   showNewLocationForm = false;
-  
+
   locName = '';
   locStreet = '';
   locHouseNumber = '';
@@ -263,19 +254,28 @@ export class EventSettingsComponent implements OnInit {
   isInviting = false;
 
   ngOnInit() {
+    this.selectedLocationId = this.eventService.eventLocationId();
+
     this.userService.getAll().subscribe({
-      next: (users) => this.users = users,
+      next: (users) => {
+        this.users = users;
+        this.cdr.markForCheck();
+      },
       error: () => console.error('Could not fetch users')
     });
-    
+
     this.locationService.getAll().subscribe({
-      next: (locs) => this.existingLocations = locs,
+      next: (locs) => {
+        this.existingLocations = locs;
+        this.cdr.markForCheck();
+      },
       error: () => {
         // Fallback demo data
         this.existingLocations = [
           { id: 1, name: 'Event Hall Neckarsulm', street: 'Hauptstrasse', houseNumber: '1', zipCode: '74172', city: 'Neckarsulm', capacity: 200 },
           { id: 2, name: 'Rooftop Heidelberg',    street: 'Bergstrasse',  houseNumber: '12', zipCode: '69117', city: 'Heidelberg', capacity: 80  },
         ];
+        this.cdr.markForCheck();
       }
     });
   }
