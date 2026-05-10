@@ -14,7 +14,7 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
   {
     id: 'birthday',
     name: 'Geburtstag',
-    description: 'Ein freundlicher Ablauf fuer eine Geburtstagsfeier mit Einladung, Highlights und Abschluss.',
+    description: 'Ein freundlicher Ablauf für eine Geburtstagsfeier mit Einladung, Highlights und Abschluss.',
     icon: 'gift',
     source: 'system',
     title: 'Mein Geburtstag',
@@ -23,21 +23,21 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
       {
         type: 'paragraph',
         data: {
-          text: 'Ich moechte meinen Geburtstag gerne mit dir feiern und freue mich sehr, wenn du dabei bist.',
+          text: 'Ich möchte meinen Geburtstag gerne mit dir feiern und freue mich sehr, wenn du dabei bist.',
         },
       },
       { type: 'header', data: { text: 'Was dich erwartet', level: 3 } },
       {
         type: 'paragraph',
         data: {
-          text: 'Es gibt gutes Essen, entspannte Musik und genug Zeit fuer gemeinsame Erinnerungen und neue Geschichten.',
+          text: 'Es gibt gutes Essen, entspannte Musik und genug Zeit für gemeinsame Erinnerungen und neue Geschichten.',
         },
       },
       {
         type: 'quote',
         data: {
-          text: 'Bring gute Laune mit, den Rest uebernehme ich.',
-          caption: 'Geburtstagsgruesse',
+          text: 'Bring gute Laune mit, den Rest übernehme ich.',
+          caption: 'Geburtstagsgruß',
           alignment: 'left',
         },
       },
@@ -46,7 +46,7 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
   {
     id: 'wedding',
     name: 'Hochzeit',
-    description: 'Eine ruhige Vorlage fuer Trauung, Feier und alle wichtigen Hinweise an eure Gaeste.',
+    description: 'Eine ruhige Vorlage für Trauung, Feier und alle wichtigen Hinweise an eure Gäste.',
     icon: 'heart',
     source: 'system',
     title: 'Unsere Hochzeit',
@@ -62,7 +62,7 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
       {
         type: 'paragraph',
         data: {
-          text: 'Nach der Trauung moechten wir mit euch anstossen, essen, lachen und bis in den Abend hinein feiern.',
+          text: 'Nach der Trauung möchten wir mit euch anstoßen, essen, lachen und bis in den Abend hinein feiern.',
         },
       },
       {
@@ -78,7 +78,7 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
   {
     id: 'dinner',
     name: 'Dinner',
-    description: 'Ideal fuer ein gemeinsames Abendessen mit kurzen Infos zu Anlass, Ablauf und Stimmung.',
+    description: 'Ideal für ein gemeinsames Abendessen mit kurzen Infos zu Anlass, Ablauf und Stimmung.',
     icon: 'coffee',
     source: 'system',
     title: 'Gemeinsames Dinner',
@@ -87,14 +87,14 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
       {
         type: 'paragraph',
         data: {
-          text: 'Ich lade dich zu einem entspannten Dinner ein, bei dem gutes Essen und gute Gespraeche im Mittelpunkt stehen.',
+          text: 'Ich lade dich zu einem entspannten Dinner ein, bei dem gutes Essen und gute Gespräche im Mittelpunkt stehen.',
         },
       },
       { type: 'header', data: { text: 'Der Plan', level: 3 } },
       {
         type: 'paragraph',
         data: {
-          text: 'Wir starten mit einem Aperitif, geniessen gemeinsam das Essen und lassen den Abend in ruhiger Atmosphaere ausklingen.',
+          text: 'Wir starten mit einem Aperitif, genießen gemeinsam das Essen und lassen den Abend in ruhiger Atmosphäre ausklingen.',
         },
       },
       {
@@ -110,29 +110,29 @@ const SYSTEM_TEMPLATES: EventTemplate[] = [
   {
     id: 'houseparty',
     name: 'Hausparty',
-    description: 'Eine lockere Vorlage fuer Musik, Freunde und einen ungezwungenen Abend zuhause.',
+    description: 'Eine lockere Vorlage für Musik, Freunde und einen ungezwungenen Abend zuhause.',
     icon: 'customer-service',
     source: 'system',
     title: 'Hausparty',
     content: createTemplateContent([
-      { type: 'header', data: { text: 'Die Wohnung wird zur Tanzflaeche', level: 2 } },
+      { type: 'header', data: { text: 'Die Wohnung wird zur Tanzfläche', level: 2 } },
       {
         type: 'paragraph',
         data: {
-          text: 'Ich schmeisse eine Hausparty und freue mich, wenn du auf einen lauten, lustigen und entspannten Abend vorbeikommst.',
+          text: 'Ich schmeiße eine Hausparty und freue mich, wenn du auf einen lauten, lustigen und entspannten Abend vorbeikommst.',
         },
       },
       { type: 'header', data: { text: 'Worauf du dich freuen kannst', level: 3 } },
       {
         type: 'paragraph',
         data: {
-          text: 'Es gibt Musik, Getraenke, kleine Snacks und genug Platz fuer gute Gespraeche zwischen Kueche, Wohnzimmer und Balkon.',
+          text: 'Es gibt Musik, Getränke, kleine Snacks und genug Platz für gute Gespräche zwischen Küche, Wohnzimmer und Balkon.',
         },
       },
       {
         type: 'quote',
         data: {
-          text: 'Je spaeter der Abend, desto besser die Playlist.',
+          text: 'Je später der Abend, desto besser die Playlist.',
           caption: 'Hausparty Modus',
           alignment: 'left',
         },

@@ -33,8 +33,8 @@ import { TemplateService } from '../../../core/services/template.service';
             <p class="eyebrow">Template Auswahl</p>
             <h1>Starte neue Events schneller mit Vorlagen</h1>
             <p class="hero-text">
-              Waehle eines der vier System-Templates oder speichere deinen aktuellen Event-Entwurf als eigenes Template.
-              Beim Anwenden wird immer ein neues Event vorbereitet, der aktuelle Inhalt wird dabei ueberschrieben.
+              Wähle eines der vier System-Templates oder speichere deinen aktuellen Event-Entwurf als eigenes Template.
+              Beim Anwenden wird immer ein neues Event vorbereitet, der aktuelle Inhalt wird dabei überschrieben.
             </p>
           </div>
 
@@ -55,15 +55,15 @@ import { TemplateService } from '../../../core/services/template.service';
           </div>
 
           <p class="section-text">
-            Eigene Templates werden aktuell direkt im Browser gespeichert und stehen dir auf diesem Geraet wieder zur
-            Verfuegung.
+            Eigene Templates werden aktuell direkt im Browser gespeichert und stehen dir auf diesem Gerät wieder zur
+            Verfügung.
           </p>
 
           <div class="save-form">
             <input
               nz-input
               [(ngModel)]="draftTemplateName"
-              placeholder="Name fuer dein Template"
+              placeholder="Name für dein Template"
               class="template-input"
             />
             <button
@@ -80,7 +80,7 @@ import { TemplateService } from '../../../core/services/template.service';
 
           @if (!hasDraftToSave()) {
             <p class="helper-text">
-              Oeffne zuerst die Event-Erstellung, fuelle Titel oder Inhalt und speichere den Entwurf dann hier als
+              Öffne zuerst die Event-Erstellung, fülle Titel oder Inhalt und speichere den Entwurf dann hier als
               wiederverwendbares Template.
             </p>
           }
@@ -107,7 +107,7 @@ import { TemplateService } from '../../../core/services/template.service';
                   <div class="template-meta">Event-Titel: {{ template.title }}</div>
                 </div>
                 <button nz-button class="action-button" (click)="applyTemplate(template)">
-                  Auswaehlen
+                  Auswählen
                 </button>
               </article>
             }
@@ -118,7 +118,7 @@ import { TemplateService } from '../../../core/services/template.service';
           <div class="section-head">
             <div>
               <p class="section-kicker">Deine Templates</p>
-              <h2>Persoenliche Vorlagen</h2>
+              <h2>Persönliche Vorlagen</h2>
             </div>
           </div>
 
@@ -478,7 +478,7 @@ export class EventTemplatesComponent {
     this.modal.confirm({
       nzTitle: 'Template anwenden?',
       nzContent: hasDraft
-        ? 'Dein aktueller Entwurf wird ueberschrieben und ein neues Event mit diesem Template vorbereitet.'
+        ? 'Dein aktueller Entwurf wird überschrieben und ein neues Event mit diesem Template vorbereitet.'
         : 'Ein neues Event wird mit diesem Template vorbereitet.',
       nzOkText: 'Template verwenden',
       nzCancelText: 'Abbrechen',
@@ -515,14 +515,14 @@ export class EventTemplatesComponent {
 
   deleteTemplate(template: EventTemplate): void {
     this.modal.confirm({
-      nzTitle: 'Template loeschen?',
+      nzTitle: 'Template löschen?',
       nzContent: `Das Template "${template.name}" wird dauerhaft aus deinem Browser entfernt.`,
-      nzOkText: 'Loeschen',
+      nzOkText: 'Löschen',
       nzCancelText: 'Abbrechen',
       nzOkDanger: true,
       nzOnOk: () => {
         this.templateService.deleteUserTemplate(template.id);
-        this.message.success('Template geloescht.');
+        this.message.success('Template gelöscht.');
       },
     });
   }

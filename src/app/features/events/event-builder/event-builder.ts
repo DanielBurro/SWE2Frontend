@@ -194,10 +194,7 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
             },
             list: {
               class: CustomList as unknown as ToolConstructable,
-              toolbox: [
-                { data: { style: 'ordered' } },
-                { data: { style: 'unordered' } },
-              ],
+              toolbox: [{ data: { style: 'unordered' } }, { data: { style: 'ordered' } }],
               inlineToolbar: true,
               config: {
                 placeholder: 'Liste',

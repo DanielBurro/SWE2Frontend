@@ -124,13 +124,18 @@ import { Location } from '../../../core/models/location.model';
       margin-bottom: 16px;
     }
     .location-display {
-      background: rgba(76, 175, 130, 0.1);
-      border: 1px solid rgba(76, 175, 130, 0.3);
-      color: #4caf82;
+      background: rgba(201, 169, 110, 0.1);
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      color: #c9a96e;
       padding: 10px 14px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .location-display:hover {
+      background: rgba(201, 169, 110, 0.15);
+      border-color: #c9a96e;
     }
     .new-location-form {
       display: flex;
@@ -140,25 +145,31 @@ import { Location } from '../../../core/models/location.model';
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 8px;
       margin-bottom: 8px;
+      transition: all 0.2s ease;
+    }
+    .new-location-form:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(201, 169, 110, 0.2);
     }
     .custom-input {
       background: #111118;
       border: 1px solid rgba(201, 169, 110, 0.3);
-      color: #e8e4dc;
+      color: #c9a96e;
       padding: 8px 12px;
       border-radius: 8px;
       font-family: inherit;
       width: 100%;
       box-sizing: border-box;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background-color 0.2s;
     }
     .custom-input:focus {
       border-color: #c9a96e;
+      background: rgba(201, 169, 110, 0.05);
     }
-    .custom-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      cursor: pointer;
+    .custom-input:hover {
+      border-color: #c9a96e;
+      background: rgba(201, 169, 110, 0.02);
     }
     .setting-label {
       font-weight: 600;
@@ -222,6 +233,20 @@ import { Location } from '../../../core/models/location.model';
     }
     ::ng-deep {
       color: rgba(232,228,220,0.3) !important;
+    }
+    ::ng-deep .ant-select-dropdown .ant-select-item {
+      color: #c9a96e !important;
+      background: #12121a !important;
+      border: 1px solid transparent !important;
+      transition: all 0.2s ease !important;
+    }
+    ::ng-deep .ant-select-dropdown .ant-select-item:hover {
+      background: rgba(201, 169, 110, 0.1) !important;
+      border-color: #c9a96e !important;
+    }
+    ::ng-deep .ant-select-dropdown .ant-select-item-option-selected {
+      background: rgba(201, 169, 110, 0.15) !important;
+      border-color: #c9a96e !important;
     }
   `]
 })

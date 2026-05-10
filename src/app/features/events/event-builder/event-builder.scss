@@ -566,7 +566,7 @@ gridster-item:hover .drag-handle-outside {
   font-size: 20px;
   transition: all 0.2s;
   border: 1px solid rgba(255,255,255,0.1);
-  
+
   &:hover {
     background: #ff4d4f;
     border-color: #ff4d4f;
@@ -712,7 +712,7 @@ gridster-item:hover .drag-handle-outside {
   .read-only-editor {
     pointer-events: none;
     margin-top: 0;
-    
+
     ::ng-deep .codex-editor__redactor {
       padding-bottom: 0 !important;
     }
