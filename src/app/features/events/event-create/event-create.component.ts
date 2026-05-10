@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -11,7 +11,6 @@ import { EventService } from '../../../core/services/event.service';
 import { LayoutService } from '../../../core/services/layout.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { EventPreviewComponent } from '../event-preview/event-preview.component';
 import { EventSettingsComponent } from '../event-settings/event-settings.component';
 
 @Component({
@@ -31,6 +30,8 @@ import { EventSettingsComponent } from '../event-settings/event-settings.compone
   styleUrl: './event-create.component.scss',
 })
 export class EventCreateComponent implements OnInit, OnDestroy {
+  @ViewChild(EventBuilder) eventBuilder!: EventBuilder;
+
   private modal = inject(NzModalService);
   private message = inject(NzMessageService);
   private layoutService = inject(LayoutService);
@@ -48,15 +49,9 @@ export class EventCreateComponent implements OnInit, OnDestroy {
   }
 
   showPreview(): void {
-    this.modal.create({
-      nzTitle: undefined,
-      nzContent: EventPreviewComponent,
-      nzFooter: null,
-      nzWidth: '1000px',
-      nzCentered: true,
-      nzClassName: 'preview-modal-wrap dark-modal',
-      nzStyle: { top: '20px' }
-    });
+    if (this.eventBuilder) {
+      this.eventBuilder.onPreview();
+    }
   }
 
   showSettings(): void {

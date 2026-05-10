@@ -25,6 +25,9 @@ export class EventService {
   public builderElements: Signal<BuilderElement[]> = computed(() => this._builderElements());
 
   public eventTitle = signal<string>('');
+  public eventDate = signal<Date | null>(null);
+  public eventLocation = signal<string>('');
+  public eventContent = signal<any>(null);
   
   // Persistent gradient state
   public color1 = signal<string>('#c9a96e');
