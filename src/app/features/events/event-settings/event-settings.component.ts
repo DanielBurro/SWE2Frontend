@@ -7,6 +7,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { EventService } from '../../../core/services/event.service';
 import { LocationService } from '../../../core/services/location.service';
 import { UserService } from '../../../core/services/user.service';
@@ -236,10 +237,12 @@ import { Location } from '../../../core/models/location.model';
 })
 export class EventSettingsComponent implements OnInit {
   private message = inject(NzMessageService);
+  private modal = inject(NzModalService);
   public eventService = inject(EventService);
   private locationService = inject(LocationService);
   private userService = inject(UserService);
   private invitationService = inject(InvitationService);
+  private router = inject(Router);
 
   // Location Form
   existingLocations: Location[] = [];
@@ -384,8 +387,6 @@ export class EventSettingsComponent implements OnInit {
     });
   }
 
-  private router = inject(Router);
-
   onDelete() {
     const eventId = this.eventService.currentEventId();
     if (!eventId) {
@@ -393,13 +394,24 @@ export class EventSettingsComponent implements OnInit {
       return;
     }
 
-    this.eventService.delete(eventId).subscribe({
-      next: () => {
-        this.message.success('Event erfolgreich gelöscht!');
-        this.router.navigate(['/profile']);
-      },
-      error: () => {
-        this.message.error('Fehler beim Löschen des Events.');
+    this.modal.confirm({
+      nzTitle: 'Event löschen?',
+      nzContent: 'Bist du sicher, dass du dieses Event löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.',
+      nzOkText: 'Löschen',
+      nzCancelText: 'Abbrechen',
+      nzOkDanger: true,
+      nzWrapClassName: 'oystr-confirmation-modal',
+      nzOnOk: () => {
+        this.eventService.delete(eventId).subscribe({
+          next: () => {
+            this.message.success('Event erfolgreich gelöscht!');
+            this.router.navigate(['/profile']);
+            this.modal.closeAll();
+          },
+          error: () => {
+            this.message.error('Fehler beim Löschen des Events.');
+          }
+        });
       }
     });
   }

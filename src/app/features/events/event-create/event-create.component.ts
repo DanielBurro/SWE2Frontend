@@ -35,11 +35,13 @@ export class EventCreateComponent implements OnInit, OnDestroy {
   private modal = inject(NzModalService);
   private message = inject(NzMessageService);
   private layoutService = inject(LayoutService);
+  private eventService = inject(EventService);
   private router = inject(Router);
 
   private subs = new Subscription();
 
   ngOnInit() {
+    this.eventService.resetBuilder();
     this.subs.add(this.layoutService.settingsRequested$.subscribe(() => this.showSettings()));
     this.subs.add(this.layoutService.templatesRequested$.subscribe(() => this.showTemplates()));
   }

@@ -45,6 +45,16 @@ export class EventService {
     this.color2.set(c2);
   }
 
+  resetBuilder() {
+    this.eventTitle.set('');
+    this.eventDate.set(null);
+    this.eventLocation.set('');
+    this.eventLocationId.set(null);
+    this.eventContent.set(null);
+    this.currentEventId.set(null);
+    this._builderElements.set([]);
+  }
+
   // --- BUILDER FUNKTIONEN ---
 
   addElement(type: string, label: string, icon: string) {
