@@ -4,15 +4,14 @@
     <div class="profile-edit-shell">
       <a routerLink="/profile" class="back-link">
         <span nz-icon nzType="arrow-left"></span>
-        Zurueck zum Profil
+        Zurück zum Profil
       </a>
 
       <section class="profile-edit-hero">
         <p class="page-eyebrow">Profildetails bearbeiten</p>
-        <h1>Pflege deine persoenlichen Angaben</h1>
+        <h1>Pflege deine persönlichen Angaben</h1>
         <p class="page-copy">
-          Aktualisiere Vorname, Nachname, Username, E-Mail und Bio an einer
-          eigenen Stelle, ohne die Profiluebersicht zu verlassen.
+          Aktualisiere Vorname, Nachname und Bio.
         </p>
         <div class="user-chip">
           <span class="user-chip-label">Aktuell:</span>
@@ -27,12 +26,10 @@
           <div>
             <h2>Deine Daten</h2>
             <p>
-              Diese Felder werden per `PUT /users/:id` gespeichert und nach
-              Erfolg direkt in der laufenden Session aktualisiert.
             </p>
           </div>
           @if (profileForm.dirty) {
-            <span class="editor-status">Ungespeicherte Aenderungen</span>
+            <span class="editor-status">Ungespeicherte Änderungen</span>
           }
         </div>
 
@@ -121,7 +118,7 @@
               class="btn-secondary"
               (click)="resetForm()"
               [disabled]="isSaving || !profileForm.dirty">
-              Eingaben zuruecksetzen
+              Eingaben zurücksetzen
             </button>
             <button
               nz-button
@@ -129,7 +126,7 @@
               class="btn-primary"
               [nzLoading]="isSaving"
               [disabled]="profileForm.invalid || !profileForm.dirty">
-              Aenderungen speichern
+              Änderungen speichern
             </button>
           </div>
         </form>
