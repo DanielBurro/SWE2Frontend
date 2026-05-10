@@ -1,14 +1,15 @@
 import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { InvitationService } from '../../core/services/invitation.service';
 import { EventService } from '../../core/services/event.service';
 import { Invitation } from '../../core/models/invitation.model';
 import { Event } from '../../core/models/event.model';
-import { HeaderComponent } from '../../shared/header/header.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { CtaBanner } from '../../components/cta-banner/cta-banner';
-import { AuthService, User } from '../../auth/auth';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
 import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
 
 @Component({
@@ -17,6 +18,7 @@ import { NzTabComponent, NzTabsComponent } from 'ng-zorro-antd/tabs';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     NzButtonModule,
     CtaBanner,
     NzTabComponent,

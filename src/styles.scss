@@ -171,3 +171,321 @@ html, body {
     color: #c9a96e !important;
   }
 }
+// In styles.scss oder via ::ng-deep umschlossen
+.oystr-confirmation-modal {
+
+  // 1. MODAL CONTAINER & BACKGROUNDS
+  .ant-modal-content,
+  .ant-modal-confirm-body-wrapper {
+    background-color: #111118 !important;
+    color: #e8e4dc !important;
+  }
+
+  .ant-modal-body {
+    background-color: #111118 !important;
+    color: #e8e4dc !important;
+  }
+
+  .ant-modal-header {
+    background: #111118 !important;
+    border-bottom-color: rgba(201, 169, 110, 0.1) !important;
+    .ant-modal-title { color: #e8e4dc !important; }
+  }
+
+  // 2. TEXT & ICON COLORS
+  .ant-modal-confirm-body {
+    .ant-modal-confirm-title {
+      color: #e8e4dc !important;
+      font-family: 'Playfair Display', serif;
+    }
+    .ant-modal-confirm-content {
+      color: rgba(232, 228, 220, 0.7) !important; // Etwas dezenterer Text
+      font-family: 'DM Sans', sans-serif;
+    }
+    .anticon {
+      top: 4px; // Feinjustierung Icon-Position
+    }
+  }
+
+  // 3. FOOTER & BUTTON ACTIONS
+  .ant-modal-footer,
+  .ant-modal-confirm-btns {
+    background-color: #111118 !important;
+    border-top: none !important; // Meist schöner ohne Trennlinie bei diesem Design
+    padding-top: 20px !important;
+  }
+
+  // Gemeinsame Button-Basis
+  .ant-modal-confirm-btns .ant-btn {
+    height: 40px;
+    padding: 0 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: none;
+  }
+
+  // --- ABBRECHEN BUTTON (Style von .btn-ghost) ---
+  .ant-modal-confirm-btns .ant-btn:not(.ant-btn-primary):not(.ant-btn-dangerous) {
+    background: transparent !important;
+    color: rgba(232, 228, 220, 0.45) !important;
+    border: 0.5px solid rgba(232, 228, 220, 0.15) !important;
+
+    &:hover, &:focus {
+      color: #e8e4dc !important;
+      border-color: rgba(232, 228, 220, 0.3) !important;
+      background: transparent !important;
+    }
+  }
+
+  // --- LÖSCHEN BUTTON (Style von .btn-delete mit Glow) ---
+  .ant-modal-confirm-btns .ant-btn-dangerous {
+    background: rgba(232, 100, 100, 0.08) !important;
+    border-color: #e86464 !important;
+    color: #e86464 !important;
+
+    &:hover, &:focus {
+      background: #e86464 !important;
+      border-color: #e86464 !important;
+      color: #ffffff !important;
+
+      // Glow-Effekt
+      box-shadow: 0 0 15px rgba(232, 100, 100, 0.4),
+      0 0 5px rgba(232, 100, 100, 0.2) !important;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// ==========================================================================
+// EDITOR.JS GLOBAL STYLING
+// ==========================================================================
+$gold-primary: #c9a96e;
+$bg-popover:   #1f1f28;
+$text-main:    #e8e4dc;
+
+// Apply Editor.js variables globally so popovers in the body pick them up
+body {
+  --color-background-popover: #{$bg-popover} !important;
+  --color-border-popover: rgba(201, 169, 110, 0.3) !important;
+  --color-background-item-hover: rgba(201, 169, 110, 0.12) !important;
+  --color-text-primary: #e8e4dc !important;
+  --color-text-secondary: rgba(232, 228, 220, 0.6) !important;
+  --color-background-icon: transparent !important;
+  --color-background-icon-active: rgba(201, 169, 110, 0.2) !important;
+  --color-text-icon-active: #c9a96e !important;
+  --color-line: rgba(201, 169, 110, 0.1) !important;
+}
+
+// Explicitly target the popover container
+.ce-popover__container {
+  background-color: $bg-popover !important;
+  border: 1px solid $gold-primary !important;
+  border-radius: 12px !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8) !important;
+}
+
+// Base Editor
+.codex-editor {
+  width: 100%;
+  color: $text-main;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Force Editor.js blocks to use 100% width */
+.ce-block__content,
+.ce-toolbar__content {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}
+
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+  outline: none !important;
+}
+
+/* Remove default redactor background/padding if any */
+.codex-editor__redactor {
+  background: transparent !important;
+  padding-bottom: 50px !important;
+}
+
+/* Text & Typografie (Primary Text) */
+.ce-paragraph {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: $text-main;
+}
+
+/* Headlines (Gold) */
+.ce-header {
+  font-family: 'Playfair Display', serif;
+  color: $gold-primary;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
+}
+
+h1.ce-header { font-size: 2.5rem; }
+h2.ce-header { font-size: 2rem; }
+h3.ce-header { font-size: 1.75rem; }
+h4.ce-header { font-size: 1.5rem; }
+
+.cdx-list__item {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: $text-main;
+}
+
+/* Links */
+.ce-paragraph a,
+.cdx-list__item a {
+  color: $gold-primary;
+  text-decoration: underline;
+  text-decoration-color: rgba($gold-primary, 0.4);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s;
+
+  &:hover {
+    text-decoration-color: $gold-primary;
+  }
+}
+
+/* Selektion / Text markieren */
+.ce-block *::selection {
+  background: rgba($gold-primary, 0.3) !important;
+  color: #ffffff;
+}
+
+/* Aktiver Block (Kein hässlicher Hintergrund) */
+.ce-block--selected .ce-block__content {
+  background: rgba($gold-primary, 0.05) !important;
+  border-radius: 8px;
+}
+
+/* --- 6-Punkte und Plus Button (Gold) --- */
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+  color: $gold-primary !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: rgba($gold-primary, 0.15) !important;
+    color: $gold-primary !important;
+  }
+}
+
+.ce-toolbar__settings-btn--active {
+  background-color: rgba($gold-primary, 0.2) !important;
+  color: $gold-primary !important;
+}
+
+/* --- Inline Menü (Erscheint beim Text markieren) --- */
+.ce-inline-toolbar {
+  background-color: #1a1a22 !important;
+  border: 1px solid rgba($gold-primary, 0.3) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+
+  .ce-inline-toolbar__button {
+    color: $text-main !important;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba($gold-primary, 0.1) !important;
+      color: $gold-primary !important;
+    }
+
+    &--active {
+      color: $gold-primary !important;
+    }
+  }
+
+  .ce-inline-toolbar__dropdown {
+    color: $text-main !important;
+    &:hover {
+      background-color: rgba($gold-primary, 0.1) !important;
+    }
+  }
+}
+.ce-inline-tool {
+  color: $gold-primary !important;
+}
+
+/* Inline Toolbar Link Input */
+.ce-inline-tool-input {
+  background: #111118 !important;
+  color: $text-main !important;
+  border: none !important;
+  border-top: 1px solid rgba($gold-primary, 0.2) !important;
+  font-family: 'DM Sans', sans-serif !important;
+  &::placeholder {
+    color: rgba($text-main, 0.4) !important;
+  }
+}
+
+/* --- Settings / Tunes Menü (6-Punkte Popover) --- */
+.ce-popover__container {
+  background: #1a1a22 !important;
+}
+
+.ce-popover, .ce-conversion-toolbar {
+  border: 1px solid rgba($gold-primary, 0.3) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8) !important;
+  color: $text-main !important;
+
+  .ce-popover-item, .ce-settings__button, .ce-toolbox__button, .ce-conversion-tool {
+    color: $text-main !important;
+    border-radius: 8px !important;
+
+    &:hover, &--focused {
+      background-color: rgba($gold-primary, 0.12) !important;
+      color: $gold-primary !important;
+
+      .ce-popover-item__icon, .ce-settings__button, .ce-toolbox__button {
+        color: $gold-primary !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+    }
+
+    &--active {
+      background-color: rgba($gold-primary, 0.2) !important;
+      color: $gold-primary !important;
+    }
+
+    /* Icons im Popover (Müssen überschrieben werden für Darkmode) */
+    .ce-popover-item__icon, .ce-popover-item__icon svg {
+      color: $gold-primary !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+  }
+
+  /* Suche im Menü */
+  .ce-popover__search {
+    background: transparent !important;
+    border-bottom: 1px solid rgba($gold-primary, 0.1) !important;
+  }
+  .ce-popover__search-input {
+    color: $text-main !important;
+    &::placeholder {
+      color: rgba($text-main, 0.4) !important;
+    }
+  }
+}
+
+/* Löschen-Button im Settings Menü speziell stylen */
+.ce-settings__button--delete:hover {
+  color: #ff4d4f !important;
+  background-color: rgba(255, 77, 79, 0.1) !important;
+}

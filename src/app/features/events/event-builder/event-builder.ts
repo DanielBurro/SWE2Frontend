@@ -13,10 +13,11 @@ import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
-import { NZ_MODAL_DATA, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { EventSettingsComponent } from '../event-settings/event-settings.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -47,78 +48,6 @@ class CustomList extends List {
 
 
 
-@Component({
-  selector: 'app-color-picker-modal',
-  standalone: true,
-  imports: [CommonModule, FormsModule, NzButtonModule],
-  template: `
-    <div class="color-picker-container">
-      <div class="picker-row">
-        <label>Startfarbe:</label>
-        <input type="color" [(ngModel)]="color1" />
-      </div>
-      <div class="picker-row">
-        <label>Endfarbe:</label>
-        <input type="color" [(ngModel)]="color2" />
-      </div>
-      <div class="preview-box" [style.background]="getGradient()"></div>
-
-      <div class="modal-footer">
-        <button nz-button nzType="primary" (click)="handleOk()">Übernehmen</button>
-      </div>
-    </div>
-  `,
-  styles: [
-    `
-      .color-picker-container {
-        padding: 10px 0;
-      }
-      .picker-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-      .preview-box {
-        height: 120px;
-        border-radius: 12px;
-        margin-top: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      label {
-        color: #e8e4dc;
-        font-weight: 500;
-      }
-      .modal-footer {
-        margin-top: 24px;
-        display: flex;
-        justify-content: flex-end;
-      }
-    `,
-  ],
-})
-export class ColorPickerModal implements OnInit {
-  color1 = '#c9a96e';
-  color2 = '#111118';
-
-  private modalData = inject(NZ_MODAL_DATA, { optional: true });
-  private modalRef = inject(NzModalRef);
-
-  ngOnInit() {
-    if (this.modalData) {
-      this.color1 = this.modalData.color1;
-      this.color2 = this.modalData.color2;
-    }
-  }
-
-  handleOk() {
-    this.modalRef.close({ color1: this.color1, color2: this.color2 });
-  }
-
-  getGradient() {
-    return `linear-gradient(135deg, ${this.color1} 0%, ${this.color2} 100%)`;
-  }
-}
 
 interface BuilderElementDefinition {
   id: string;
@@ -143,6 +72,7 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
   private userService = inject(UserService);
   private modal = inject(NzModalService);
   private message = inject(NzMessageService);
+  private router = inject(Router);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
 
@@ -211,52 +141,55 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initEditor() {
-    const existingData = this.eventService.eventContent();
-    
-    this.editorInstance = new EditorJS({
-      holder: 'editor-holder',
-      data: existingData || undefined,
-      onChange: async () => {
-        if (this.editorInstance) {
-          try {
-            const data = await this.editorInstance.save();
-            this.eventService.eventContent.set(data);
-          } catch (e) {
-            console.error('Failed to auto-save editor data:', e);
-          }
-        }
-      },
-      tools: {
-        header: {
-          class: Header as any,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Überschrift',
-            levels: [1, 2, 3],
-            defaultLevel: 2,
+    // delay initialization slightly to allow eventContent to settle when loading existing events
+    setTimeout(() => {
+        const existingData = this.eventService.eventContent();
+
+        this.editorInstance = new EditorJS({
+          holder: 'editor-holder',
+          data: existingData || undefined,
+          onChange: async () => {
+            if (this.editorInstance) {
+              try {
+                const data = await this.editorInstance.save();
+                this.eventService.eventContent.set(data);
+              } catch (e) {
+                console.error('Failed to auto-save editor data:', e);
+              }
+            }
           },
-        },
-        list: {
-          class: CustomList as unknown as ToolConstructable,
-          toolbox: [
-            { data: { style: 'ordered' } },
-            { data: { style: 'unordered' } },
-          ],
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Liste',
-            defaultStyle: 'unordered',
+          tools: {
+            header: {
+              class: Header as any,
+              inlineToolbar: true,
+              config: {
+                placeholder: 'Überschrift',
+                levels: [1, 2, 3],
+                defaultLevel: 2,
+              },
+            },
+            list: {
+              class: CustomList as unknown as ToolConstructable,
+              toolbox: [
+                { data: { style: 'ordered' } },
+                { data: { style: 'unordered' } },
+              ],
+              inlineToolbar: true,
+              config: {
+                placeholder: 'Liste',
+                defaultStyle: 'unordered',
+              },
+            },
+            quote: { class: Quote as any, inlineToolbar: true },
+            embed: {
+              class: Embed,
+              config: {
+                services: { youtube: true, facebook: true, twitter: true, instagram: true },
+              },
+            },
           },
-        },
-        quote: { class: Quote as any, inlineToolbar: true },
-        embed: {
-          class: Embed,
-          config: {
-            services: { youtube: true, facebook: true, twitter: true, instagram: true },
-          },
-        },
-      },
-    });
+        });
+    }, 100);
   }
 
   calculateLayout(): void {
@@ -359,10 +292,10 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
         console.error('Failed to save before preview:', e);
       }
     }
-    
+
     this.showPreview = true;
     this.cdr.detectChanges();
-    
+
     setTimeout(() => {
       this.initPreviewEditor();
     }, 50);
@@ -379,7 +312,7 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
 
   private initPreviewEditor() {
     const data = this.eventService.eventContent();
-    
+
     this.previewEditorInstance = new EditorJS({
       holder: 'preview-editor-holder',
       readOnly: true,
@@ -399,33 +332,63 @@ export class EventBuilder implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  onPublish() {
-    this.message
-      .loading('Event wird veröffentlicht...', { nzDuration: 2000 })
-      .onClose.subscribe(() => {
-        this.message.success('Dein Event wurde erfolgreich veröffentlicht!');
-      });
-  }
-
-  pickGradient() {
-    const modal = this.modal.create({
-      nzTitle: 'Hintergrund anpassen',
-      nzContent: ColorPickerModal,
-      nzData: {
-        color1: this.eventService.color1(),
-        color2: this.eventService.color2(),
-      },
-      nzWidth: 400,
-      nzFooter: null,
-      nzClassName: 'dark-modal',
-      nzMaskClosable: false,
-    });
-
-    modal.afterClose.subscribe((result) => {
-      if (result) {
-        this.eventService.updateColors(result.color1, result.color2);
+  async onPublish() {
+    if (this.editorInstance) {
+      try {
+        const data = await this.editorInstance.save();
+        this.eventService.eventContent.set(data);
+      } catch (e) {
+        console.error('Failed to auto-save editor data before publishing:', e);
       }
-    });
+    }
+
+    const title = this.eventService.eventTitle();
+    const dateObj = this.eventService.eventDate();
+    const locationId = this.eventService.eventLocationId();
+
+    if (!title || !dateObj || !locationId) {
+      this.message.error('Bitte Titel, Datum und Ort in den Einstellungen festlegen!');
+      return;
+    }
+
+    const msgId = this.message.loading('Event wird veröffentlicht...', { nzDuration: 0 }).messageId;
+
+    const dto = {
+      title: title,
+      description: JSON.stringify(this.eventService.eventContent()),
+      date: dateObj.toISOString(),
+      hostId: this.currentUser?.id || 1,
+      locationId: locationId
+    };
+
+    if (this.eventService.currentEventId()) {
+      // Update existing
+      this.eventService.update(this.eventService.currentEventId()!, dto).subscribe({
+        next: (event) => {
+          this.message.remove(msgId);
+          this.message.success('Dein Event wurde erfolgreich aktualisiert!');
+          this.router.navigate(['/event', event.id]);
+        },
+        error: () => {
+          this.message.remove(msgId);
+          this.message.error('Fehler beim Aktualisieren des Events.');
+        }
+      });
+    } else {
+      // Create new
+      this.eventService.create(dto).subscribe({
+        next: (event) => {
+          this.message.remove(msgId);
+          this.message.success('Dein Event wurde erfolgreich veröffentlicht!');
+          this.eventService.currentEventId.set(event.id);
+          this.router.navigate(['/event', event.id]);
+        },
+        error: () => {
+          this.message.remove(msgId);
+          this.message.error('Fehler beim Veröffentlichen des Events.');
+        }
+      });
+    }
   }
 
   adjustTitleHeight(textarea: HTMLTextAreaElement) {

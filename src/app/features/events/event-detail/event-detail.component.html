@@ -13,14 +13,18 @@
     <div class="event-banner" [style.background]="'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'">
       <div class="banner-overlay"></div>
       <div class="banner-content">
-        <a routerLink="/" class="back-link">
-          <span nz-icon nzType="arrow-left"></span>
-          Alle Events
-        </a>
-        <div class="event-status-badge">
-          <span class="status-dot" [style.background]="event.status === 'offen' ? '#4caf82' : '#c9a96e'"></span>
-          {{ event.status | titlecase }}
+
+        <div class="banner-top-row">
+          <a routerLink="/" class="back-link">
+            <span nz-icon nzType="arrow-left"></span>
+            Alle Events
+          </a>
+          <div class="event-status-badge">
+            <span class="status-dot" [style.background]="getEventStatusColor(event.status)"></span>
+            {{ getEventStatusLabel(event.status) }}
+          </div>
         </div>
+
         <h1 class="event-banner-title">{{ event.title }}</h1>
         <div class="banner-meta">
           <span>
@@ -49,9 +53,9 @@
           <div class="detail-card">
             <h2 class="card-title">Über dieses Event</h2>
             <nz-divider />
-            <p class="event-description">
-              {{ event.description || 'Keine Beschreibung vorhanden.' }}
-            </p>
+            <div class="event-description">
+              <div id="event-detail-editor" class="editor-js-wrapper read-only-editor"></div>
+            </div>
           </div>
 
           <!-- GÄSTELISTE -->
@@ -98,6 +102,101 @@
               }
             </div>
           </div>
+
+          <!-- EINLADUNGS-VERWALTUNG (nur Host) -->
+          @if (isHost) {
+            <div class="detail-card invite-management-card">
+              <div class="invite-mgmt-header">
+                <h2 class="card-title">Einladungen verwalten</h2>
+                <button nz-button class="btn-gold-sm" (click)="openInviteModal()">
+                  <span nz-icon nzType="user-add"></span>
+                  Einladen
+                </button>
+              </div>
+              <nz-divider />
+
+              @if (invitations.length === 0) {
+                <nz-empty nzNotFoundContent="Noch keine Einladungen verschickt" class="custom-empty" />
+              }
+
+              <div class="invite-list">
+                @for (inv of invitations; track inv.id) {
+                  <div class="invite-row" [class.expanded]="expandedInviteId === inv.id">
+
+                    <div class="invite-row-main" (click)="toggleExpand(inv.id)">
+                      <div class="invite-left">
+                        <nz-avatar
+                          [nzText]="getInitials(inv.guestName)"
+                          [nzSize]="32"
+                          class="guest-avatar">
+                        </nz-avatar>
+                        <div class="invite-info">
+                          <span class="invite-name">{{ inv.guestName }}</span>
+                          <span class="invite-sent">Eingeladen {{ formatDateShort(inv.sentAt) }}</span>
+                        </div>
+                      </div>
+                      <div class="invite-right">
+                        <span class="invite-status-badge"
+                          [style.color]="getStatusColor(inv.status)"
+                          [style.border-color]="getStatusColor(inv.status) + '40'"
+                          [style.background]="getStatusColor(inv.status) + '15'">
+                          {{ getStatusLabel(inv.status) }}
+                        </span>
+                        <span nz-icon [nzType]="expandedInviteId === inv.id ? 'up' : 'down'" class="expand-icon"></span>
+                      </div>
+                    </div>
+
+                    @if (expandedInviteId === inv.id) {
+                      <div class="invite-expand">
+
+                        <!-- Einladungslink -->
+                        <div class="invite-link-section">
+                          <span class="expand-label">Einladungslink</span>
+                          <div class="link-row link-row--hint">
+                            <span nz-icon nzType="mail" class="link-hint-icon"></span>
+                            <span class="invite-link-hint">{{ getInviteLinkHint() }}</span>
+                          </div>
+                        </div>
+
+                        <!-- Status ändern -->
+                        <div class="invite-status-section">
+                          <span class="expand-label">Status ändern</span>
+                          <div class="status-actions">
+                            @for (s of ['ACCEPTED', 'PENDING', 'DECLINED']; track s) {
+                              <button
+                                nz-button
+                                class="status-btn"
+                                [class.active]="inv.status === s"
+                                [style.border-color]="inv.status === s ? getStatusColor(s) : ''"
+                                [style.color]="inv.status === s ? getStatusColor(s) : ''"
+                                (click)="changeInviteStatus(inv, s)">
+                                {{ getStatusLabel(s) }}
+                              </button>
+                            }
+                          </div>
+                        </div>
+
+                        <!-- Aktionen -->
+                        <div class="invite-actions">
+                          <button
+                            nz-button
+                            class="btn-danger-sm"
+                            nz-popconfirm
+                            nzPopconfirmTitle="Einladung wirklich zurückziehen?"
+                            (nzOnConfirm)="deleteInvite(inv)">
+                            <span nz-icon nzType="delete"></span>
+                            Zurückziehen
+                          </button>
+                        </div>
+
+                      </div>
+                    }
+
+                  </div>
+                }
+              </div>
+            </div>
+          }
 
         </div>
 
@@ -146,22 +245,22 @@
             </div>
           }
 
-          <!-- HOST ACTIONS -->
-          @if (isHost) {
-            <div class="sidebar-card">
-              <p class="sidebar-label">Event verwalten</p>
-              <div class="host-actions">
-                <button nz-button nzBlock class="btn-gold">
-                  <span nz-icon nzType="user-add"></span>
-                  Gast einladen
-                </button>
-                <button nz-button nzBlock class="btn-outline-gold">
-                  <span nz-icon nzType="edit"></span>
-                  Event bearbeiten
-                </button>
-              </div>
-            </div>
-          }
+           <!-- HOST ACTIONS -->
+           @if (isHost) {
+             <div class="sidebar-card">
+               <p class="sidebar-label">Event verwalten</p>
+               <div class="host-actions">
+                 <button nz-button nzBlock class="btn-gold" (click)="openInviteModal()">
+                   <span nz-icon nzType="user-add"></span>
+                   Gast einladen
+                 </button>
+                 <button nz-button nzBlock [routerLink]="['/events', event.id, 'edit']" class="btn-outline-gold">
+                   <span nz-icon nzType="edit"></span>
+                   Event bearbeiten
+                 </button>
+               </div>
+             </div>
+           }
 
           <!-- EVENT INFO -->
           <div class="sidebar-card">
@@ -188,3 +287,71 @@
   }
 
 </div>
+
+<!-- EINLADUNGS-MODAL -->
+<nz-modal
+  [(nzVisible)]="isInviteModalOpen"
+  nzTitle="Gast einladen"
+  (nzOnCancel)="closeInviteModal()"
+  (nzOnOk)="sendInvite()"
+  nzOkText="Einladung senden"
+  [nzOkDisabled]="!selectedGuest"
+  [nzOkLoading]="isSendingInvite"
+  nzCancelText="Abbrechen"
+  nzClassName="invite-modal">
+  <ng-container *nzModalContent>
+    <div class="modal-body">
+
+      <p class="modal-hint">
+        Der Gast erhält den Einladungslink automatisch per E-Mail.
+      </p>
+
+      <!-- Suchfeld -->
+      <div class="user-search-box">
+        <span nz-icon nzType="search" class="search-icon"></span>
+        <input
+          class="user-search-input"
+          type="text"
+          placeholder="Name, Username oder E-Mail suchen..."
+          [value]="searchQuery"
+          (input)="onSearchChange($any($event.target).value)"
+          autocomplete="off" />
+        @if (searchQuery) {
+          <button class="search-clear" (click)="onSearchChange('')">
+            <span nz-icon nzType="close-circle"></span>
+          </button>
+        }
+      </div>
+
+      <!-- Ergebnisliste -->
+      <div class="user-list">
+        @if (filteredInvitableUsers.length === 0 && !searchQuery) {
+          <p class="modal-empty">Alle verfügbaren Nutzer wurden bereits eingeladen.</p>
+        } @else if (filteredInvitableUsers.length === 0) {
+          <p class="modal-empty">Keine Ergebnisse für „{{ searchQuery }}"</p>
+        }
+
+        @for (user of filteredInvitableUsers; track user.id) {
+          <div
+            class="user-row"
+            [class.selected]="selectedGuest?.id === user.id"
+            (click)="selectUser(user)">
+            <nz-avatar
+              [nzText]="getInitials(user.firstName + ' ' + user.lastName)"
+              [nzSize]="36"
+              class="user-row-avatar">
+            </nz-avatar>
+            <div class="user-row-info">
+              <span class="user-row-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="user-row-meta">&#64;{{ user.username }} · {{ user.email }}</span>
+            </div>
+            @if (selectedGuest?.id === user.id) {
+              <span nz-icon nzType="check-circle" nzTheme="fill" class="user-row-check"></span>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+  </ng-container>
+</nz-modal>

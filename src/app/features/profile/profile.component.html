@@ -33,8 +33,13 @@
           @if (myEvents().length > 0) {
             <ul>
               @for (event of myEvents(); track event.id) {
-                <li>
-                  <strong>{{ event.title }}</strong> - {{ event.date }}
+                <li style="display: flex; justify-content: space-between; align-items: center;">
+                  <a [routerLink]="['/events', event.id]" style="color: #e8e4dc; text-decoration: none; flex: 1;">
+                    <strong>{{ event.title }}</strong> - {{ event.date | date: 'short' }}
+                  </a>
+                  <button nz-button nzSize="small" [routerLink]="['/events', event.id, 'edit']" class="btn-edit">
+                    Bearbeiten
+                  </button>
                 </li>
               }
             </ul>

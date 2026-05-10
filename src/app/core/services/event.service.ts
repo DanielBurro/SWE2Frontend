@@ -27,7 +27,9 @@ export class EventService {
   public eventTitle = signal<string>('');
   public eventDate = signal<Date | null>(null);
   public eventLocation = signal<string>('');
+  public eventLocationId = signal<number | null>(null);
   public eventContent = signal<any>(null);
+  public currentEventId = signal<number | null>(null);
   
   // Persistent gradient state
   public color1 = signal<string>('#c9a96e');
