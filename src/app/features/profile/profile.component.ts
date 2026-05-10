@@ -22,7 +22,6 @@ import { HeaderComponent } from '../../shared/header/header.component';
   imports: [
     CommonModule,
     RouterLink,
-    HeaderComponent,
     NzButtonModule,
     NzDividerModule,
     NzIconModule,

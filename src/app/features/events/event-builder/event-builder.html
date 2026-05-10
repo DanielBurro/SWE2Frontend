@@ -1,0 +1,202 @@
+<div class="header-sticky-wrapper">
+  <nz-header class="secondary-header" #headerContainer>
+    <div class="header-left">
+      <div class="status-pill" #pillElement>
+        <span class="dot"></span>
+        <span class="pill-text">Hinzufügen:</span>
+      </div>
+
+      <div class="header-controls"
+           cdkDropList
+           [cdkDropListSortingDisabled]="true">
+        <div class="main-actions">
+          @for (item of visibleItems; track item.id) {
+            <button class="action-item ripple"
+                    (click)="addItem(item)"
+                    cdkDrag
+                    [cdkDragData]="item">
+              <span nz-icon [nzType]="item.icon"></span>
+              <span class="label">{{ item.label }}</span>
+
+              <!-- Placeholder while dragging -->
+              <div *cdkDragPlaceholder></div>
+            </button>
+          }
+        </div>
+
+        @if (overflowItems.length > 0) {
+          <div class="controls-spacer"></div>
+
+          <button
+            class="action-item more-button"
+            [class.active]="isMenuOpen"
+            (click)="toggleMenu()"
+          >
+            <span nz-icon [nzType]="isMenuOpen ? 'close' : 'plus'"></span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="header-right" #rightActions>
+      <button class="action-item-secondary" (click)="onSettings()">
+        <span nz-icon nzType="setting"></span>
+        <span>Einstellungen</span>
+      </button>
+      <button class="btn-publish" (click)="onPublish()">
+        <span nz-icon nzType="cloud-upload"></span>
+        <span>Veröffentlichen</span>
+      </button>
+    </div>
+  </nz-header>
+
+  @if (isMenuOpen && overflowItems.length > 0) {
+    <div class="grid-card-overlay" (click)="toggleMenu()"></div>
+
+    <div class="grid-card">
+      <div class="grid-container">
+        @for (item of overflowItems; track item.id) {
+          <button class="grid-item" (click)="addItem(item)">
+            <span nz-icon [nzType]="item.icon"></span>
+            <span class="grid-label">{{ item.label }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<div class="builder-page-wrapper">
+  <div class="builder-canvas">
+    <div class="title-container">
+      <textarea
+        #titleArea
+        class="notion-title"
+        placeholder="Unbenanntes Event"
+        [ngModel]="eventService.eventTitle()"
+        (ngModelChange)="eventService.eventTitle.set($event)"
+        (input)="adjustTitleHeight(titleArea)"
+        rows="1"
+      ></textarea>
+      <div class="title-underline"></div>
+    </div>
+
+    <div class="builder-content-area">
+      <!-- EditorJS Holder - OUTSIDE cdkDropList to avoid conflict -->
+      <div id="editor-holder" class="editor-js-wrapper"></div>
+    </div>
+  </div>
+</div>
+
+@if (showPreview) {
+  <div class="preview-overlay">
+    <div class="preview-overlay-bg" (click)="closePreview()"></div>
+    <div class="preview-dialog">
+      <div class="preview-close" (click)="closePreview()">
+        <span nz-icon nzType="close"></span>
+      </div>
+      
+      <div class="preview-content detail-page">
+        <!-- HERO BANNER -->
+        <div class="event-banner" [style.background]="eventService.coverGradient()">
+          <div class="banner-overlay"></div>
+          <div class="banner-content">
+            <div class="event-status-badge">
+              <span class="status-dot" style="background: #4caf82"></span>
+              Entwurf
+            </div>
+            <h1 class="event-banner-title">{{ eventService.eventTitle() || 'Unbenanntes Event' }}</h1>
+            <div class="banner-meta">
+              <span>
+                <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                {{ formatDate(eventService.eventDate()) }}
+              </span>
+              <span>
+                <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                {{ formatTime(eventService.eventDate()) }} Uhr
+              </span>
+              <span>
+                <span nz-icon nzType="environment" nzTheme="outline"></span>
+                {{ eventService.eventLocation() || 'Ort ausstehend' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-container">
+          <div class="detail-layout">
+
+            <!-- LINKE SPALTE -->
+            <div class="detail-main">
+
+              <!-- BESCHREIBUNG -->
+              <div class="detail-card">
+                <h2 class="card-title">Über dieses Event</h2>
+                <nz-divider />
+                <div class="event-description">
+                  <div id="preview-editor-holder" class="editor-js-wrapper read-only-editor"></div>
+                </div>
+              </div>
+
+              <!-- GÄSTELISTE -->
+              <div class="detail-card">
+                <div class="guests-header">
+                  <h2 class="card-title">Gästeliste</h2>
+                  <div class="guest-stats">
+                    <span class="stat accepted">
+                      <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+                      0 Zugesagt
+                    </span>
+                    <span class="stat pending">
+                      <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                      0 Ausstehend
+                    </span>
+                  </div>
+                </div>
+                <nz-divider />
+                <nz-empty nzNotFoundContent="Noch keine Gäste eingeladen" class="custom-empty" />
+              </div>
+
+            </div>
+
+            <!-- RECHTE SPALTE -->
+            <div class="detail-sidebar">
+
+              <!-- HOST INFO -->
+              <div class="sidebar-card">
+                <p class="sidebar-label">Veranstalter</p>
+                <div class="host-row">
+                  <nz-avatar [nzText]="getUserInitials()" [nzSize]="44" class="host-avatar"></nz-avatar>
+                  <div>
+                    <p class="host-name">{{ getUserFullName() }}</p>
+                    <p class="host-sub">Event-Host</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EVENT INFO -->
+              <div class="sidebar-card">
+                <p class="sidebar-label">Details</p>
+                <div class="info-rows">
+                  <div class="info-row">
+                    <span nz-icon nzType="calendar" nzTheme="outline" class="info-icon"></span>
+                    <span>{{ formatDate(eventService.eventDate()) }}</span>
+                  </div>
+                  <div class="info-row">
+                    <span nz-icon nzType="clock-circle" nzTheme="outline" class="info-icon"></span>
+                    <span>{{ formatTime(eventService.eventDate()) }} Uhr</span>
+                  </div>
+                  <div class="info-row">
+                    <span nz-icon nzType="environment" nzTheme="outline" class="info-icon"></span>
+                    <span>{{ eventService.eventLocation() || 'Ort ausstehend' }}</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

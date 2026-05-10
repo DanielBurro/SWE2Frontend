@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, effect, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzDropdownDirective, NzDropdownMenuComponent, NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzMenuDirective, NzMenuDividerDirective } from 'ng-zorro-antd/menu';
 import { User } from '../../core/models/user.model';
 import { AuthService } from '../../core/services/auth.service';
 import { SearchService } from '../../core/services/search.service';
@@ -26,6 +27,10 @@ import { UserService } from '../../core/services/user.service';
     NzIconModule,
     NzDropDownModule,
     NzAvatarModule,
+    NzDropdownDirective,
+    NzDropdownMenuComponent,
+    NzMenuDividerDirective,
+    NzMenuDirective,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',

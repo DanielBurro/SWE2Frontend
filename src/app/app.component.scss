@@ -1,0 +1,136 @@
+.app-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0f;
+  overflow: hidden;
+  padding-top: 60px; // Space for fixed header
+}
+
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1001;
+}
+
+.inner-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: #0a0a0f;
+}
+
+.main-sider {
+  background: #141414; // Same as header background
+  border-right: 1px solid rgba(201, 169, 110, 0.1);
+  height: 100%;
+  flex: 0 0 auto;
+  z-index: 10;
+
+  ::ng-deep .ant-layout-sider-children {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+.sider-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sider-toggle-container {
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-sider-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #c9a96e;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s;
+
+  &:hover {
+    background: rgba(201, 169, 110, 0.1);
+  }
+}
+
+.main-menu {
+  background: transparent;
+  border-right: none;
+  flex: 1;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(201, 169, 110, 0.2);
+    border-radius: 2px;
+  }
+
+  ::ng-deep .ant-menu-item {
+    margin-top: 4px;
+    margin-bottom: 8px;
+    height: 48px;
+    line-height: 48px;
+    color: rgba(232, 228, 220, 0.6);
+
+    &.ant-menu-item-selected {
+      background: rgba(201, 169, 110, 0.1) !important;
+      color: #c9a96e;
+      font-weight: 600;
+
+      &::after {
+        border-right: 3px solid #c9a96e;
+      }
+
+      .anticon {
+        color: #c9a96e;
+      }
+    }
+
+    &:hover {
+      color: #c9a96e;
+    }
+  }
+}
+
+.app-content {
+  flex: 1;
+  background: #0a0a0f;
+  position: relative;
+  overflow: hidden;
+}
+
+.content-scroll-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(201, 169, 110, 0.2);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(201, 169, 110, 0.3);
+    }
+  }
+}

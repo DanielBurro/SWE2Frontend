@@ -1,0 +1,99 @@
+$gold-primary: #c9a96e;
+$bg-sider: #12121a;
+$text-muted: rgba(232, 228, 220, 0.6);
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+// Notion-Style Handle (links neben der Karte)
+.drag-handle-outside {
+  position: absolute;
+  left: -35px;
+  top: 12px;
+  cursor: grab;
+  color: rgba($gold-primary, 0.4);
+  font-size: 22px;
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+  z-index: 10;
+
+  &:active { cursor: grabbing; }
+  &:hover { color: $gold-primary; }
+}
+
+// Zeige Handle wenn man über das gridster-item (host) hovert
+:host-context(gridster-item:hover) .drag-handle-outside {
+  opacity: 1;
+}
+
+.content-card {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-sizing: border-box !important;
+
+  .hover-toolbar {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    right: 0;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+
+    .type-icon { color: $gold-primary; font-size: 14px; }
+    .type-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: $text-muted;
+      margin-left: 8px;
+      letter-spacing: 0.5px;
+    }
+    .spacer { flex: 1; }
+    .delete-btn {
+      pointer-events: auto;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      &:hover { color: #ff4d4f; }
+    }
+  }
+
+  .card-body {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box !important;
+    overflow: hidden;
+  }
+
+  // Zustände
+  &:hover {
+    border-color: rgba($gold-primary, 0.3);
+    .hover-toolbar { opacity: 1; }
+  }
+
+  &.is-focused {
+    background: rgba($bg-sider, 0.85) !important;
+    border-color: $gold-primary !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+}
