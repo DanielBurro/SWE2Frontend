@@ -61,3 +61,4 @@ For more information on using the Angular CLI, including detailed command refere
 ## Feature Docs
 
 - [Eigene Events im Profil](docs/profile-own-events.md)
+- [Event Templates](docs/event-templates.md)

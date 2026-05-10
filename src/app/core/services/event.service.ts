@@ -1,9 +1,16 @@
 // event.services.ts
 
-import { Injectable, inject, signal, computed, Signal } from '@angular/core';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, CreateEventDto, EventStatus } from '../models/event.model';
+import {
+  EventTemplateContent,
+  EventTemplateSnapshot,
+  cloneTemplateSnapshot,
+  createTemplateContent,
+  hasTemplateContent,
+} from '../models/event-template.model';
 import { environment } from '../../../environments/environment';
 
 // Simplified Interface for the Builder-Elemente (Document-style)
@@ -30,7 +37,7 @@ export class EventService {
   public eventLocationId = signal<number | null>(null);
   public eventContent = signal<any>(null);
   public currentEventId = signal<number | null>(null);
-  
+
   // Persistent gradient state
   public color1 = signal<string>('#c9a96e');
   public color2 = signal<string>('#111118');
@@ -43,6 +50,31 @@ export class EventService {
   updateColors(c1: string, c2: string) {
     this.color1.set(c1);
     this.color2.set(c2);
+  }
+
+  hasDraftContent(): boolean {
+    return this.eventTitle().trim().length > 0 || hasTemplateContent(this.eventContent());
+  }
+
+  getTemplateSnapshot(fallbackTitle = 'Neues Event'): EventTemplateSnapshot {
+    const content = (this.eventContent() as EventTemplateContent | null) ?? createTemplateContent([]);
+
+    return cloneTemplateSnapshot({
+      title: this.eventTitle().trim() || fallbackTitle,
+      content,
+    });
+  }
+
+  applyTemplateSnapshot(template: EventTemplateSnapshot) {
+    const nextTemplate = cloneTemplateSnapshot(template);
+
+    this.currentEventId.set(null);
+    this.eventDate.set(null);
+    this.eventLocation.set('');
+    this.eventLocationId.set(null);
+    this.eventTitle.set(nextTemplate.title);
+    this.eventContent.set(nextTemplate.content);
+    this._builderElements.set([]);
   }
 
   resetBuilder() {
@@ -88,7 +120,7 @@ export class EventService {
   }
 
   /**
-   * Hilfsfunktion für Standard-Inhalte je nach Typ
+   * Hilfsfunktion fuer Standard-Inhalte je nach Typ
    */
   private getDefaultDataForType(type: string): any {
     switch (type) {
@@ -100,60 +132,6 @@ export class EventService {
         return { url: '' };
       default:
         return {};
-    }
-  }
-
-  /**
-   * Hilfsfunktion für Standard-Inhalte je nach Typ
-   */
-  applyTemplate(templateType: string) {
-    if (templateType === 'birthday') {
-      this.eventTitle.set('Mein Geburtstag 🎂');
-      this._builderElements.set([
-        {
-          id: window.crypto.randomUUID(),
-          type: 'heading',
-          label: 'Heading',
-          icon: 'font-size',
-          data: { text: 'Herzlich Willkommen zu meiner Party!', level: 1 },
-        },
-        {
-          id: window.crypto.randomUUID(),
-          type: 'text',
-          label: 'Text',
-          icon: 'align-left',
-          data: { text: 'Ich feiere meinen Geburtstag und würde mich freuen, wenn du dabei bist!' },
-        },
-      ]);
-    } else if (templateType === 'wedding') {
-      this.eventTitle.set('Unsere Hochzeit ❤️');
-      this._builderElements.set([
-        {
-          id: window.crypto.randomUUID(),
-          type: 'heading',
-          label: 'Heading',
-          icon: 'font-size',
-          data: { text: 'Wir trauen uns!', level: 1 },
-        },
-        {
-          id: window.crypto.randomUUID(),
-          type: 'image',
-          label: 'Image',
-          icon: 'picture',
-          data: { url: '' },
-        },
-      ]);
-    } else if (templateType === 'party') {
-      this.eventTitle.set('Hausparty! 🥳');
-      this._builderElements.set([
-        {
-          id: window.crypto.randomUUID(),
-          type: 'heading',
-          label: 'Heading',
-          icon: 'font-size',
-          data: { text: 'Bier & Beats', level: 1 },
-        },
-      ]);
     }
   }
 
@@ -177,13 +155,12 @@ export class EventService {
 
   /**
    * Modifiziert: Nimmt die Builder-Elemente automatisch mit in das DTO auf,
-   * sobald das Backend dafür bereit ist.
+   * sobald das Backend dafuer bereit ist.
    */
   create(dto: CreateEventDto): Observable<Event> {
-    // Hier kombinieren wir das DTO mit den aktuellen Builder-Elementen
     const fullDto = {
       ...dto,
-      builderContent: this._builderElements(), // Wir hängen die Elemente einfach dran
+      builderContent: this._builderElements(),
     };
     return this.http.post<Event>(this.base, fullDto);
   }

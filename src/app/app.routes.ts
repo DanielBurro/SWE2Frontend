@@ -16,6 +16,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'events/templates',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/events/event-templates/event-templates.component').then(
+        (m) => m.EventTemplatesComponent
+      ),
+  },
+  {
     path: 'events/:id/edit',
     loadComponent: () =>
       import('./features/events/event-edit/event-edit').then(
