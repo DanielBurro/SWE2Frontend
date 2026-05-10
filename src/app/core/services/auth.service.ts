@@ -65,4 +65,19 @@ export class AuthService {
     this.#user.set(null);
     this.router.navigate(['/auth/login']);
   }
+
+  isTokenValid(): boolean {
+    const token = this.#token();
+    if (!token) return false;
+
+    try {
+      // JWT besteht aus Header.Payload.Signature – Base64url-dekodieren
+      const payloadBase64 = token.split('.')[1];
+      const payload: JwtPayload = JSON.parse(atob(payloadBase64));
+      // exp ist Unix-Timestamp in Sekunden, Date.now() in Millisekunden
+      return payload.exp * 1000 > Date.now();
+    } catch {
+      return false; 
+    }
+  }
 }

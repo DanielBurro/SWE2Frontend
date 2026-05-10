@@ -1,7 +1,6 @@
 <app-header />
 
 <div class="detail-page">
-
   @if (isLoading) {
     <div class="detail-container">
       <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 6 }" />
@@ -9,11 +8,11 @@
   }
 
   @if (!isLoading && event) {
-    <!-- HERO BANNER -->
-    <div class="event-banner" [style.background]="'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'">
+    <div
+      class="event-banner"
+      [style.background]="'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'">
       <div class="banner-overlay"></div>
       <div class="banner-content">
-
         <div class="banner-top-row">
           <a routerLink="/" class="back-link">
             <span nz-icon nzType="arrow-left"></span>
@@ -45,11 +44,7 @@
 
     <div class="detail-container">
       <div class="detail-layout">
-
-        <!-- LINKE SPALTE -->
         <div class="detail-main">
-
-          <!-- BESCHREIBUNG -->
           <div class="detail-card">
             <h2 class="card-title">Über dieses Event</h2>
             <nz-divider />
@@ -58,7 +53,6 @@
             </div>
           </div>
 
-          <!-- GÄSTELISTE -->
           <div class="detail-card">
             <div class="guests-header">
               <h2 class="card-title">Gästeliste</h2>
@@ -103,7 +97,6 @@
             </div>
           </div>
 
-          <!-- EINLADUNGS-VERWALTUNG (nur Host) -->
           @if (isHost) {
             <div class="detail-card invite-management-card">
               <div class="invite-mgmt-header">
@@ -122,7 +115,6 @@
               <div class="invite-list">
                 @for (inv of invitations; track inv.id) {
                   <div class="invite-row" [class.expanded]="expandedInviteId === inv.id">
-
                     <div class="invite-row-main" (click)="toggleExpand(inv.id)">
                       <div class="invite-left">
                         <nz-avatar
@@ -136,20 +128,22 @@
                         </div>
                       </div>
                       <div class="invite-right">
-                        <span class="invite-status-badge"
+                        <span
+                          class="invite-status-badge"
                           [style.color]="getStatusColor(inv.status)"
                           [style.border-color]="getStatusColor(inv.status) + '40'"
                           [style.background]="getStatusColor(inv.status) + '15'">
                           {{ getStatusLabel(inv.status) }}
                         </span>
-                        <span nz-icon [nzType]="expandedInviteId === inv.id ? 'up' : 'down'" class="expand-icon"></span>
+                        <span
+                          nz-icon
+                          [nzType]="expandedInviteId === inv.id ? 'up' : 'down'"
+                          class="expand-icon"></span>
                       </div>
                     </div>
 
                     @if (expandedInviteId === inv.id) {
                       <div class="invite-expand">
-
-                        <!-- Einladungslink -->
                         <div class="invite-link-section">
                           <span class="expand-label">Einladungslink</span>
                           <div class="link-row link-row--hint">
@@ -158,7 +152,6 @@
                           </div>
                         </div>
 
-                        <!-- Status ändern -->
                         <div class="invite-status-section">
                           <span class="expand-label">Status ändern</span>
                           <div class="status-actions">
@@ -176,7 +169,6 @@
                           </div>
                         </div>
 
-                        <!-- Aktionen -->
                         <div class="invite-actions">
                           <button
                             nz-button
@@ -188,22 +180,16 @@
                             Zurückziehen
                           </button>
                         </div>
-
                       </div>
                     }
-
                   </div>
                 }
               </div>
             </div>
           }
-
         </div>
 
-        <!-- RECHTE SPALTE -->
         <div class="detail-sidebar">
-
-          <!-- HOST INFO -->
           <div class="sidebar-card">
             <p class="sidebar-label">Veranstalter</p>
             <div class="host-row">
@@ -219,7 +205,6 @@
             </div>
           </div>
 
-          <!-- RSVP (Gast-Sicht) -->
           @if (!isHost) {
             <div class="sidebar-card rsvp-card">
               <p class="sidebar-label">Deine Antwort</p>
@@ -245,24 +230,27 @@
             </div>
           }
 
-           <!-- HOST ACTIONS -->
-           @if (isHost) {
-             <div class="sidebar-card">
-               <p class="sidebar-label">Event verwalten</p>
-               <div class="host-actions">
-                 <button nz-button nzBlock class="btn-gold" (click)="openInviteModal()">
-                   <span nz-icon nzType="user-add"></span>
-                   Gast einladen
-                 </button>
-                 <button nz-button nzBlock [routerLink]="['/events', event.id, 'edit']" class="btn-outline-gold">
-                   <span nz-icon nzType="edit"></span>
-                   Event bearbeiten
-                 </button>
-               </div>
-             </div>
-           }
+          @if (isHost) {
+            <div class="sidebar-card">
+              <p class="sidebar-label">Event verwalten</p>
+              <div class="host-actions">
+                <button nz-button nzBlock class="btn-gold" (click)="openInviteModal()">
+                  <span nz-icon nzType="user-add"></span>
+                  Gast einladen
+                </button>
+                <button
+                  nz-button
+                  nzBlock
+                  class="btn-outline-gold"
+                  [routerLink]="['/events', event.id, 'edit']"
+                  [state]="{ event }">
+                  <span nz-icon nzType="edit"></span>
+                  Event bearbeiten
+                </button>
+              </div>
+            </div>
+          }
 
-          <!-- EVENT INFO -->
           <div class="sidebar-card">
             <p class="sidebar-label">Details</p>
             <div class="info-rows">
@@ -280,15 +268,12 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
   }
-
 </div>
 
-<!-- EINLADUNGS-MODAL -->
 <nz-modal
   [(nzVisible)]="isInviteModalOpen"
   nzTitle="Gast einladen"
@@ -301,12 +286,10 @@
   nzClassName="invite-modal">
   <ng-container *nzModalContent>
     <div class="modal-body">
-
       <p class="modal-hint">
         Der Gast erhält den Einladungslink automatisch per E-Mail.
       </p>
 
-      <!-- Suchfeld -->
       <div class="user-search-box">
         <span nz-icon nzType="search" class="search-icon"></span>
         <input
@@ -323,12 +306,11 @@
         }
       </div>
 
-      <!-- Ergebnisliste -->
       <div class="user-list">
         @if (filteredInvitableUsers.length === 0 && !searchQuery) {
           <p class="modal-empty">Alle verfügbaren Nutzer wurden bereits eingeladen.</p>
         } @else if (filteredInvitableUsers.length === 0) {
-          <p class="modal-empty">Keine Ergebnisse für „{{ searchQuery }}"</p>
+          <p class="modal-empty">Keine Ergebnisse für "{{ searchQuery }}"</p>
         }
 
         @for (user of filteredInvitableUsers; track user.id) {
@@ -351,7 +333,6 @@
           </div>
         }
       </div>
-
     </div>
   </ng-container>
 </nz-modal>

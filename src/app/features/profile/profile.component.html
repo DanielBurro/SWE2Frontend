@@ -14,7 +14,11 @@
       <nz-tab nzTitle="Einladungen" class="tab-btn">
         <div class="profile-section">
           <h3>Einladungen</h3>
-          @if (invitations().length > 0) {
+          @if (invitationsLoading()) {
+            <div class="list-skeleton">
+              <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+            </div>
+          } @else if (invitations().length > 0) {
             <ul>
               @for (invitation of invitations(); track invitation.id) {
                 <li>
@@ -23,26 +27,90 @@
               }
             </ul>
           } @else {
-            <p>Aktuell keine Einladungen</p>
+            <p class="empty-copy">Aktuell keine Einladungen</p>
           }
         </div>
       </nz-tab>
+
       <nz-tab nzTitle="Meine Events" class="tab-btn">
         <div class="profile-section">
-          <h3>Meine Events</h3>
-          @if (myEvents().length > 0) {
-            <ul>
-              @for (event of myEvents(); track event.id) {
-                <li style="display: flex; justify-content: space-between; align-items: center;">
-                  <a [routerLink]="['/events', event.id]" style="color: #e8e4dc; text-decoration: none; flex: 1;">
-                    <strong>{{ event.title }}</strong> - {{ event.date | date: 'short' }}
-                  </a>
-                  <button nz-button nzSize="small" [routerLink]="['/events', event.id, 'edit']" class="btn-edit">
-                    Bearbeiten
-                  </button>
-                </li>
+          <div class="section-header">
+            <div>
+              <p class="section-eyebrow">Von dir erstellt</p>
+              <h3>Meine Events</h3>
+            </div>
+            <a routerLink="/events/create" class="section-link">
+              Neues Event
+              <span nz-icon nzType="plus"></span>
+            </a>
+          </div>
+
+          @if (myEventsLoading()) {
+            <div class="events-grid">
+              @for (placeholder of [1, 2, 3]; track placeholder) {
+                <div class="skeleton-card">
+                  <nz-skeleton [nzActive]="true" [nzAvatar]="false" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+                </div>
               }
-            </ul>
+            </div>
+          } @else if (myEventsError()) {
+            <div class="feedback-card">
+              <p class="feedback-title">Deine Events konnten gerade nicht geladen werden.</p>
+              <p class="feedback-copy">
+                Versuche es bitte erneut. Sobald der Service wieder erreichbar ist, erscheinen
+                deine Events hier automatisch.
+              </p>
+              <button nz-button type="button" class="btn-primary" (click)="reloadMyEvents()">
+                Erneut laden
+              </button>
+            </div>
+          } @else if (myEvents().length > 0) {
+            <div class="events-grid">
+              @for (event of myEvents(); track event.id; let i = $index) {
+                <a class="event-card" [routerLink]="['/events', event.id]" [state]="{ event }">
+                  <div class="card-img" [style.background]="getGradient(i)">
+                    <div class="img-overlay"></div>
+                    <span class="date-badge">{{ formatEventDate(event.date) }}</span>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="status-row">
+                      <span class="status-dot" [style.background]="getStatusColor(event.status)"></span>
+                      <span class="status-text">{{ event.status | titlecase }}</span>
+                    </div>
+
+                    <h4 class="event-title">{{ event.title }}</h4>
+
+                    <p class="event-meta">
+                      <span nz-icon nzType="environment" nzTheme="outline" class="meta-icon"></span>
+                      {{ event.locationName }}
+                    </p>
+
+                    <nz-divider class="card-divider"></nz-divider>
+
+                    <div class="card-footer">
+                      <div class="event-host">
+                        <nz-avatar
+                          [nzText]="getHostInitials(event.hostName)"
+                          nzSize="small"
+                          [ngStyle]="{
+                            background: 'rgba(201,169,110,0.15)',
+                            color: '#c9a96e',
+                            'font-size': '9px'
+                          }">
+                        </nz-avatar>
+                        <span class="host-name">von {{ event.hostName || 'dir' }}</span>
+                      </div>
+
+                      <span class="card-link-hint">
+                        Verwalten
+                        <span nz-icon nzType="arrow-right"></span>
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              }
+            </div>
           } @else {
             <app-cta-banner />
           }

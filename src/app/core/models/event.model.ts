@@ -22,8 +22,6 @@ export interface CreateEventDto {
   locationId: number;
 }
 
-// ── Status-Converter ──
-
 const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
   PLANNED:   'Geplant',
   ACTIVE:    'Aktiv',
@@ -58,3 +56,4 @@ export interface EventData {
   title: string;
   elements: EventElement[];
 }
+

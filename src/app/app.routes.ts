@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -8,6 +9,14 @@ export const routes: Routes = [
   },
   {
     path: 'events/create',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/events/event-create/event-create.component').then(
+        (m) => m.EventCreateComponent
+      ),
+  },
+  {
+    path: 'events/:id/edit',
     loadComponent: () =>
       import('./features/events/event-create/event-create.component').then(
         (m) => m.EventCreateComponent
@@ -21,14 +30,8 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'events/:id/edit',
-    loadComponent: () =>
-      import('./features/events/event-edit/event-edit').then(
-        (m) => m.EventEditComponent
-      ),
-  },
-  {
     path: 'profile',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/profile/profile.component').then(
         (m) => m.ProfileComponent
