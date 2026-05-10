@@ -21,6 +21,7 @@ import { EventBuilder } from '../event-builder/event-builder';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { LayoutService } from '../../../core/services/layout.service';
 import { EventSettingsComponent } from '../event-settings/event-settings.component';
+import { TemplateService } from '../../../core/services/template.service';
 
 @Component({
   selector: 'app-event-create',
@@ -56,6 +57,7 @@ export class EventCreateComponent implements OnInit, OnDestroy {
   private message         = inject(NzMessageService);
   private cdr             = inject(ChangeDetectorRef);
   private modal = inject(NzModalService);
+  private templateService = inject(TemplateService);
   private subs = new Subscription();
 
   locations: Location[] = [];
@@ -68,6 +70,10 @@ export class EventCreateComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.eventService.resetBuilder();
+    const pendingTemplate = this.templateService.consumePendingTemplate();
+    if (pendingTemplate) {
+      this.eventService.applyTemplateSnapshot(pendingTemplate);
+    }
     this.subs.add(this.layoutService.settingsRequested$.subscribe(() => this.showSettings()));
     this.subs.add(this.layoutService.templatesRequested$.subscribe(() => this.showTemplates()));
   }
